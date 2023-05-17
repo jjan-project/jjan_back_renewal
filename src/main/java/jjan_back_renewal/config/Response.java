@@ -7,7 +7,7 @@ import lombok.Getter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @AllArgsConstructor
-public class Response<T> implements GenericResponse{
+public class Response<T> extends GenericResponse{
     private String status;
     private String message;
     private T data;
