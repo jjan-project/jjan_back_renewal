@@ -36,16 +36,6 @@ public class UserController {
         return ResponseEntity.ok().body(loginResponseDto);
     }
 
-    @GetMapping("/")
-    public String root() {
-        return "exampleMapping";
-    }
-
-    @GetMapping("/user")
-    public String user() {
-        return "user";
-    }
-
     //이메일 중복검증, 수정필요
     @GetMapping("/userEmail/{userEmail}")
     public Response<?> findUserByEmail(@PathVariable("userEmail") String userEmail) throws Exception {
@@ -53,8 +43,8 @@ public class UserController {
     }
 
     //닉네임 중복검증, 수정필요
-    @GetMapping("/userNickName/{userNickName}")
-    public Response<?> findUserByNickName(@PathVariable("userNickName") String userNickName) throws Exception {
-        return new Response<>("true", "조회 성공", userService.findByNickName(userNickName));
+    @PostMapping("/api/user/{nickName}")
+    public ResponseEntity<LoginResponseDto> findUserByNickName(@RequestBody String nickName) {
+        return ResponseEntity.ok().body(new LoginResponseDto());
     }
 }

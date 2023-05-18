@@ -7,34 +7,38 @@ import lombok.Data;
 public class UserDto {
     private Long id;
     private String email;
-    private String password;
     private String nickName;
-    private String address;
-    private String sex;
-    private String birth;
+    private String password;
     private String profile;
+    private String name;
+    private String address;
+    private String gender;
+    private String birth;
 
     public UserDto(UserEntity userEntity) {
         this.id = userEntity.getId();
         this.email = userEntity.getEmail();
-        this.password = userEntity.getPassword();
         this.nickName = userEntity.getNickName();
-        this.address = userEntity.getAddress();
-        this.sex = userEntity.getSex();
-        this.birth = userEntity.getBirth();
+        this.password = userEntity.getPassword();
         this.profile = userEntity.getProfile();
+        this.name = userEntity.getName();
+        this.address = userEntity.getAddress();
+        this.gender = userEntity.getGender();
+        this.birth = userEntity.getBirth();
+
     }
 
     public UserEntity toEntity() {
         return UserEntity.builder()
                 .id(id)
                 .email(email)
-                .password(password)
                 .nickName(nickName)
-                .address(address)
-                .sex(sex)
-                .birth(birth)
+                .password(password)
                 .profile(profile)
+                .name(name)
+                .address(address)
+                .gender(gender)
+                .birth(birth)
                 .build();
     }
 }

@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
         return new UserDto(userEntity);
     }
 
-    //need Exceptions
     @Override
     public UserDto findByEmail(String email) {
         UserEntity byEmail = userRepository.findByEmail(email)
@@ -38,7 +37,6 @@ public class UserServiceImpl implements UserService {
         return new UserDto(byEmail);
     }
 
-    //need Exceptions
     @Override
     public UserDto findByNickName(String nickName) {
         UserEntity byNickName = userRepository.findByNickName(nickName)
