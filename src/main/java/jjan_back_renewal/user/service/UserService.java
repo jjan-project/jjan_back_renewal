@@ -11,4 +11,6 @@ public interface UserService {
     UserDto findByEmail(String email);
 
     UserDto findByNickName(String nickName);
+
+    Long isDuplicatedNickName(String nickName);
 }

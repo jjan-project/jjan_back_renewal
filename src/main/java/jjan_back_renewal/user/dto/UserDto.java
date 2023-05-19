@@ -1,9 +1,11 @@
 package jjan_back_renewal.user.dto;
 
 import jjan_back_renewal.user.entitiy.UserEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class UserDto {
     private Long id;
     private String email;
