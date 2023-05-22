@@ -42,26 +42,39 @@ public class UserController {
         return ResponseEntity.ok().body(loginResponseDto);
     }
 
-    @GetMapping("/")
-    public String root() {
-        return "exampleMapping";
-    }
-
-    @GetMapping("/user")
-    public String user() {
-        return "user";
-    }
-
-    //이메일 중복검증, 수정필요
+    //이메일로 유저 찾기
     @GetMapping("/userEmail/{userEmail}")
     public Response<?> findUserByEmail(@PathVariable("userEmail") String userEmail) throws Exception {
         return new Response<>("true", "조회 성공", userService.findByEmail(userEmail));
     }
-
-    //닉네임 중복검증, 수정필요
+    
+    //닉네임으로 유저 찾기
     @GetMapping("/userNickName/{userNickName}")
     public Response<?> findUserByNickName(@PathVariable("userNickName") String userNickName) throws Exception {
         return new Response<>("true", "조회 성공", userService.findByNickName(userNickName));
+    }
+
+    
+    @PostMapping("/api/user/unique-nickname")
+    public ResponseEntity<UniqueTestResponseDto> isDuplicatedNickName(@RequestBody String nickName) {
+
+        if(isNickNameLengthOK(nickName) && userService.isDuplicatedNickName(nickName) == UserServiceImpl.NOT_DUPLICATED) {
+            return ResponseEntity.ok().body(new UniqueTestResponseDto("nickName",nickName));
+        }
+        else {
+            UniqueTestResponseDto uniqueTestResponseDto = new UniqueTestResponseDto("nickName",nickName);
+            uniqueTestResponseDto.response403();
+            return ResponseEntity.ok().body(uniqueTestResponseDto);
+        }
+
+    }
+
+    private boolean isNickNameLengthOK(String nickName) {
+        if(nickName.length() >= 8  && nickName.length() <= 16) {
+            return true;
+        }
+        else
+            return false;
     }
 
     @PostMapping("/api/user/unique-email")

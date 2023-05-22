@@ -17,6 +17,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     public static final Long NOT_DUPLICATED = -1L;
 
+    public static final Long NOT_DUPLICATED = -1L;
+
     @Override
     public UserDto login(LoginRequestDto loginRequestDto) {
         return null;
@@ -31,7 +33,6 @@ public class UserServiceImpl implements UserService {
         return new UserDto(userEntity);
     }
 
-    //need Exceptions
     @Override
     public UserDto findByEmail(String email) {
         UserEntity byEmail = userRepository.findByEmail(email)
@@ -39,13 +40,24 @@ public class UserServiceImpl implements UserService {
         return new UserDto(byEmail);
     }
 
-    //need Exceptions
     @Override
     public UserDto findByNickName(String nickName) {
         UserEntity byNickName = userRepository.findByNickName(nickName)
                 .orElseThrow(() -> new NoSuchNicknameException(nickName));
         return new UserDto(byNickName);
     }
+
+    @Override
+    public Long isDuplicatedNickName(String nickName) {
+        Long ret = NOT_DUPLICATED;
+        try {
+            UserEntity userEntity = userRepository.findByNickName(nickName)
+                    .orElseThrow(()-> new NoSuchNicknameException(nickName));
+            ret = userEntity.getId();
+        }
+        catch (NoSuchNicknameException e) {
+            return ret;
+        }
 
     @Override
     public Long isDuplicatedEmail(String email) {
