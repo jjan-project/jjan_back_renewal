@@ -1,5 +1,6 @@
 package jjan_back_renewal.user.controller;
 
+import io.micrometer.common.util.StringUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import jjan_back_renewal.user.dto.LoginRequestDto;
 import jjan_back_renewal.user.dto.LoginResponseDto;
@@ -11,6 +12,9 @@ import jjan_back_renewal.user.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,8 +54,7 @@ public class UserController {
         return new Response<>("true", "조회 성공", userService.findByNickName(userNickName));
     }
 
-    //닉네임 중복검증
-    //요청한 DTO가 null이 아닐경우 중복
+    
     @PostMapping("/api/user/unique-nickname")
     public ResponseEntity<UniqueTestResponseDto> isDuplicatedNickName(@RequestBody String nickName) {
 
@@ -74,4 +77,28 @@ public class UserController {
             return false;
     }
 
+    @PostMapping("/api/user/unique-email")
+    public ResponseEntity<UniqueTestResponseDto> isDuplicatedEmail(@RequestBody String email) {
+        if (isEmail(email) && userService.isDuplicatedEmail(email) == UserServiceImpl.NOT_DUPLICATED) {
+            return ResponseEntity.ok().body(new UniqueTestResponseDto("email", email));
+        } else {
+            UniqueTestResponseDto response = new UniqueTestResponseDto("email", email);
+            response.response403();
+            return ResponseEntity.ok().body(response);
+        }
+    }
+
+    private boolean isEmail(String email) {
+        boolean validation = false;
+        if (StringUtils.isEmpty(email)) {
+            return false;
+        }
+        String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(email);
+        if (m.matches()) {
+            validation = true;
+        }
+        return validation;
+    }
 }
