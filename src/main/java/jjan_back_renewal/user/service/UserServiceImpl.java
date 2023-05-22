@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    public static final Long NOT_DUPLICATED = -1L;
 
     @Override
     public UserDto login(LoginRequestDto loginRequestDto) {
@@ -44,6 +45,19 @@ public class UserServiceImpl implements UserService {
         UserEntity byNickName = userRepository.findByNickName(nickName)
                 .orElseThrow(() -> new NoSuchNicknameException(nickName));
         return new UserDto(byNickName);
+    }
+
+    @Override
+    public Long isDuplicatedEmail(String email) {
+        Long ret = NOT_DUPLICATED;
+        try {
+            UserEntity userEntity = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new NoSuchEmailException(email));
+            ret = userEntity.getId();
+        } catch (NoSuchEmailException e) {
+            return ret;
+        }
+        return ret;
     }
 
 }
