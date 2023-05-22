@@ -1,8 +1,12 @@
 package jjan_back_renewal.user.dto;
 
 import jjan_back_renewal.user.entitiy.UserEntity;
+import jjan_back_renewal.user.util.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +20,7 @@ public class UserDto {
     private String address;
     private String gender;
     private String birth;
+    private List<Role> roles = new ArrayList<>();
 
     public UserDto(UserEntity userEntity) {
         this.id = userEntity.getId();
@@ -27,7 +32,7 @@ public class UserDto {
         this.address = userEntity.getAddress();
         this.gender = userEntity.getGender();
         this.birth = userEntity.getBirth();
-
+        this.roles = userEntity.getRoles();
     }
 
     public UserEntity toEntity() {
@@ -41,6 +46,7 @@ public class UserDto {
                 .address(address)
                 .gender(gender)
                 .birth(birth)
+                .roles(roles)
                 .build();
     }
 }

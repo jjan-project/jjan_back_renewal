@@ -2,9 +2,13 @@ package jjan_back_renewal.user.entitiy;
 
 
 import jakarta.persistence.*;
+import jjan_back_renewal.user.util.Role;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -40,8 +44,12 @@ public class UserEntity {
     @Column(nullable = false)
     private String birth;
 
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
+    private List<Role> roles = new ArrayList<>();
+
     @Builder
-    public UserEntity(Long id, String email, String nickName, String password, String profile, String name, String address, String gender, String birth) {
+    public UserEntity(Long id, String email, String nickName, String password, String profile, String name, String address, String gender, String birth, List<Role> roles) {
         this.id = id;
         this.email = email;
         this.nickName = nickName;
@@ -51,11 +59,12 @@ public class UserEntity {
         this.address = address;
         this.gender = gender;
         this.birth = birth;
+        this.roles = roles;
     }
 
-
-
-
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
 
 }
 
