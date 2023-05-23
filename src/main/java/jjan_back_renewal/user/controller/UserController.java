@@ -29,11 +29,10 @@ public class UserController {
         return "hello";
     }
 
+
     @GetMapping("/login-test")
-    public ResponseEntity<LoginResponseDto> login() {
-        LoginRequestDto loginRequestDto = new LoginRequestDto("이름", "비번");
-        UserDto userDto = userService.login(loginRequestDto);
-        LoginResponseDto loginResponseDto = new LoginResponseDto(userDto);
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+        LoginResponseDto loginResponseDto = userService.login(loginRequestDto);
         // login failure
         if (loginResponseDto.getUserDto() == null) {
             loginResponseDto.response403();
@@ -47,22 +46,21 @@ public class UserController {
     public Response<?> findUserByEmail(@PathVariable("userEmail") String userEmail) throws Exception {
         return new Response<>("true", "조회 성공", userService.findByEmail(userEmail));
     }
-    
+
     //닉네임으로 유저 찾기
     @GetMapping("/userNickName/{userNickName}")
     public Response<?> findUserByNickName(@PathVariable("userNickName") String userNickName) throws Exception {
         return new Response<>("true", "조회 성공", userService.findByNickName(userNickName));
     }
 
-    
+
     @PostMapping("/api/user/unique-nickname")
     public ResponseEntity<UniqueTestResponseDto> isDuplicatedNickName(@RequestBody String nickName) {
 
-        if(isNickNameLengthOK(nickName) && userService.isDuplicatedNickName(nickName) == UserServiceImpl.NOT_DUPLICATED) {
-            return ResponseEntity.ok().body(new UniqueTestResponseDto("nickName",nickName));
-        }
-        else {
-            UniqueTestResponseDto uniqueTestResponseDto = new UniqueTestResponseDto("nickName",nickName);
+        if (isNickNameLengthOK(nickName) && userService.isDuplicatedNickName(nickName) == UserServiceImpl.NOT_DUPLICATED) {
+            return ResponseEntity.ok().body(new UniqueTestResponseDto("nickName", nickName));
+        } else {
+            UniqueTestResponseDto uniqueTestResponseDto = new UniqueTestResponseDto("nickName", nickName);
             uniqueTestResponseDto.response403();
             return ResponseEntity.ok().body(uniqueTestResponseDto);
         }
@@ -70,10 +68,9 @@ public class UserController {
     }
 
     private boolean isNickNameLengthOK(String nickName) {
-        if(nickName.length() >= 8  && nickName.length() <= 16) {
+        if (nickName.length() >= 8 && nickName.length() <= 16) {
             return true;
-        }
-        else
+        } else
             return false;
     }
 
