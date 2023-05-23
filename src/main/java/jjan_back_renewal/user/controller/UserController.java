@@ -18,43 +18,23 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
 
-    @Operation(summary = "error test", description = "DB에 없는 이메일 검색 시 에러 핸들링")
-    @GetMapping("/error-test")
-    public String error() {
-        userService.findByEmail("hello@naver.com");
-        return "hello";
-    }
-
-
-    @GetMapping("/login-test")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-        LoginResponseDto loginResponseDto = userService.login(loginRequestDto);
-        // login failure
-        if (loginResponseDto.getUserDto() == null) {
-            loginResponseDto.response403();
-            return ResponseEntity.ok().body(loginResponseDto);
+    @PostMapping("/unique-email")
+    public ResponseEntity<UniqueTestResponseDto> isDuplicatedEmail(@RequestBody String email) {
+        if (isEmail(email) && userService.isDuplicatedEmail(email) == UserServiceImpl.NOT_DUPLICATED) {
+            return ResponseEntity.ok().body(new UniqueTestResponseDto("email", email));
+        } else {
+            UniqueTestResponseDto response = new UniqueTestResponseDto("email", email);
+            response.response403();
+            return ResponseEntity.ok().body(response);
         }
-        return ResponseEntity.ok().body(loginResponseDto);
     }
 
-    //이메일로 유저 찾기
-    @GetMapping("/userEmail/{userEmail}")
-    public Response<?> findUserByEmail(@PathVariable("userEmail") String userEmail) throws Exception {
-        return new Response<>("true", "조회 성공", userService.findByEmail(userEmail));
-    }
-
-    //닉네임으로 유저 찾기
-    @GetMapping("/userNickName/{userNickName}")
-    public Response<?> findUserByNickName(@PathVariable("userNickName") String userNickName) throws Exception {
-        return new Response<>("true", "조회 성공", userService.findByNickName(userNickName));
-    }
-
-
-    @PostMapping("/api/user/unique-nickname")
+    @PostMapping("/unique-nickname")
     public ResponseEntity<UniqueTestResponseDto> isDuplicatedNickName(@RequestBody String nickName) {
 
         if (isNickNameLengthOK(nickName) && userService.isDuplicatedNickName(nickName) == UserServiceImpl.NOT_DUPLICATED) {
@@ -67,6 +47,18 @@ public class UserController {
 
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+        LoginResponseDto loginResponseDto = userService.login(loginRequestDto);
+        // login failure
+        if (loginResponseDto.getUserDto() == null) {
+            loginResponseDto.response403();
+            return ResponseEntity.ok().body(loginResponseDto);
+        }
+        return ResponseEntity.ok().body(loginResponseDto);
+    }
+
+
     private boolean isNickNameLengthOK(String nickName) {
         if (nickName.length() >= 8 && nickName.length() <= 16) {
             return true;
@@ -74,16 +66,6 @@ public class UserController {
             return false;
     }
 
-    @PostMapping("/api/user/unique-email")
-    public ResponseEntity<UniqueTestResponseDto> isDuplicatedEmail(@RequestBody String email) {
-        if (isEmail(email) && userService.isDuplicatedEmail(email) == UserServiceImpl.NOT_DUPLICATED) {
-            return ResponseEntity.ok().body(new UniqueTestResponseDto("email", email));
-        } else {
-            UniqueTestResponseDto response = new UniqueTestResponseDto("email", email);
-            response.response403();
-            return ResponseEntity.ok().body(response);
-        }
-    }
 
     private boolean isEmail(String email) {
         boolean validation = false;
