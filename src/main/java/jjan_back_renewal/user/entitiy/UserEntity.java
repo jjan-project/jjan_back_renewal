@@ -1,6 +1,7 @@
 package jjan_back_renewal.user.entitiy;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jjan_back_renewal.user.util.Role;
 import lombok.Builder;
@@ -44,7 +45,7 @@ public class UserEntity {
     @Column(nullable = false)
     private String birth;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
 
