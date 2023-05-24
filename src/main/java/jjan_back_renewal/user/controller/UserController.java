@@ -23,6 +23,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @Operation(summary = "이메일 중복 체크", description = "중복 이메일일 시 403 status code 반환합니다.")
     @PostMapping("/unique-email")
     public ResponseEntity<UniqueTestResponseDto> isDuplicatedEmail(@RequestBody String email) {
         if (isEmail(email) && userService.isDuplicatedEmail(email) == UserServiceImpl.NOT_DUPLICATED) {
@@ -34,6 +35,7 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "닉네임 중복 체크", description = "중복 닉네임일 시 403 status code 반환합니다.")
     @PostMapping("/unique-nickname")
     public ResponseEntity<UniqueTestResponseDto> isDuplicatedNickName(@RequestBody String nickName) {
 
@@ -47,6 +49,7 @@ public class UserController {
 
     }
 
+    @Operation(summary = "로그인", description = "로그인 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         LoginResponseDto loginResponseDto = userService.login(loginRequestDto);
