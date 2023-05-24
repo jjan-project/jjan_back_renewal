@@ -1,19 +1,23 @@
 package jjan_back_renewal.user.service;
 
+import jjan_back_renewal.user.dto.LoginRequestDto;
+import jjan_back_renewal.user.dto.LoginResponseDto;
 import jjan_back_renewal.user.dto.UserDto;
 import jjan_back_renewal.user.entitiy.UserEntity;
 import jjan_back_renewal.user.exception.NoSuchNicknameException;
 import jjan_back_renewal.user.repository.UserRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.*;
 import jjan_back_renewal.user.exception.NoSuchEmailException;
+import jjan_back_renewal.user.util.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class UserServiceImplTest {
@@ -23,6 +27,9 @@ class UserServiceImplTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Test
     @DisplayName("DB에 없는 nickName을 호출 시 NoSuchNickNameException이 발생한다")
@@ -46,8 +53,9 @@ class UserServiceImplTest {
     @DisplayName("DB에 있는 NickName에 isDuplicatedNickName을 호출하면 NOT_DUPLICATED 값을 반환하지 않는다. ")
     void isDuplicatedNickName_Duplicated() {
         String nickName = "ExistUser1";
-        saveEntityByNickName(nickName);
+        UserEntity newUser = saveEntityByNickName(nickName);
         assertThat(userService.isDuplicatedNickName(nickName)).isNotEqualTo(UserServiceImpl.NOT_DUPLICATED);
+        userRepository.deleteById(newUser.getId());
     }
 
 
@@ -92,6 +100,44 @@ class UserServiceImplTest {
         assertThat(userService.isDuplicatedEmail(email)).isEqualTo(UserServiceImpl.NOT_DUPLICATED);
     }
 
+    @Test
+    @DisplayName("DB 안에 저장된 이메일 & 패스워드 조합으로 로그인 시 성공한다.")
+    void login_있는조합_success() {
+        String email = "test@naver.com";
+        String password = "1111";
+        UserEntity userEntity = saveEntityForLogin(email, password);
+        LoginRequestDto loginRequestDto = new LoginRequestDto(email, password);
+        LoginResponseDto login = userService.login(loginRequestDto);
+        assertThat(login.getUserDto().getEmail()).isEqualTo(email);
+        assertThat(passwordEncoder.matches(loginRequestDto.getPassword(), userEntity.getPassword())).isTrue();
+        userRepository.deleteById(userEntity.getId());
+    }
+
+    @Test
+    @DisplayName("DB 안에 없는 이메일로 로그인 시 실패한다.")
+    void login_없는이메일_fail() {
+        String email = "test@naver.com";
+        String password = "1111";
+        LoginRequestDto loginRequestDto = new LoginRequestDto(email, password);
+        assertThatThrownBy(
+                () -> userService.login(loginRequestDto))
+                .isExactlyInstanceOf(BadCredentialsException.class);
+    }
+
+    @Test
+    @DisplayName("잘못된 이메일 & 비밀번호 조합으로 로그인 시 실패한다.")
+    void login_잘못된조합_fail() {
+        String email = "test@naver.com";
+        String password = "1111";
+        UserEntity userEntity = saveEntityForLogin(email, password);
+        LoginRequestDto loginRequestDto = new LoginRequestDto(email, password + "!!");
+        assertThatThrownBy(
+                () -> userService.login(loginRequestDto))
+                .isExactlyInstanceOf(BadCredentialsException.class);
+        userRepository.deleteById(userEntity.getId());
+    }
+
+
     UserEntity saveEntityByNickName(String nickName) {
         return userRepository.save(UserEntity.builder()
                 .email("")
@@ -117,4 +163,19 @@ class UserServiceImplTest {
                 .birth("")
                 .build());
     }
+
+    UserEntity saveEntityForLogin(String email, String password) {
+        return userRepository.save(UserEntity.builder()
+                .email(email)
+                .nickName("nickName")
+                .password(passwordEncoder.encode(password))
+                .profile("")
+                .name("")
+                .address("")
+                .gender("")
+                .birth("")
+                .roles(List.of(Role.ROLE_MEMBER))
+                .build());
+    }
+
 }
