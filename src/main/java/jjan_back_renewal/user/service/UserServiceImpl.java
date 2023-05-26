@@ -1,10 +1,12 @@
 package jjan_back_renewal.user.service;
 
+import jjan_back_renewal.user.dto.JoinResponseDto;
 import jjan_back_renewal.user.dto.LoginRequestDto;
 import jjan_back_renewal.user.dto.UserDto;
 import jjan_back_renewal.user.entitiy.UserEntity;
 import jjan_back_renewal.user.exception.NoSuchEmailException;
 import jjan_back_renewal.user.exception.NoSuchNicknameException;
+import jjan_back_renewal.user.join.JwtProvider;
 import jjan_back_renewal.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,19 +18,17 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     public static final Long NOT_DUPLICATED = -1L;
+    private final JwtProvider jwtProvider;
 
     @Override
     public UserDto login(LoginRequestDto loginRequestDto) {
         return null;
     }
 
-    //client에게 dto로 정보를 입력 받고
-    //Entity에 Setter 없이 Mapper를 통해 DTO로 client -> Controller -> Entity로 값을 넘긴다
     @Override
-    public UserDto register(UserDto userDto) {
-        UserEntity userEntity = new UserEntity();
-        //. . . . .
-        return new UserDto(userEntity);
+    public JoinResponseDto join(UserDto userDto) {
+        UserEntity userEntity = userRepository.save(userDto.toEntity());
+        return new JoinResponseDto(new UserDto(userEntity), jwtProvider.createToken(userEntity.getEmail(),userEntity.getRoles()));
     }
 
     @Override

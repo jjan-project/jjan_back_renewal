@@ -90,6 +90,9 @@ class UserServiceImplTest {
                 .address("")
                 .gender("")
                 .birth("")
+                .build());
+    }
+
     @Test
     @DisplayName("DB 에 없는 이메일을 findByEmail 호출시 NoSuchEmailException 이 발생한다.")
     void findByEmail_없는이메일_exception() {
@@ -128,7 +131,7 @@ class UserServiceImplTest {
         return userRepository.save(UserEntity.builder()
                 .email(email)
                 .nickName("nickname")
-                .sex("M")
+                .gender("M")
                 .birth("19980830")
                 .password("pwd")
                 .address("SEOUL")

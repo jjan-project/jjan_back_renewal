@@ -18,7 +18,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web' // web
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //jpa
-	//implementation 'org.springframework.boot:spring-boot-starter-security' //security
+	implementation 'org.springframework.boot:spring-boot-starter-security' //security
 	implementation 'org.projectlombok:lombok' //lombok
 	annotationProcessor 'org.projectlombok:lombok' //lombok
 
@@ -29,6 +29,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test' //test
 
 	//[ Java JWT ]
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
 	//[ Swagger ]
 	//https://springdoc.org/v2/
