@@ -24,29 +24,6 @@ class UserServiceImplTest {
     @Autowired
     UserRepository userRepository;
 
-
-//    @BeforeEach
-//    void beforeAll() {
-//        String nickName = "ExistUser1";
-//        userRepository.save(UserEntity.builder()
-//                .email("")
-//                .nickName(nickName)
-//                .password("")
-//                .profile("")
-//                .name("")
-//                .address("")
-//                .gender("")
-//                .birth("")
-//                .build());
-//    }
-
-
-    @AfterEach
-    void afterEach() {
-        userRepository.deleteAll();
-    }
-
-
     @Test
     @DisplayName("DB에 없는 nickName을 호출 시 NoSuchNickNameException이 발생한다")
     void findByNickName_notInDB() {
@@ -62,6 +39,7 @@ class UserServiceImplTest {
         UserEntity exist = saveEntityByNickName(nickName);
         UserDto newUser = userService.findByNickName(nickName);
         assertThat(newUser.getId()).isEqualTo(exist.getId());
+        userRepository.deleteById(exist.getId());
     }
 
     @Test
@@ -78,19 +56,6 @@ class UserServiceImplTest {
     void isDuplicatedNickName_NOT_Duplicated() {
         String nickName = "NotExistUser1";
         assertThat(userService.isDuplicatedNickName(nickName)).isEqualTo(UserServiceImpl.NOT_DUPLICATED);
-    }
-
-    UserEntity saveEntityByNickName(String nickName) {
-        return userRepository.save(UserEntity.builder()
-                .email("")
-                .nickName(nickName)
-                .password("")
-                .profile("")
-                .name("")
-                .address("")
-                .gender("")
-                .birth("")
-                .build());
     }
 
     @Test
@@ -112,7 +77,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("DB 에 없는 이메일에 isDuplicatedEmail 호출하면 NOT_DUPLICATED 값을 반환하지 않는다.")
+    @DisplayName("DB 에 있는 이메일에 isDuplicatedEmail 호출하면 NOT_DUPLICATED 값을 반환하지 않는다.")
     void isDuplicatedEmail_있는이메일_returns_DUPLICATED() {
         String email = "test@naver.com";
         UserEntity save = saveEntityByEmail(email);
@@ -125,6 +90,19 @@ class UserServiceImplTest {
     void isDuplicatedEmail_없는이메일_returns_NOT_DUPLICATED() {
         String email = "test@naver.com";
         assertThat(userService.isDuplicatedEmail(email)).isEqualTo(UserServiceImpl.NOT_DUPLICATED);
+    }
+
+    UserEntity saveEntityByNickName(String nickName) {
+        return userRepository.save(UserEntity.builder()
+                .email("")
+                .nickName(nickName)
+                .password("")
+                .profile("")
+                .name("")
+                .address("")
+                .gender("")
+                .birth("")
+                .build());
     }
 
     UserEntity saveEntityByEmail(String email) {
@@ -152,6 +130,13 @@ class UserServiceImplTest {
                 .address("SEOUL")
                 .gender("M")
                 .birth("19980108")
+                .nickName("nickName")
+                .password("")
+                .profile("")
+                .name("")
+                .address("")
+                .gender("")
+                .birth("")
                 .build());
 
         assertThat(userService.findByNickName("Limworld98").getId()).isEqualTo(user.getId());
