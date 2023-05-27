@@ -1,5 +1,6 @@
 package jjan_back_renewal.user.service;
 
+import jjan_back_renewal.user.dto.JoinResponseDto;
 import jjan_back_renewal.user.dto.LoginRequestDto;
 import jjan_back_renewal.user.dto.LoginResponseDto;
 import jjan_back_renewal.user.dto.UserDto;
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     public static final Long NOT_DUPLICATED = -1L;
+    private final JwtProvider jwtProvider;
 
     @Override
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
@@ -35,13 +37,10 @@ public class UserServiceImpl implements UserService {
         return new LoginResponseDto(new UserDto(userEntity), jwtProvider.createToken(userEntity.getEmail(), userEntity.getRoles()));
     }
 
-    //client에게 dto로 정보를 입력 받고
-    //Entity에 Setter 없이 Mapper를 통해 DTO로 client -> Controller -> Entity로 값을 넘긴다
     @Override
-    public UserDto register(UserDto userDto) {
-        UserEntity userEntity = new UserEntity();
-        //. . . . .
-        return new UserDto(userEntity);
+    public JoinResponseDto join(UserDto userDto) {
+        UserEntity userEntity = userRepository.save(userDto.toEntity());
+        return new JoinResponseDto(new UserDto(userEntity), jwtProvider.createToken(userEntity.getEmail(),userEntity.getRoles()));
     }
 
     @Override

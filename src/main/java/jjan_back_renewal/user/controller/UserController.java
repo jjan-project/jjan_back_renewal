@@ -2,14 +2,12 @@ package jjan_back_renewal.user.controller;
 
 import io.micrometer.common.util.StringUtils;
 import io.swagger.v3.oas.annotations.Operation;
-import jjan_back_renewal.user.dto.LoginRequestDto;
-import jjan_back_renewal.user.dto.LoginResponseDto;
+import jjan_back_renewal.user.dto.*;
 import jjan_back_renewal.config.Response;
-import jjan_back_renewal.user.dto.UniqueTestResponseDto;
-import jjan_back_renewal.user.dto.UserDto;
 import jjan_back_renewal.user.service.UserService;
 import jjan_back_renewal.user.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,4 +81,12 @@ public class UserController {
         }
         return validation;
     }
+
+    @Operation(summary = "회원가입", description = "회원가입 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
+    @PostMapping("/api/user/join")
+    public ResponseEntity<JoinResponseDto> join(@RequestBody UserDto userDto) {
+        JoinResponseDto joinResponseDto = userService.join(userDto);
+        return ResponseEntity.ok().body(joinResponseDto);
+    }
+
 }

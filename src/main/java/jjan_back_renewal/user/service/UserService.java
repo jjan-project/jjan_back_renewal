@@ -1,5 +1,6 @@
 package jjan_back_renewal.user.service;
 
+import jjan_back_renewal.user.dto.JoinResponseDto;
 import jjan_back_renewal.user.dto.LoginRequestDto;
 import jjan_back_renewal.user.dto.LoginResponseDto;
 import jjan_back_renewal.user.dto.UserDto;
@@ -7,7 +8,7 @@ import jjan_back_renewal.user.dto.UserDto;
 public interface UserService {
     LoginResponseDto login(LoginRequestDto loginRequestDto);
 
-    UserDto register(UserDto userDto);
+    JoinResponseDto join(UserDto userDto);
 
     UserDto findByEmail(String email);
 

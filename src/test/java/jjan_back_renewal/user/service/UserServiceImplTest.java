@@ -154,6 +154,28 @@ class UserServiceImplTest {
     UserEntity saveEntityByEmail(String email) {
         return userRepository.save(UserEntity.builder()
                 .email(email)
+                .nickName("nickname")
+                .name("testname")
+                .gender("M")
+                .birth("19980830")
+                .password("pwd")
+                .address("SEOUL")
+                .profile("")
+                .build());
+    }
+
+    @Test
+    @DisplayName("회원가입 api 테스팅")
+    void join() {
+        UserEntity user = userRepository.save(UserEntity.builder()
+                .email("phoenix1228@daum.net")
+                .nickName("Limworld98")
+                .password("testpassword")
+                .profile("")
+                .name("")
+                .address("SEOUL")
+                .gender("M")
+                .birth("19980108")
                 .nickName("nickName")
                 .password("")
                 .profile("")
@@ -162,6 +184,9 @@ class UserServiceImplTest {
                 .gender("")
                 .birth("")
                 .build());
+
+        assertThat(userService.findByNickName("Limworld98").getId()).isEqualTo(user.getId());
+        assertThat(userService.findByEmail("phoenix1228@daum.net").getId()).isEqualTo(user.getId());
     }
 
     UserEntity saveEntityForLogin(String email, String password) {

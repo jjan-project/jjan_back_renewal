@@ -23,7 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 public class JwtProvider {
-    @Value("${jwt.secret}")
+
+    @Value("${spring.jwt.secret}")
     private String salt;
 
     private Key secretKey;
@@ -53,12 +54,11 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    // 토큰에 담겨있는 유저 account 획득
-    public String getAccount(String token) {
+    private String getAccount(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJwt(token)
                 .getBody()
                 .getSubject();
     }
@@ -77,11 +77,9 @@ public class JwtProvider {
                 token = token.split(" ")[1].trim();
             }
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
-            // 만료되었을 시 false
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
         }
     }
-
 }

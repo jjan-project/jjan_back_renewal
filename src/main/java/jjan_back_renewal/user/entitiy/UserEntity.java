@@ -67,5 +67,11 @@ public class UserEntity {
         this.roles.add(role);
     }
 
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+
+
 }
 
