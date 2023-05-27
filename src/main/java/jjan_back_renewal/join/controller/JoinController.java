@@ -33,7 +33,7 @@ public class JoinController {
     }
 
     @Operation(summary = "회원가입", description = "회원가입 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
-    @PostMapping("/api/user/join")
+    @PostMapping("/join")
     public ResponseEntity<JoinResponseDto> join(@RequestBody UserDto userDto) {
         JoinResponseDto joinResponseDto = joinService.join(userDto);
         return ResponseEntity.ok().body(joinResponseDto);
