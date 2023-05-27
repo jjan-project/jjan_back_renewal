@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginResponseDto extends GenericResponse {
     private UserDto userDto;
+    private String token;
 }

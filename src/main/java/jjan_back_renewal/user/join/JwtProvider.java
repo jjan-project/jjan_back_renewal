@@ -1,6 +1,5 @@
 package jjan_back_renewal.user.join;
 
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -24,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 public class JwtProvider {
+
     @Value("${spring.jwt.secret}")
     private String salt;
 
@@ -63,21 +63,23 @@ public class JwtProvider {
                 .getSubject();
     }
 
+    public String resolveToken(HttpServletRequest request) {
+        return request.getHeader("Authorization");
+    }
+
+    // 토큰 검증
     public boolean validateToken(String token) {
         try {
-            if(!token.substring(0,"BEARER ".length()).equalsIgnoreCase("BEARER ")) {
+            // Bearer 검증
+            if (!token.substring(0, "BEARER ".length()).equalsIgnoreCase("BEARER ")) {
                 return false;
             } else {
                 token = token.split(" ")[1].trim();
             }
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return false;
         }
-    }
-
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
     }
 }

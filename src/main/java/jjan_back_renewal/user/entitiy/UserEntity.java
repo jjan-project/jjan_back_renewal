@@ -1,6 +1,7 @@
 package jjan_back_renewal.user.entitiy;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jjan_back_renewal.user.util.Role;
 import lombok.Builder;
@@ -66,9 +67,9 @@ public class UserEntity {
         this.roles.add(role);
     }
 
-
-
-
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
 
 
 

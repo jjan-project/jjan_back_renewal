@@ -16,66 +16,13 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
 
-    @Operation(summary = "error test", description = "DB에 없는 이메일 검색 시 에러 핸들링")
-    @GetMapping("/error-test")
-    public String error() {
-        userService.findByEmail("hello@naver.com");
-        return "hello";
-    }
-
-    @GetMapping("/login-test")
-    public ResponseEntity<LoginResponseDto> login() {
-        LoginRequestDto loginRequestDto = new LoginRequestDto("이름", "비번");
-        UserDto userDto = userService.login(loginRequestDto);
-        LoginResponseDto loginResponseDto = new LoginResponseDto(userDto);
-        // login failure
-        if (loginResponseDto.getUserDto() == null) {
-            loginResponseDto.response403();
-            return ResponseEntity.ok().body(loginResponseDto);
-        }
-        return ResponseEntity.ok().body(loginResponseDto);
-    }
-
-    //이메일로 유저 찾기
-    @GetMapping("/userEmail/{userEmail}")
-    public Response<?> findUserByEmail(@PathVariable("userEmail") String userEmail) throws Exception {
-        return new Response<>("true", "조회 성공", userService.findByEmail(userEmail));
-    }
-    
-    //닉네임으로 유저 찾기
-    @GetMapping("/userNickName/{userNickName}")
-    public Response<?> findUserByNickName(@PathVariable("userNickName") String userNickName) throws Exception {
-        return new Response<>("true", "조회 성공", userService.findByNickName(userNickName));
-    }
-
-    
-    @PostMapping("/api/user/unique-nickname")
-    public ResponseEntity<UniqueTestResponseDto> isDuplicatedNickName(@RequestBody String nickName) {
-
-        if(isNickNameLengthOK(nickName) && userService.isDuplicatedNickName(nickName) == UserServiceImpl.NOT_DUPLICATED) {
-            return ResponseEntity.ok().body(new UniqueTestResponseDto("nickName",nickName));
-        }
-        else {
-            UniqueTestResponseDto uniqueTestResponseDto = new UniqueTestResponseDto("nickName",nickName);
-            uniqueTestResponseDto.response403();
-            return ResponseEntity.ok().body(uniqueTestResponseDto);
-        }
-
-    }
-
-    private boolean isNickNameLengthOK(String nickName) {
-        if(nickName.length() >= 8  && nickName.length() <= 16) {
-            return true;
-        }
-        else
-            return false;
-    }
-
-    @PostMapping("/api/user/unique-email")
+    @Operation(summary = "이메일 중복 체크", description = "중복 이메일일 시 403 status code 반환합니다.")
+    @PostMapping("/unique-email")
     public ResponseEntity<UniqueTestResponseDto> isDuplicatedEmail(@RequestBody String email) {
         if (isEmail(email) && userService.isDuplicatedEmail(email) == UserServiceImpl.NOT_DUPLICATED) {
             return ResponseEntity.ok().body(new UniqueTestResponseDto("email", email));
@@ -85,6 +32,41 @@ public class UserController {
             return ResponseEntity.ok().body(response);
         }
     }
+
+    @Operation(summary = "닉네임 중복 체크", description = "중복 닉네임일 시 403 status code 반환합니다.")
+    @PostMapping("/unique-nickname")
+    public ResponseEntity<UniqueTestResponseDto> isDuplicatedNickName(@RequestBody String nickName) {
+
+        if (isNickNameLengthOK(nickName) && userService.isDuplicatedNickName(nickName) == UserServiceImpl.NOT_DUPLICATED) {
+            return ResponseEntity.ok().body(new UniqueTestResponseDto("nickName", nickName));
+        } else {
+            UniqueTestResponseDto uniqueTestResponseDto = new UniqueTestResponseDto("nickName", nickName);
+            uniqueTestResponseDto.response403();
+            return ResponseEntity.ok().body(uniqueTestResponseDto);
+        }
+
+    }
+
+    @Operation(summary = "로그인", description = "로그인 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+        LoginResponseDto loginResponseDto = userService.login(loginRequestDto);
+        // login failure
+        if (loginResponseDto.getUserDto() == null) {
+            loginResponseDto.response403();
+            return ResponseEntity.ok().body(loginResponseDto);
+        }
+        return ResponseEntity.ok().body(loginResponseDto);
+    }
+
+
+    private boolean isNickNameLengthOK(String nickName) {
+        if (nickName.length() >= 8 && nickName.length() <= 16) {
+            return true;
+        } else
+            return false;
+    }
+
 
     private boolean isEmail(String email) {
         boolean validation = false;

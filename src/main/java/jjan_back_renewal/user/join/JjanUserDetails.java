@@ -18,7 +18,7 @@ public class JjanUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return userEntity.getRoles().stream().map(o-> new SimpleGrantedAuthority(
+        return userEntity.getRoles().stream().map(o -> new SimpleGrantedAuthority(
                 o.name()
         )).collect(Collectors.toList());
     }
