@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Getter
 @NoArgsConstructor
 @Entity
@@ -66,11 +67,6 @@ public class UserEntity {
     public void addRole(Role role) {
         this.roles.add(role);
     }
-
-    public void addRole(Role role) {
-        this.roles.add(role);
-    }
-
 
 
 }

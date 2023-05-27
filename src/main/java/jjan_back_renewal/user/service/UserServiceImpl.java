@@ -25,7 +25,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     public static final Long NOT_DUPLICATED = -1L;
-    private final JwtProvider jwtProvider;
 
     @Override
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {

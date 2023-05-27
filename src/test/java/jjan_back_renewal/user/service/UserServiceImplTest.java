@@ -8,6 +8,7 @@ import jjan_back_renewal.user.exception.NoSuchNicknameException;
 import jjan_back_renewal.user.repository.UserRepository;
 import jjan_back_renewal.user.exception.NoSuchEmailException;
 import jjan_back_renewal.user.util.Role;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 class UserServiceImplTest {
+
+    @AfterEach
+    void clear() {
+        userRepository.deleteAll();
+    }
 
     @Autowired
     UserService userService;
@@ -176,7 +182,6 @@ class UserServiceImplTest {
                 .address("SEOUL")
                 .gender("M")
                 .birth("19980108")
-                .nickName("nickName")
                 .password("")
                 .profile("")
                 .name("")
