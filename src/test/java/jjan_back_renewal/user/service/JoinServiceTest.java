@@ -1,10 +1,11 @@
 package jjan_back_renewal.user.service;
 
-import jjan_back_renewal.user.dto.LoginRequestDto;
-import jjan_back_renewal.user.dto.LoginResponseDto;
+import jjan_back_renewal.join.dto.LoginRequestDto;
+import jjan_back_renewal.join.dto.LoginResponseDto;
+import jjan_back_renewal.join.service.JoinService;
 import jjan_back_renewal.user.entitiy.UserEntity;
 import jjan_back_renewal.user.repository.UserRepository;
-import jjan_back_renewal.user.util.Role;
+import jjan_back_renewal.user.entitiy.Role;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

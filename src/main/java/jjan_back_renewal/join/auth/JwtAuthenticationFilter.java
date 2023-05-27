@@ -1,4 +1,4 @@
-package jjan_back_renewal.user.join;
+package jjan_back_renewal.join.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

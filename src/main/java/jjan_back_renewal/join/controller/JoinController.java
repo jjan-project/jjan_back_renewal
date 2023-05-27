@@ -1,12 +1,11 @@
-package jjan_back_renewal.user.controller;
+package jjan_back_renewal.join.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jjan_back_renewal.user.dto.JoinResponseDto;
-import jjan_back_renewal.user.dto.LoginRequestDto;
-import jjan_back_renewal.user.dto.LoginResponseDto;
+import jjan_back_renewal.join.dto.JoinResponseDto;
+import jjan_back_renewal.join.dto.LoginRequestDto;
+import jjan_back_renewal.join.dto.LoginResponseDto;
 import jjan_back_renewal.user.dto.UserDto;
-import jjan_back_renewal.user.service.JoinService;
-import jjan_back_renewal.user.service.UserService;
+import jjan_back_renewal.join.service.JoinService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,13 +1,10 @@
 package jjan_back_renewal.user.dto;
 
 import jjan_back_renewal.user.entitiy.UserEntity;
-import jjan_back_renewal.user.util.Role;
+import jjan_back_renewal.user.entitiy.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import java.util.ArrayList;
 import java.util.List;

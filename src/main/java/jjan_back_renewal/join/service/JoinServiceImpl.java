@@ -1,11 +1,11 @@
-package jjan_back_renewal.user.service;
+package jjan_back_renewal.join.service;
 
-import jjan_back_renewal.user.dto.JoinResponseDto;
-import jjan_back_renewal.user.dto.LoginRequestDto;
-import jjan_back_renewal.user.dto.LoginResponseDto;
+import jjan_back_renewal.join.dto.JoinResponseDto;
+import jjan_back_renewal.join.dto.LoginRequestDto;
+import jjan_back_renewal.join.dto.LoginResponseDto;
 import jjan_back_renewal.user.dto.UserDto;
 import jjan_back_renewal.user.entitiy.UserEntity;
-import jjan_back_renewal.user.join.JwtProvider;
+import jjan_back_renewal.join.auth.JwtProvider;
 import jjan_back_renewal.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

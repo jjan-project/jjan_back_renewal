@@ -1,9 +1,7 @@
 package jjan_back_renewal.user.entitiy;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jjan_back_renewal.user.util.Role;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

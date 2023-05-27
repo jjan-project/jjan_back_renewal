@@ -1,17 +1,13 @@
 package jjan_back_renewal.user.service;
 
-import jjan_back_renewal.user.dto.JoinResponseDto;
-import jjan_back_renewal.user.dto.LoginRequestDto;
-import jjan_back_renewal.user.dto.LoginResponseDto;
 import jjan_back_renewal.user.dto.UserDto;
 import jjan_back_renewal.user.entitiy.UserEntity;
 import jjan_back_renewal.user.exception.NoSuchEmailException;
 import jjan_back_renewal.user.exception.NoSuchNicknameException;
-import jjan_back_renewal.user.join.JwtProvider;
+import jjan_back_renewal.join.auth.JwtProvider;
 import jjan_back_renewal.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package jjan_back_renewal.user.join;
+package jjan_back_renewal.join.auth;
 
 import jjan_back_renewal.user.entitiy.UserEntity;
 import lombok.Getter;

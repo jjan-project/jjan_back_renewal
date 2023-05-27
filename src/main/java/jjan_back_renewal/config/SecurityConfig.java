@@ -1,8 +1,10 @@
-package jjan_back_renewal.user.join;
+package jjan_back_renewal.config;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jjan_back_renewal.join.auth.JwtAuthenticationFilter;
+import jjan_back_renewal.join.auth.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
