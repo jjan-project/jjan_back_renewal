@@ -47,19 +47,6 @@ public class UserController {
 
     }
 
-    @Operation(summary = "로그인", description = "로그인 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-        LoginResponseDto loginResponseDto = userService.login(loginRequestDto);
-        // login failure
-        if (loginResponseDto.getUserDto() == null) {
-            loginResponseDto.response403();
-            return ResponseEntity.ok().body(loginResponseDto);
-        }
-        return ResponseEntity.ok().body(loginResponseDto);
-    }
-
-
     private boolean isNickNameLengthOK(String nickName) {
         if (nickName.length() >= 8 && nickName.length() <= 16) {
             return true;
@@ -82,11 +69,5 @@ public class UserController {
         return validation;
     }
 
-    @Operation(summary = "회원가입", description = "회원가입 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
-    @PostMapping("/api/user/join")
-    public ResponseEntity<JoinResponseDto> join(@RequestBody UserDto userDto) {
-        JoinResponseDto joinResponseDto = userService.join(userDto);
-        return ResponseEntity.ok().body(joinResponseDto);
-    }
 
 }

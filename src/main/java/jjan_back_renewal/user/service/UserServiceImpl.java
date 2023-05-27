@@ -27,22 +27,6 @@ public class UserServiceImpl implements UserService {
     public static final Long NOT_DUPLICATED = -1L;
 
     @Override
-    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
-        UserEntity userEntity = userRepository.findByEmail(loginRequestDto.getEmail())
-                .orElseThrow(() -> new BadCredentialsException("Wrong Authentication"));
-        if (!passwordEncoder.matches(loginRequestDto.getPassword(), userEntity.getPassword())) {
-            throw new BadCredentialsException("Wrong Authentication");
-        }
-        return new LoginResponseDto(new UserDto(userEntity), jwtProvider.createToken(userEntity.getEmail(), userEntity.getRoles()));
-    }
-
-    @Override
-    public JoinResponseDto join(UserDto userDto) {
-        UserEntity userEntity = userRepository.save(userDto.toEntity());
-        return new JoinResponseDto(new UserDto(userEntity), jwtProvider.createToken(userEntity.getEmail(),userEntity.getRoles()));
-    }
-
-    @Override
     public UserDto findByEmail(String email) {
         UserEntity byEmail = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchEmailException(email));

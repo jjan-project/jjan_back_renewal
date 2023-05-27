@@ -5,13 +5,9 @@ import jjan_back_renewal.user.dto.LoginRequestDto;
 import jjan_back_renewal.user.dto.LoginResponseDto;
 import jjan_back_renewal.user.dto.UserDto;
 
-public interface UserService {
+public interface JoinService {
 
-    UserDto findByEmail(String email);
+    LoginResponseDto login(LoginRequestDto loginRequestDto);
 
-    UserDto findByNickName(String nickName);
-
-    Long isDuplicatedNickName(String nickName);
-
-    Long isDuplicatedEmail(String email);
+    JoinResponseDto join(UserDto userDto);
 }
