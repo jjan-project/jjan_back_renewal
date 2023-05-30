@@ -66,6 +66,8 @@ public class UserEntity {
         this.roles.add(role);
     }
 
-
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
 }
 
