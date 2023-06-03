@@ -1,5 +1,6 @@
 package jjan_back_renewal.upload;
 
+import jjan_back_renewal.config.GenericResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FileUploadResponseDto {
-    String identifier;
-    String fileName;
-    String url;
+public class FileUploadResponseDto extends GenericResponse {
+    private String identifier;
+    private String fileName;
+    private String url;
 }

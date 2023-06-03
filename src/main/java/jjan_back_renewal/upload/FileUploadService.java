@@ -41,7 +41,7 @@ public class FileUploadService {
     @Transactional
     public void updateProfileImage(FileUploadResponseDto upload) {
         UserEntity user = userRepository.findByEmail(upload.getIdentifier())
-                .orElseThrow(() -> new FileUploadException("해당하는 유저를 찾을 수 없습니다"));
+                .orElseThrow(() -> new FileUploadException("해당하는 유저 " + upload.getIdentifier() + "를 찾을 수 없습니다"));
         user.setProfile(upload.getUrl());
     }
 
@@ -74,7 +74,8 @@ public class FileUploadService {
     }
 
     private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(file.getOriginalFilename());
+        String encodedFileName = new String(file.getOriginalFilename().getBytes("UTF-8"), "8859_1");
+        File convertFile = new File(encodedFileName);
         if (convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(file.getBytes());
