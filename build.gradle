@@ -38,6 +38,9 @@ dependencies {
     //https://springdoc.org/v2/
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
     implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
+
+    // Spring Cloud Starter AWS
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 tasks.named('test') {

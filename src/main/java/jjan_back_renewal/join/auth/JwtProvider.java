@@ -54,11 +54,18 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    private String getAccount(String token) {
+    public String getUserEmail(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        token = token.split(" ")[1].trim();
+        UserDetails userDetails = userDetailService.loadUserByUsername(getAccount(token));
+        return userDetails.getUsername();
+    }
+
+    public String getAccount(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
