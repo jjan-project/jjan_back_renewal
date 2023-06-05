@@ -1,12 +1,10 @@
 package jjan_back_renewal.join.auth;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import jjan_back_renewal.join.dto.TokenDto;
 import jjan_back_renewal.user.entitiy.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +27,8 @@ public class JwtProvider {
 
     private Key secretKey;
 
-    private final long expireTime = 1000L * 60 * 60; // 1 hour
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60; // 1 hour
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 90; // 90 days
     private final JjanUserDetailService userDetailService;
 
     @PostConstruct
@@ -37,14 +36,30 @@ public class JwtProvider {
         secretKey = Keys.hmacShaKeyFor(salt.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createToken(String email, List<Role> roles) {
+    public TokenDto createToken(String email, List<Role> roles) {
+        return new TokenDto(createAccessToken(email, roles), createRefreshToken(email, roles));
+    }
+
+    public String createAccessToken(String email, List<Role> roles) {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("roles", roles);
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + expireTime))
+                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_TIME))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String createRefreshToken(String email, List<Role> roles) {
+        Claims claims = Jwts.claims().setSubject(email);
+        claims.put("roles", roles);
+        Date now = new Date();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
