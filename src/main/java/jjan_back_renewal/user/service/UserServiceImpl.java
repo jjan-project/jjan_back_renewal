@@ -8,8 +8,10 @@ import jjan_back_renewal.join.auth.JwtProvider;
 import jjan_back_renewal.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Slf4j
@@ -60,6 +62,16 @@ public class UserServiceImpl implements UserService {
             return ret;
         }
         return ret;
+    }
+
+    @Override
+    @Transactional
+    public UserDto setNickName(String userEmail, String nickName) {
+        UserEntity targetUser = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new NoSuchEmailException(userEmail));
+        targetUser.setNickName(nickName);
+
+        return new UserDto(targetUser);
     }
 
 }
