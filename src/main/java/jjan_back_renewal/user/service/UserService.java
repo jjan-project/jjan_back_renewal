@@ -10,6 +10,8 @@ public interface UserService {
 
     UserDto setNickName(String userEmail, String nickName);
 
+    UserDto setDrinkCapacity(String userEmail, String capacity);
+
     Long isDuplicatedNickName(String nickName);
 
     Long isDuplicatedEmail(String email);
