@@ -8,6 +8,7 @@ import jjan_back_renewal.join.dto.JoinResponseDto;
 import jjan_back_renewal.user.dto.*;
 import jjan_back_renewal.user.service.UserService;
 import jjan_back_renewal.user.service.UserServiceImpl;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,8 @@ import java.util.regex.Pattern;
 public class UserController {
 
     private final UserService userService;
-    private JwtProvider jwtProvider;
+    private final JwtProvider jwtProvider;
+
 
     @Operation(summary = "주량 변경", description = "주량을 변경합니다")
     @PutMapping("/drink-capacity")

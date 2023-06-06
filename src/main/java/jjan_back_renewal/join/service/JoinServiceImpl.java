@@ -34,6 +34,7 @@ public class JoinServiceImpl implements JoinService {
 
     @Override
     public JoinResponseDto join(UserDto userDto) {
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         UserEntity userEntity = userRepository.save(userDto.toEntity());
         return new JoinResponseDto(new UserDto(userEntity), jwtProvider.createToken(userEntity.getEmail(), userEntity.getRoles()));
     }
