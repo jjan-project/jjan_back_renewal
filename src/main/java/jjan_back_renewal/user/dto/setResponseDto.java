@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class setResponseDto extends GenericResponse {
-    private String item;
+    private UserDto userDto;
 }

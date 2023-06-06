@@ -79,7 +79,8 @@ public class UserServiceImpl implements UserService {
     public UserDto setDrinkCapacity(String userEmail, String capacity) {
         UserEntity targetUser = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new NoSuchEmailException(userEmail));
-        return null;
+        targetUser.setDrinkCapacity(capacity);
+        return new UserDto(targetUser);
     }
 
 }
