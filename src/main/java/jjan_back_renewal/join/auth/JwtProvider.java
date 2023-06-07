@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class JwtProvider {
 
     private Key secretKey;
 
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60; // 1 hour
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 90; // 90 days
+    public static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60; // 1 hour
+    public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 90; // 90 days
     private final JjanUserDetailService userDetailService;
 
     @PostConstruct
@@ -38,6 +39,10 @@ public class JwtProvider {
 
     public TokenDto createToken(String email, List<Role> roles) {
         return new TokenDto(createAccessToken(email, roles), createRefreshToken(email, roles));
+    }
+
+    public String createToken(String refreshToken) {
+        return createAccessToken(getAccount(refreshToken), List.of(Role.ROLE_MEMBER));
     }
 
     public String createAccessToken(String email, List<Role> roles) {
@@ -64,6 +69,16 @@ public class JwtProvider {
                 .compact();
     }
 
+    public boolean refreshTokenExpiresLessThan1Month(String token) {
+        Calendar expireTime = Calendar.getInstance();
+        Calendar oneMonthLater = Calendar.getInstance();
+        oneMonthLater.setTime(getExpireTime(token));
+        expireTime.setTime(getExpireTime(token));
+        oneMonthLater.add(Calendar.DATE, 1);
+        // now  expireTime now+1month
+        return oneMonthLater.after(expireTime);
+    }
+
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailService.loadUserByUsername(getAccount(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
@@ -85,12 +100,21 @@ public class JwtProvider {
                 .getSubject();
     }
 
+    public Date getExpireTime(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+    }
+
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader("Authorization");
     }
 
     // 토큰 검증
-    public boolean validateToken(String token) {
+    public boolean validateAccessToken(String token) {
         try {
             // Bearer 검증
             if (!token.substring(0, "BEARER ".length()).equalsIgnoreCase("BEARER ")) {
@@ -99,6 +123,15 @@ public class JwtProvider {
                 token = token.split(" ")[1].trim();
             }
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+            return !claims.getBody().getExpiration().before(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean validateRefreshToken(String refreshToken) {
+        try {
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(refreshToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
