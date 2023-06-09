@@ -43,7 +43,7 @@ public class RandomNicknameGenerateService {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(uri, String.class);
         HttpStatusCode statusCode = responseEntity.getStatusCode();
-        if (!(statusCode.is2xxSuccessful() && statusCode.is3xxRedirection())) {
+        if (!statusCode.is2xxSuccessful()) {
             throw new ApiServerException("랜덤 닉네임 생성 API 서버에 문제가 있음");
         }
         return responseEntity.getBody();
