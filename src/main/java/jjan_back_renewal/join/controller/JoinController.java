@@ -1,6 +1,11 @@
 package jjan_back_renewal.join.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jjan_back_renewal.join.dto.JoinResponseDto;
+import jjan_back_renewal.join.dto.LoginRequestDto;
+import jjan_back_renewal.join.dto.LoginResponseDto;
+import jjan_back_renewal.join.dto.RandomNicknameGenerateResponseDto;
+import jjan_back_renewal.join.service.RandomNicknameGenerateService;
 import jakarta.servlet.http.HttpServletRequest;
 import jjan_back_renewal.join.dto.*;
 import jjan_back_renewal.user.dto.UserDto;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class JoinController {
 
     private final JoinService joinService;
+    private final RandomNicknameGenerateService randomNicknameGenerateService;
 
     @Operation(summary = "비밀번호 찾기", description = "사용자 인증(현재는 이메일,한글성명 인증) 후 이메일로 임시 비밀번호를 발송합니다")
     @PostMapping("/reset-password")
@@ -45,6 +51,15 @@ public class JoinController {
     public ResponseEntity<JoinResponseDto> join(@RequestBody UserDto userDto) {
         JoinResponseDto joinResponseDto = joinService.join(userDto);
         return ResponseEntity.ok().body(joinResponseDto);
+    }
+
+    @Operation(summary = "랜덤 닉네임 생성", description = "유효한 랜덤 닉네임 생성 후 반환")
+    @GetMapping("/random-nickname")
+    public ResponseEntity<RandomNicknameGenerateResponseDto> randomNickname() {
+        return ResponseEntity.ok()
+                .body(new RandomNicknameGenerateResponseDto(
+                        randomNicknameGenerateService.generateRandomNickname(8))
+                );
     }
 
 }
