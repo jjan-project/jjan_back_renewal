@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class setRequestDto extends GenericResponse {
+public class setRequestDto {
     private String item;
 }

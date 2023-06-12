@@ -15,4 +15,6 @@ public interface UserService {
     Long isDuplicatedNickName(String nickName);
 
     Long isDuplicatedEmail(String email);
+
+    boolean isReplaceableUser(String email);
 }

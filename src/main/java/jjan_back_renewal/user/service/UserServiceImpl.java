@@ -66,21 +66,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto setNickName(String userEmail, String nickName) {
-        UserEntity targetUser = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new NoSuchEmailException(userEmail));
+    public UserDto setNickName(String email, String nickName) {
+        UserEntity targetUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchEmailException(email));
         targetUser.setNickName(nickName);
+        targetUser.setNickNameChangeAvailable(false);
 
         return new UserDto(targetUser);
     }
 
     @Override
     @Transactional
-    public UserDto setDrinkCapacity(String userEmail, String capacity) {
-        UserEntity targetUser = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new NoSuchEmailException(userEmail));
+    public UserDto setDrinkCapacity(String email, String capacity) {
+        UserEntity targetUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchEmailException(email));
         targetUser.setDrinkCapacity(capacity);
         return new UserDto(targetUser);
     }
 
+    @Override
+    public boolean isReplaceableUser(String email) {
+        UserEntity targetUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchEmailException(email));
+        return targetUser.isNickNameChangeAvailable();
+    }
 }

@@ -23,6 +23,7 @@ public class UserDto {
     private String gender;
     private String birth;
     private String drinkCapacity;
+    private boolean isNickNameChangeAvailable = true;
     private List<Role> roles = new ArrayList<>();
 
     public UserDto(UserEntity userEntity) {
@@ -37,6 +38,7 @@ public class UserDto {
         this.birth = userEntity.getBirth();
         this.drinkCapacity = userEntity.getDrinkCapacity();
         this.roles = userEntity.getRoles();
+        this.isNickNameChangeAvailable = userEntity.isNickNameChangeAvailable();
     }
 
     public UserEntity toEntity() {
@@ -52,6 +54,7 @@ public class UserDto {
                 .birth(birth)
                 .drinkCapacity(drinkCapacity)
                 .roles(roles)
+                .isNickNameChangeAvailable(isNickNameChangeAvailable)
                 .build();
     }
 }

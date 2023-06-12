@@ -42,7 +42,8 @@ public class UserController {
         String newNickName = setRequestDto.getItem();
         //닉네임 길이 및 중복 검사
         if ((isNickNameLengthOK(newNickName) 
-                && userService.isDuplicatedNickName(newNickName) == UserServiceImpl.NOT_DUPLICATED)) {
+                && userService.isDuplicatedNickName(newNickName) == UserServiceImpl.NOT_DUPLICATED)
+                && userService.isReplaceableUser(userEmail)) {
             UserDto userDto = userService.setNickName(userEmail,newNickName);
             return ResponseEntity.ok().body(new setResponseDto(userDto));
         } else {
