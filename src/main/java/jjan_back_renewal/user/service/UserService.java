@@ -8,7 +8,13 @@ public interface UserService {
 
     UserDto findByNickName(String nickName);
 
+    UserDto setNickName(String userEmail, String nickName);
+
+    UserDto setDrinkCapacity(String userEmail, String capacity);
+
     Long isDuplicatedNickName(String nickName);
 
     Long isDuplicatedEmail(String email);
+
+    boolean isReplaceableUser(String email);
 }
