@@ -3,14 +3,14 @@ package jjan_back_renewal.user.entitiy;
 
 import jakarta.persistence.*;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Getter
+@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "user")

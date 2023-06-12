@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
     public static final Long NOT_DUPLICATED = -1L;
 
     @Override
