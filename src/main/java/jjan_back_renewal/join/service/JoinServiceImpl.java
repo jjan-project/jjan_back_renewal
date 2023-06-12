@@ -21,11 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class JoinServiceImpl implements JoinService {
 
-    private JavaMailSender mailSender;
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final JavaMailSender mailSender;
 
     @Override
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
@@ -49,14 +48,15 @@ public class JoinServiceImpl implements JoinService {
         UserEntity userEntity = userRepository.findByEmail(passwordRequestDto.getEmail())
                 .orElseThrow(() -> new NoSuchEmailException(passwordRequestDto.getEmail()));
 
-        if (passwordRequestDto.getName() == userEntity.getName()) {
+        if (passwordRequestDto.getName().equals(userEntity.getName())) {
             MailDto mail = createMailAndChangePassword(userEntity.getEmail(), userEntity.getName());
             mailSend(mail);
-            return new PasswordResponseDto(passwordRequestDto.getEmail());
         }
         else {
             return new PasswordResponseDto(null);
         }
+
+        return new PasswordResponseDto(passwordRequestDto.getEmail());
     }
 
     public MailDto createMailAndChangePassword(String email, String name) {
@@ -89,6 +89,7 @@ public class JoinServiceImpl implements JoinService {
         UserEntity targetUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchEmailException(email));
         targetUser.setPassword(passwordEncoder.encode(tempPassword));
+        userRepository.save(targetUser);
     }
 
     public void mailSend(MailDto mailDto){
