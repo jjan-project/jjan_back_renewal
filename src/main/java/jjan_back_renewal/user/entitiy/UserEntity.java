@@ -2,6 +2,7 @@ package jjan_back_renewal.user.entitiy;
 
 
 import jakarta.persistence.*;
+import lombok.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
