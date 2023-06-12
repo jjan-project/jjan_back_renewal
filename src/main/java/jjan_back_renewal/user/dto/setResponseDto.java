@@ -1,7 +1,6 @@
-package jjan_back_renewal.join.dto;
+package jjan_back_renewal.user.dto;
 
 import jjan_back_renewal.config.GenericResponse;
-import jjan_back_renewal.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class JoinResponseDto extends GenericResponse {
+public class setResponseDto extends GenericResponse {
     private UserDto userDto;
-    private String token;
 }

@@ -63,6 +63,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/user/login").permitAll()
                 .requestMatchers("/api/user/join").permitAll()
                 .requestMatchers("/api/user/random-nickname").permitAll()
+                .requestMatchers("/api/user/reset-password").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
