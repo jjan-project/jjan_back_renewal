@@ -6,8 +6,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jjan_back_renewal.join.dto.JoinResponseDto;
 import jjan_back_renewal.join.dto.LoginRequestDto;
 import jjan_back_renewal.join.dto.LoginResponseDto;
+import jjan_back_renewal.join.dto.RandomNicknameGenerateResponseDto;
+import jjan_back_renewal.join.service.RandomNicknameGenerateService;
+import jakarta.servlet.http.HttpServletRequest;
+import jjan_back_renewal.join.dto.*;
 import jjan_back_renewal.user.dto.UserDto;
 import jjan_back_renewal.join.service.JoinService;
+import jjan_back_renewal.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +23,18 @@ import org.springframework.web.bind.annotation.*;
 public class JoinController {
 
     private final JoinService joinService;
+    private final RandomNicknameGenerateService randomNicknameGenerateService;
+
+    @Operation(summary = "비밀번호 찾기", description = "사용자 인증(현재는 이메일,한글성명 인증) 후 이메일로 임시 비밀번호를 발송합니다")
+    @PostMapping("/reset-password")
+    public ResponseEntity<PasswordResponseDto> resetPassword(@RequestBody PasswordRequestDto passwordRequestDto) {
+        PasswordResponseDto passwordResponseDto = joinService.resetPassword(passwordRequestDto);
+        //reset failure
+        if(passwordResponseDto.getEmail() == null)
+            passwordResponseDto.response404();
+
+        return ResponseEntity.ok().body(passwordResponseDto);
+    }
 
     @Operation(summary = "로그인", description = "로그인 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
     @PostMapping("/login")
@@ -40,6 +57,15 @@ public class JoinController {
         return ResponseEntity.ok().body(joinResponseDto);
     }
 
+    @Operation(summary = "랜덤 닉네임 생성", description = "유효한 랜덤 닉네임 생성 후 반환")
+    @GetMapping("/random-nickname")
+    public ResponseEntity<RandomNicknameGenerateResponseDto> randomNickname() {
+        return ResponseEntity.ok()
+                .body(new RandomNicknameGenerateResponseDto(
+                        randomNicknameGenerateService.generateRandomNickname(8))
+                );
+    }
+ 
     private void setRefreshTokenInCookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie("refresh_token", token);
         cookie.setPath("/");
