@@ -18,7 +18,7 @@ public class JjanUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Wrong Authentication"));
+                .orElseThrow(() -> new UsernameNotFoundException("Wrong Authentication : " + " cannot find email " + username));
 
         return new JjanUserDetails(user);
     }

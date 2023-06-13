@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,9 +32,29 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtProvider jwtProvider;
 
+    private static final String[] PERMIT_URL_ARRAY = {
+            /* swagger v3 */
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/api/user/unique-email",
+            "/api/user/unique-nickname",
+            "/api/user/login",
+            "/api/user/join",
+            "/api/user/random-nickname",
+            "/api/user/reset-password",
+            "/api/user/setup"
+    };
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(
+                PERMIT_URL_ARRAY
+        );
     }
 
     @Bean
@@ -57,13 +78,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .requestMatchers("/api/user/unique-email").permitAll()
-                .requestMatchers("/api/user/unique-nickname").permitAll()
-                .requestMatchers("/api/user/login").permitAll()
-                .requestMatchers("/api/user/join").permitAll()
-                .requestMatchers("/api/user/random-nickname").permitAll()
-                .requestMatchers("/api/user/reset-password").permitAll()
+                .requestMatchers(PERMIT_URL_ARRAY).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
@@ -83,6 +98,7 @@ public class SecurityConfig {
                         response.setStatus(401);
                         response.setCharacterEncoding("utf-8");
                         response.setContentType("text/html; charset=UTF-8");
+
                         response.getWriter().write("인증되지 않은 사용자입니다.");
                     }
                 });
