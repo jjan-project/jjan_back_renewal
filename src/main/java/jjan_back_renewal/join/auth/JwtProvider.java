@@ -71,10 +71,9 @@ public class JwtProvider {
 
     public boolean refreshTokenExpiresLessThan1Month(String token) {
         Calendar expireTime = Calendar.getInstance();
-        Calendar oneMonthLater = Calendar.getInstance();
-        oneMonthLater.setTime(getExpireTime(token));
         expireTime.setTime(getExpireTime(token));
-        oneMonthLater.add(Calendar.DATE, 1);
+        Calendar oneMonthLater = Calendar.getInstance();
+        oneMonthLater.add(Calendar.MONTH, 1);
         // now  expireTime now+1month
         return oneMonthLater.after(expireTime);
     }
