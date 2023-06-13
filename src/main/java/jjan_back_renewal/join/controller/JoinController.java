@@ -8,14 +8,17 @@ import jjan_back_renewal.join.dto.LoginRequestDto;
 import jjan_back_renewal.join.dto.LoginResponseDto;
 import jjan_back_renewal.join.dto.RandomNicknameGenerateResponseDto;
 import jjan_back_renewal.join.service.RandomNicknameGenerateService;
-import jakarta.servlet.http.HttpServletRequest;
 import jjan_back_renewal.join.dto.*;
 import jjan_back_renewal.user.dto.UserDto;
 import jjan_back_renewal.join.service.JoinService;
-import jjan_back_renewal.user.service.UserService;
+import jjan_back_renewal.user.entitiy.Role;
+import jjan_back_renewal.user.entitiy.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,13 +27,14 @@ public class JoinController {
 
     private final JoinService joinService;
     private final RandomNicknameGenerateService randomNicknameGenerateService;
+    private final PasswordEncoder passwordEncoder;
 
     @Operation(summary = "비밀번호 찾기", description = "사용자 인증(현재는 이메일,한글성명 인증) 후 이메일로 임시 비밀번호를 발송합니다")
     @PostMapping("/reset-password")
     public ResponseEntity<PasswordResponseDto> resetPassword(@RequestBody PasswordRequestDto passwordRequestDto) {
         PasswordResponseDto passwordResponseDto = joinService.resetPassword(passwordRequestDto);
         //reset failure
-        if(passwordResponseDto.getEmail() == null)
+        if (passwordResponseDto.getEmail() == null)
             passwordResponseDto.response404();
 
         return ResponseEntity.ok().body(passwordResponseDto);
@@ -65,7 +69,20 @@ public class JoinController {
                         randomNicknameGenerateService.generateRandomNickname(8))
                 );
     }
- 
+
+    @Operation(summary = "로그인 확인을 위해 해당하는 email, password 로 회원가입을 진행합니다.", description = "테스트용")
+    @GetMapping("/setup")
+    public String setup(@RequestParam("email") String email, @RequestParam("password") String password) {
+        joinService.join(new UserDto(saveEntityForLogin(email, password)));
+        return "OK";
+    }
+
+    @Operation(summary = "로그인이 정상적으로 되었는지 확인합니다.", description = "테스트용")
+    @GetMapping("/index")
+    public String test() {
+        return "OK";
+    }
+
     private void setRefreshTokenInCookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie("refresh_token", token);
         cookie.setPath("/");
@@ -73,5 +90,20 @@ public class JoinController {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         response.addCookie(cookie);
+    }
+
+    private UserEntity saveEntityForLogin(String email, String password) {
+        return (UserEntity.builder()
+                .email(email)
+                .nickName("nickName")
+                .password(passwordEncoder.encode(password))
+                .profile("")
+                .name("")
+                .address("")
+                .gender("")
+                .birth("")
+                .roles(List.of(Role.ROLE_MEMBER))
+                .drinkCapacity("")
+                .build());
     }
 }
