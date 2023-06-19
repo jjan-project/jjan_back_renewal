@@ -2,6 +2,7 @@ package jjan_back_renewal.post.entity;
 
 import jakarta.persistence.*;
 import jjan_back_renewal.config.BaseTimeEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,4 +26,11 @@ public class PostEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
+    @Builder
+    public PostEntity(Long id, String author, String title, String content) {
+        this.id = id;
+        this.author = author;
+        this.title = title;
+        this.content = content;
+    }
 }
