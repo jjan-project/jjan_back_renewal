@@ -1,6 +1,7 @@
 package jjan_back_renewal.post.dto;
 
 import jjan_back_renewal.post.entity.PostEntity;
+import jjan_back_renewal.user.entitiy.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PostDto {
     private Long id;
-    private String author;
+    private UserEntity author;
     private String title;
     private String content;
     private LocalDateTime createdAt;

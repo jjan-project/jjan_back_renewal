@@ -2,6 +2,7 @@ package jjan_back_renewal.post.entity;
 
 import jakarta.persistence.*;
 import jjan_back_renewal.config.BaseTimeEntity;
+import jjan_back_renewal.user.entitiy.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +18,9 @@ public class PostEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String author;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity author;
 
     @Column(nullable = false)
     private String title;
@@ -27,7 +29,7 @@ public class PostEntity extends BaseTimeEntity {
     private String content;
 
     @Builder
-    public PostEntity(Long id, String author, String title, String content) {
+    public PostEntity(Long id, UserEntity author, String title, String content) {
         this.id = id;
         this.author = author;
         this.title = title;
