@@ -3,7 +3,7 @@ package jjan_back_renewal.user.entitiy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jjan_back_renewal.post.entity.PostEntity;
+import jjan_back_renewal.party.entity.PartyEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,7 +59,7 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "author")
     @JsonIgnore
-    private List<PostEntity> posts = new ArrayList<>();
+    private List<PartyEntity> parties = new ArrayList<>();
 
     @Builder
     public UserEntity(Long id, String email, String nickName, String password, String profile, String name, String address, String gender, String birth, String drinkCapacity, boolean isNickNameChangeAvailable, List<Role> roles) {
