@@ -6,6 +6,7 @@ import jjan_back_renewal.join.auth.JwtProvider;
 import jjan_back_renewal.party.dto.PartyCreateRequestDto;
 import jjan_back_renewal.party.dto.PartyResponseDto;
 import jjan_back_renewal.party.dto.PartyDto;
+import jjan_back_renewal.party.dto.PartyUpdateRequestDto;
 import jjan_back_renewal.party.service.PartyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +34,17 @@ public class PartyController {
         return ResponseEntity.ok().body(new PartyResponseDto(partyService.read(partyId)));
     }
 
+    @Operation(summary = "글수정", description = "글을 수정합니다.")
+    @PutMapping
+    public ResponseEntity<PartyResponseDto> updateParty(@RequestBody PartyUpdateRequestDto updateRequestDto, HttpServletRequest request) {
+        String userEmail = jwtProvider.getUserEmail(request);
+        PartyDto write = partyService.update(userEmail, updateRequestDto);
+        return ResponseEntity.ok().body(new PartyResponseDto(write));
+    }
+
+
     @Operation(summary = "글삭제", description = "해당하는 id 의 Party 를 삭제합니다.")
-    @GetMapping
+    @DeleteMapping
     public ResponseEntity<PartyResponseDto> deleteParty(@RequestBody Long partyId) {
         return ResponseEntity.ok().body(new PartyResponseDto(partyService.delete(partyId)));
     }
