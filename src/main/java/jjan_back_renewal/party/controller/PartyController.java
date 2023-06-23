@@ -32,4 +32,12 @@ public class PartyController {
     public ResponseEntity<PartyResponseDto> readParty(@RequestBody Long partyId) {
         return ResponseEntity.ok().body(new PartyResponseDto(partyService.read(partyId)));
     }
+
+    @Operation(summary = "글삭제", description = "해당하는 id 의 Party 를 삭제합니다.")
+    @GetMapping
+    public ResponseEntity<PartyResponseDto> deleteParty(@RequestBody Long partyId) {
+        return ResponseEntity.ok().body(new PartyResponseDto(partyService.delete(partyId)));
+    }
+
+
 }

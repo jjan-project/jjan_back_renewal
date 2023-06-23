@@ -43,8 +43,12 @@ public class PartyServiceImpl implements PartyService {
         return null;
     }
 
+    @Transactional
     @Override
     public PartyDto delete(Long partyId) {
-        return null;
+        PartyEntity partyEntity = partyRepository.findById(partyId)
+                .orElseThrow(() -> new NoSuchPartyException("해당하는 파티 id 를 찾을 수 없습니다. : " + partyId));
+        partyRepository.deleteById(partyId);
+        return new PartyDto(partyEntity);
     }
 }
