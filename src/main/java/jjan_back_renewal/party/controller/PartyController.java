@@ -24,10 +24,9 @@ public class PartyController {
 
     @Operation(summary = "글쓰기", description = "글씁니다")
     @PostMapping
-    public ResponseEntity<PartyCreateResponseDto> writePost(@RequestBody PartyCreateRequestDto createRequestDto, HttpServletRequest request) {
+    public ResponseEntity<PartyCreateResponseDto> writeParty(@RequestBody PartyCreateRequestDto createRequestDto, HttpServletRequest request) {
         String userEmail = jwtProvider.getUserEmail(request);
         PartyDto write = partyService.write(userEmail, createRequestDto);
         return ResponseEntity.ok().body(new PartyCreateResponseDto(write));
-
     }
 }
