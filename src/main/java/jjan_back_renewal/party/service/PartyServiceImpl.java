@@ -3,6 +3,7 @@ package jjan_back_renewal.party.service;
 import jjan_back_renewal.party.dto.PartyCreateRequestDto;
 import jjan_back_renewal.party.dto.PartyDto;
 import jjan_back_renewal.party.entity.PartyEntity;
+import jjan_back_renewal.party.exception.NoSuchPartyException;
 import jjan_back_renewal.party.repository.PartyRepository;
 import jjan_back_renewal.user.entitiy.UserEntity;
 import jjan_back_renewal.user.exception.NoSuchEmailException;
@@ -27,5 +28,23 @@ public class PartyServiceImpl implements PartyService {
         PartyDto partyDto = new PartyDto(userEntity, requestDto);
         PartyEntity save = partyRepository.save(partyDto.toEntity());
         return new PartyDto(save);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PartyDto read(Long partyId) {
+        PartyEntity partyEntity = partyRepository.findById(partyId)
+                .orElseThrow(() -> new NoSuchPartyException("해당하는 파티 id 를 찾을 수 없습니다. : " + partyId));
+        return new PartyDto(partyEntity);
+    }
+
+    @Override
+    public PartyDto update() {
+        return null;
+    }
+
+    @Override
+    public PartyDto delete(Long partyId) {
+        return null;
     }
 }

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PartyCreateResponseDto extends GenericResponse {
+public class PartyResponseDto extends GenericResponse {
     private PartyDto party;
 }

@@ -5,4 +5,7 @@ import jjan_back_renewal.party.dto.PartyDto;
 
 public interface PartyService {
     PartyDto write(String userEmail, PartyCreateRequestDto requestDto);
+    PartyDto read(Long partyId);
+    PartyDto update();
+    PartyDto delete(Long partyId);
 }
