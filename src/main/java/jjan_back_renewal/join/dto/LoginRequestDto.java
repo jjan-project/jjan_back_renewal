@@ -1,4 +1,4 @@
-package jjan_back_renewal.user.dto;
+package jjan_back_renewal.join.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

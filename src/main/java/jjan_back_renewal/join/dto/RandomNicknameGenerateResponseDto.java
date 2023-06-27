@@ -1,4 +1,4 @@
-package jjan_back_renewal.user.dto;
+package jjan_back_renewal.join.dto;
 
 import jjan_back_renewal.config.GenericResponse;
 import lombok.AllArgsConstructor;
@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponseDto extends GenericResponse {
-    private UserDto userDto;
+public class RandomNicknameGenerateResponseDto extends GenericResponse {
+    private String nickname;
 }

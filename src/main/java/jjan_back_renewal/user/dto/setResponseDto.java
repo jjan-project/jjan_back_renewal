@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UniqueTestResponseDto extends GenericResponse {
-    private String target;
-    private String item;
+public class setResponseDto extends GenericResponse {
+    private UserDto userDto;
 }

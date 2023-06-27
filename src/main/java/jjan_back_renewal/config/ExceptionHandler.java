@@ -1,5 +1,6 @@
 package jjan_back_renewal.config;
 
+import jjan_back_renewal.upload.FileUploadException;
 import jjan_back_renewal.user.exception.NoSuchEmailException;
 import jjan_back_renewal.user.exception.NoSuchNicknameException;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,13 @@ public class ExceptionHandler {
     public ResponseEntity<GenericResponse> noSuchNicknameError(NoSuchNicknameException e) {
         log.info("존재하지 않는 닉네임 검사 : {}", e.getMessage());
         GenericResponse response = new GenericResponse(403, "FORBIDDEN");
+        return ResponseEntity.ok().body(response);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(FileUploadException.class)
+    public ResponseEntity<GenericResponse> fileConversionError(FileUploadException e) {
+        log.error(e.getMessage());
+        GenericResponse response = new GenericResponse(400, "BAD REQUEST");
         return ResponseEntity.ok().body(response);
     }
 }

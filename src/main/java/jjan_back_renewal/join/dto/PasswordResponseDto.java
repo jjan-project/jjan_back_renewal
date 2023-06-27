@@ -1,4 +1,4 @@
-package jjan_back_renewal.user.dto;
+package jjan_back_renewal.join.dto;
 
 import jjan_back_renewal.config.GenericResponse;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UniqueTestResponseDto extends GenericResponse {
-    private String target;
-    private String item;
+public class PasswordResponseDto extends GenericResponse {
+    String email;
 }

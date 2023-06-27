@@ -2,14 +2,15 @@ package jjan_back_renewal.user.controller;
 
 import io.micrometer.common.util.StringUtils;
 import io.swagger.v3.oas.annotations.Operation;
-import jjan_back_renewal.user.dto.LoginRequestDto;
-import jjan_back_renewal.user.dto.LoginResponseDto;
-import jjan_back_renewal.config.Response;
-import jjan_back_renewal.user.dto.UniqueTestResponseDto;
-import jjan_back_renewal.user.dto.UserDto;
+import jakarta.servlet.http.HttpServletRequest;
+import jjan_back_renewal.join.auth.JwtProvider;
+import jjan_back_renewal.join.dto.JoinResponseDto;
+import jjan_back_renewal.user.dto.*;
 import jjan_back_renewal.user.service.UserService;
 import jjan_back_renewal.user.service.UserServiceImpl;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,53 +19,42 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
+    private final JwtProvider jwtProvider;
 
-    @Operation(summary = "error test", description = "DB에 없는 이메일 검색 시 에러 핸들링")
-    @GetMapping("/error-test")
-    public String error() {
-        userService.findByEmail("hello@naver.com");
-        return "hello";
+
+    @Operation(summary = "주량 변경", description = "주량을 변경합니다")
+    @PutMapping("/drink-capacity")
+    public ResponseEntity<setResponseDto> setDrinkCapacity(HttpServletRequest request, @RequestBody setRequestDto setRequestDto) {
+        String userEmail = jwtProvider.getUserEmail(request);
+        String capacity = setRequestDto.getItem();
+        UserDto userDto = userService.setDrinkCapacity(userEmail,capacity);
+        return ResponseEntity.ok().body(new setResponseDto(userDto));
     }
-
-    @GetMapping("/login-test")
-    public ResponseEntity<LoginResponseDto> login() {
-        LoginRequestDto loginRequestDto = new LoginRequestDto("이름", "비번");
-        UserDto userDto = userService.login(loginRequestDto);
-        LoginResponseDto loginResponseDto = new LoginResponseDto(userDto);
-        // login failure
-        if (loginResponseDto.getUserDto() == null) {
-            loginResponseDto.response403();
-            return ResponseEntity.ok().body(loginResponseDto);
+    
+    @Operation(summary = "닉네임 변경", description = "닉네임 중복 검사 이후 닉네임을 변경합니다")
+    @PutMapping("/nickname")
+    public ResponseEntity<setResponseDto> setNickName(HttpServletRequest request, @RequestBody setRequestDto setRequestDto) {
+        String userEmail = jwtProvider.getUserEmail(request);
+        String newNickName = setRequestDto.getItem();
+        //닉네임 길이 및 중복 검사
+        if ((isNickNameLengthOK(newNickName) 
+                && userService.isDuplicatedNickName(newNickName) == UserServiceImpl.NOT_DUPLICATED)
+                && userService.isReplaceableUser(userEmail)) {
+            UserDto userDto = userService.setNickName(userEmail,newNickName);
+            return ResponseEntity.ok().body(new setResponseDto(userDto));
+        } else {
+            setResponseDto response = new setResponseDto();
+            response.response403();
+            return ResponseEntity.ok().body(response);
         }
-        return ResponseEntity.ok().body(loginResponseDto);
     }
 
-    @GetMapping("/")
-    public String root() {
-        return "exampleMapping";
-    }
-
-    @GetMapping("/user")
-    public String user() {
-        return "user";
-    }
-
-    //이메일 중복검증, 수정필요
-    @GetMapping("/userEmail/{userEmail}")
-    public Response<?> findUserByEmail(@PathVariable("userEmail") String userEmail) throws Exception {
-        return new Response<>("true", "조회 성공", userService.findByEmail(userEmail));
-    }
-
-    //닉네임 중복검증, 수정필요
-    @GetMapping("/userNickName/{userNickName}")
-    public Response<?> findUserByNickName(@PathVariable("userNickName") String userNickName) throws Exception {
-        return new Response<>("true", "조회 성공", userService.findByNickName(userNickName));
-    }
-
-    @PostMapping("/api/user/unique-email")
+    @Operation(summary = "이메일 중복 체크", description = "중복 이메일일 시 403 status code 반환합니다.")
+    @PostMapping("/unique-email")
     public ResponseEntity<UniqueTestResponseDto> isDuplicatedEmail(@RequestBody String email) {
         if (isEmail(email) && userService.isDuplicatedEmail(email) == UserServiceImpl.NOT_DUPLICATED) {
             return ResponseEntity.ok().body(new UniqueTestResponseDto("email", email));
@@ -74,6 +64,28 @@ public class UserController {
             return ResponseEntity.ok().body(response);
         }
     }
+
+    @Operation(summary = "닉네임 중복 체크", description = "중복 닉네임일 시 403 status code 반환합니다.")
+    @PostMapping("/unique-nickname")
+    public ResponseEntity<UniqueTestResponseDto> isDuplicatedNickName(@RequestBody String nickName) {
+
+        if (isNickNameLengthOK(nickName) && userService.isDuplicatedNickName(nickName) == UserServiceImpl.NOT_DUPLICATED) {
+            return ResponseEntity.ok().body(new UniqueTestResponseDto("nickName", nickName));
+        } else {
+            UniqueTestResponseDto uniqueTestResponseDto = new UniqueTestResponseDto("nickName", nickName);
+            uniqueTestResponseDto.response403();
+            return ResponseEntity.ok().body(uniqueTestResponseDto);
+        }
+
+    }
+
+    private boolean isNickNameLengthOK(String nickName) {
+        if (nickName.length() >= 4 && nickName.length() <= 16) {
+            return true;
+        } else
+            return false;
+    }
+
 
     private boolean isEmail(String email) {
         boolean validation = false;
@@ -88,4 +100,6 @@ public class UserController {
         }
         return validation;
     }
+
+
 }
