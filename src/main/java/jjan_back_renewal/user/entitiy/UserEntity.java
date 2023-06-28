@@ -1,7 +1,9 @@
 package jjan_back_renewal.user.entitiy;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jjan_back_renewal.party.entity.PartyEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,8 +57,12 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "author")
+    @JsonIgnore
+    private List<PartyEntity> parties = new ArrayList<>();
+
     @Builder
-    public UserEntity(Long id, String email, String nickName, String password, String profile, String name, String address, String gender, String birth, String drinkCapacity, boolean isNickNameChangeAvailable,List<Role> roles) {
+    public UserEntity(Long id, String email, String nickName, String password, String profile, String name, String address, String gender, String birth, String drinkCapacity, boolean isNickNameChangeAvailable, List<Role> roles) {
         this.id = id;
         this.email = email;
         this.nickName = nickName;
