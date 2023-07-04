@@ -1,35 +1,43 @@
 package jjan_back_renewal.party.dto;
 
 import jjan_back_renewal.party.entity.PartyEntity;
+import jjan_back_renewal.party.entity.PartyTag;
 import jjan_back_renewal.user.entitiy.UserEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class PartyDto {
+
     private Long id;
     private UserEntity author;
     private String title;
     private String content;
     private int maxPartyNum;
-    private String partyLocation;
+    private double partyLatitude;
+    private double partyLongitude;
     private String partyDate;
+    private List<PartyTag> partyTags = new ArrayList<>();
+    private List<String> partyImages = new ArrayList<>();
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public PartyDto(UserEntity userEntity, PartyCreateRequestDto createRequestDto) {
+    public PartyDto(UserEntity userEntity, PartyCreateRequestDto createRequestDto, List<String> partyImages) {
         this.setAuthor(userEntity);
         this.setTitle(createRequestDto.getTitle());
         this.setContent(createRequestDto.getContent());
-        this.setPartyDate(createRequestDto.getPartyDate());
-        this.setPartyLocation(createRequestDto.getPartyLocation());
+        this.setPartyLatitude(createRequestDto.getPartyLatitude());
+        this.setPartyLongitude(createRequestDto.getPartyLongitude());
+        for (String tag : createRequestDto.getPartyTags()) {
+            partyTags.add(PartyTag.of(tag));
+        }
+        this.partyImages = partyImages;
     }
 
     public PartyDto(PartyEntity entity) {
@@ -38,7 +46,10 @@ public class PartyDto {
         this.title = entity.getTitle();
         this.content = entity.getContent();
         this.maxPartyNum = entity.getMaxPartyNum();
-        this.partyLocation = entity.getPartyLocation();
+        this.partyLatitude = entity.getPartyLatitude();
+        this.partyLongitude = entity.getPartyLongitude();
+        this.partyTags = entity.getPartyTags();
+        this.partyImages = entity.getPartyImages();
         this.partyDate = entity.getPartyDate();
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();
@@ -51,8 +62,11 @@ public class PartyDto {
                 .title(title)
                 .content(content)
                 .maxPartyNum(maxPartyNum)
-                .partyLocation(partyLocation)
+                .partyLatitude(partyLatitude)
+                .partyLongitude(partyLongitude)
                 .partyDate(partyDate)
+                .partyImages(partyImages)
+                .partyTags(partyTags)
                 .build();
     }
 }
