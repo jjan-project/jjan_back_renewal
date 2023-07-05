@@ -47,8 +47,8 @@ public class JoinServiceImpl implements JoinService {
         UserEntity userEntity = userRepository.findByEmail(passwordRequestDto.getEmail())
                 .orElseThrow(() -> new NoSuchEmailException(passwordRequestDto.getEmail()));
 
-        if (passwordRequestDto.getName().equals(userEntity.getName())) {
-            MailDto mail = createMailAndChangePassword(userEntity.getEmail(), userEntity.getName());
+        if (passwordRequestDto.getNickname().equals(userEntity.getNickName())) {
+            MailDto mail = createMailAndChangePassword(userEntity.getEmail(), userEntity.getNickName());
             mailSend(mail);
         }
         else {

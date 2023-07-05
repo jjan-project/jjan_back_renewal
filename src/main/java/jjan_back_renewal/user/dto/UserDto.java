@@ -18,11 +18,12 @@ public class UserDto {
     private String nickName;
     private String password;
     private String profile;
-    private String name;
     private String address;
     private String gender;
     private String birth;
     private String drinkCapacity;
+    private Double location_x;
+    private Double location_y;
     private boolean isNickNameChangeAvailable = true;
     private List<Role> roles = new ArrayList<>();
 
@@ -32,12 +33,13 @@ public class UserDto {
         this.nickName = userEntity.getNickName();
         this.password = userEntity.getPassword();
         this.profile = userEntity.getProfile();
-        this.name = userEntity.getName();
         this.address = userEntity.getAddress();
         this.gender = userEntity.getGender();
         this.birth = userEntity.getBirth();
         this.drinkCapacity = userEntity.getDrinkCapacity();
         this.roles = userEntity.getRoles();
+        this.location_x = userEntity.getLocation_x();
+        this.location_y = userEntity.getLocation_y();
         this.isNickNameChangeAvailable = userEntity.isNickNameChangeAvailable();
     }
 
@@ -48,12 +50,13 @@ public class UserDto {
                 .nickName(nickName)
                 .password(password)
                 .profile(profile)
-                .name(name)
                 .address(address)
                 .gender(gender)
                 .birth(birth)
                 .drinkCapacity(drinkCapacity)
                 .roles(roles)
+                .location_x(location_x)
+                .location_y(location_y)
                 .isNickNameChangeAvailable(isNickNameChangeAvailable)
                 .build();
     }

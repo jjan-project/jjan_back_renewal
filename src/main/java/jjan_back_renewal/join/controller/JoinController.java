@@ -27,7 +27,7 @@ public class JoinController {
     private final JoinService joinService;
     private final RandomNicknameGenerateService randomNicknameGenerateService;
 
-    @Operation(summary = "비밀번호 찾기", description = "사용자 인증(현재는 이메일,한글성명 인증) 후 이메일로 임시 비밀번호를 발송합니다")
+    @Operation(summary = "비밀번호 찾기", description = "사용자 인증(현재는 이메일,닉네임 인증) 후 이메일로 임시 비밀번호를 발송합니다")
     @PostMapping("/reset-password")
     public ResponseEntity<PasswordResponseDto> resetPassword(@RequestBody PasswordRequestDto passwordRequestDto) {
         PasswordResponseDto passwordResponseDto = joinService.resetPassword(passwordRequestDto);
@@ -96,7 +96,6 @@ public class JoinController {
                 .nickName("nickName")
                 .password(password)
                 .profile("")
-                .name("")
                 .address("")
                 .gender("")
                 .birth("")
