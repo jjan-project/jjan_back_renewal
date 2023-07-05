@@ -21,6 +21,5 @@ public class PartyUpdateRequestDto {
     private double partyLatitude;
     private double partyLongitude;
     private String partyDate;
-    private List<String> partyImages = new ArrayList<>();
     private List<PartyTag> partyTags = new ArrayList<>();
 }

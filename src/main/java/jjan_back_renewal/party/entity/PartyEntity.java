@@ -44,14 +44,14 @@ public class PartyEntity extends BaseTimeEntity {
     @ElementCollection(fetch = FetchType.LAZY)
     private List<PartyTag> partyTags = new ArrayList<>();
 
-    public void update(PartyUpdateRequestDto requestDto) {
+    public void update(PartyUpdateRequestDto requestDto, List<String> partyImages) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.maxPartyNum = requestDto.getMaxPartyNum();
         this.partyLatitude = requestDto.getPartyLatitude();
         this.partyLongitude = requestDto.getPartyLongitude();
         this.partyDate = requestDto.getPartyDate();
-        this.partyImages = requestDto.getPartyImages();
         this.partyTags = requestDto.getPartyTags();
+        this.partyImages = partyImages;
     }
 }

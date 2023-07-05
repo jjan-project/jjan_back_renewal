@@ -12,7 +12,7 @@ public interface PartyService {
 
     PartyDto read(Long partyId);
 
-    PartyDto update(String userEmail, PartyUpdateRequestDto requestDto);
+    PartyDto update(String userEmail, PartyUpdateRequestDto requestDto, List<MultipartFile> partyImages);
 
     PartyDto delete(Long partyId);
 }

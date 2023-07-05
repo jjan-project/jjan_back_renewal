@@ -43,9 +43,11 @@ public class PartyController {
 
     @Operation(summary = "글수정", description = "글을 수정합니다.")
     @PutMapping
-    public ResponseEntity<PartyResponseDto> updateParty(@RequestBody PartyUpdateRequestDto updateRequestDto, HttpServletRequest request) {
+    public ResponseEntity<PartyResponseDto> updateParty(@RequestPart PartyUpdateRequestDto updateRequestDto,
+                                                        @RequestPart List<MultipartFile> partyImages,
+                                                        HttpServletRequest request) {
         String userEmail = jwtProvider.getUserEmail(request);
-        PartyDto write = partyService.update(userEmail, updateRequestDto);
+        PartyDto write = partyService.update(userEmail, updateRequestDto, partyImages);
         return ResponseEntity.ok().body(new PartyResponseDto(write));
     }
 

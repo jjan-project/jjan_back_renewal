@@ -62,7 +62,7 @@ public class PartyServiceImpl implements PartyService {
 
     @Transactional
     @Override
-    public PartyDto update(String userEmail, PartyUpdateRequestDto requestDto) {
+    public PartyDto update(String userEmail, PartyUpdateRequestDto requestDto, List<MultipartFile> partyImages) {
         UserEntity userEntity = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new NoSuchEmailException(userEmail));
         if (!userEntity.getEmail().equals(requestDto.getUserEntity().getEmail())) {
@@ -70,7 +70,16 @@ public class PartyServiceImpl implements PartyService {
         }
         PartyEntity party = partyRepository.findById(requestDto.getId())
                 .orElseThrow(() -> new NoSuchPartyException("해당하는 파티 id 를 찾을 수 없습니다. : " + requestDto.getId()));
-        party.update(requestDto);
+        List<String> partyImageUrls = new ArrayList<>();
+        try {
+            List<FileUploadResponseDto> fileUploadResponseDtos = fileUploadService.uploadPartyImages(UUID.randomUUID().toString(), partyImages);
+            for (FileUploadResponseDto dto : fileUploadResponseDtos) {
+                partyImageUrls.add(dto.getUrl());
+            }
+        } catch (IOException e) {
+            throw new FileUploadException(e.getMessage());
+        }
+        party.update(requestDto, partyImageUrls);
         return new PartyDto(party);
     }
 
