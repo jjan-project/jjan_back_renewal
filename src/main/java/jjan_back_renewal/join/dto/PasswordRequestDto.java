@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PasswordRequestDto {
     String email;
-    String name;
+    String nickname;
 }

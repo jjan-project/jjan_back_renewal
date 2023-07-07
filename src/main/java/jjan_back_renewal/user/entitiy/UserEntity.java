@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,6 @@ public class UserEntity {
     private String profile;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
     private String address;
 
     @Column(nullable = false)
@@ -49,6 +47,12 @@ public class UserEntity {
 
     @Column(nullable = false)
     private String drinkCapacity;
+
+    @Column(nullable = false)
+    private Double location_x;
+
+    @Column(nullable = false)
+    private Double location_y;
 
     @Column
     private boolean isNickNameChangeAvailable = true;
@@ -62,18 +66,19 @@ public class UserEntity {
     private List<PartyEntity> parties = new ArrayList<>();
 
     @Builder
-    public UserEntity(Long id, String email, String nickName, String password, String profile, String name, String address, String gender, String birth, String drinkCapacity, boolean isNickNameChangeAvailable, List<Role> roles) {
+    public UserEntity(Long id, String email, String nickName, String password, String profile, String address, String gender, String birth, String drinkCapacity, Double location_x, Double location_y, boolean isNickNameChangeAvailable, List<Role> roles) {
         this.id = id;
         this.email = email;
         this.nickName = nickName;
         this.password = password;
         this.profile = profile;
-        this.name = name;
         this.address = address;
         this.gender = gender;
         this.birth = birth;
         this.drinkCapacity = drinkCapacity;
         this.roles = roles;
+        this.location_x = location_x;
+        this.location_y = location_y;
         this.isNickNameChangeAvailable = isNickNameChangeAvailable;
     }
 
