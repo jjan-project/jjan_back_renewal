@@ -1,6 +1,7 @@
 package jjan_back_renewal.join.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.Nullable;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jjan_back_renewal.join.dto.JoinResponseDto;
@@ -9,6 +10,7 @@ import jjan_back_renewal.join.dto.LoginResponseDto;
 import jjan_back_renewal.join.dto.RandomNicknameGenerateResponseDto;
 import jjan_back_renewal.join.service.RandomNicknameGenerateService;
 import jjan_back_renewal.join.dto.*;
+import jjan_back_renewal.upload.FileUploadService;
 import jjan_back_renewal.user.dto.UserDto;
 import jjan_back_renewal.join.service.JoinService;
 import jjan_back_renewal.user.entitiy.Role;
@@ -16,7 +18,9 @@ import jjan_back_renewal.user.entitiy.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,6 +29,7 @@ import java.util.List;
 public class JoinController {
 
     private final JoinService joinService;
+    private final FileUploadService fileUploadService;
     private final RandomNicknameGenerateService randomNicknameGenerateService;
 
     @Operation(summary = "비밀번호 찾기", description = "사용자 인증(현재는 이메일,닉네임 인증) 후 이메일로 임시 비밀번호를 발송합니다")
@@ -53,8 +58,11 @@ public class JoinController {
 
     @Operation(summary = "회원가입", description = "회원가입 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
     @PostMapping("/join")
-    public ResponseEntity<JoinResponseDto> join(@RequestBody UserDto userDto, HttpServletResponse response) {
+    public ResponseEntity<JoinResponseDto> join(@RequestBody UserDto userDto, @RequestParam(value = "profileImage") MultipartFile multipartFile, HttpServletResponse response) throws IOException {
         JoinResponseDto joinResponseDto = joinService.join(userDto);
+        //유저가 회원가입시에 프로필 이미지를 등록할경우(multipartFile is not null)
+        if (!multipartFile.isEmpty())
+            fileUploadService.uploadProfileImage(userDto.getEmail(), multipartFile);
         setRefreshTokenInCookie(response, joinResponseDto.getToken().getRefreshToken());
         return ResponseEntity.ok().body(joinResponseDto);
     }
