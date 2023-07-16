@@ -1,0 +1,17 @@
+package com.team.jjan.upload;
+
+import com.team.jjan.common.GenericResponse;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class FileUploadResponseDto extends GenericResponse {
+    private String identifier;
+    private String fileName;
+    private String url;
+}
