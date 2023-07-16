@@ -1,5 +1,7 @@
 package com.team.jjan.security.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.jwt.filter.JwtAuthenticationFilter;
 import com.team.jjan.jwt.support.JwtProvider;
 import jakarta.servlet.ServletException;
@@ -8,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,6 +26,8 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+
+import static com.team.jjan.common.ResponseCode.AUTHORIZATION_FAIL;
 
 @Configuration
 @RequiredArgsConstructor
@@ -64,28 +70,27 @@ public class SecurityConfig {
                 .anyRequest().hasRole("MEMBER")
                 .and()
                 .exceptionHandling()
-                .accessDeniedHandler(new AccessDeniedHandler() {
-                    @Override
-                    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-                        response.setStatus(403);
-                        response.setCharacterEncoding("utf-8");
-                        response.setContentType("text/html; charset=UTF-8");
-                        response.getWriter().write("권한이 없는 사용자입니다.");
-                    }
-                })
+                .accessDeniedPage("/api/security/authentication")
                 .authenticationEntryPoint(new AuthenticationEntryPoint() {
                     @Override
                     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-                        response.setStatus(401);
-                        response.setCharacterEncoding("utf-8");
-                        response.setContentType("text/html; charset=UTF-8");
-
-                        response.getWriter().write("인증되지 않은 사용자입니다.");
+                        setErrorResponse(response , HttpStatus.UNAUTHORIZED.value());
                     }
                 });
 
         http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    public static void setErrorResponse(HttpServletResponse response, int status) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.setStatus(status);
+        response.setCharacterEncoding("utf-8");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        ResponseMessage errorResponse = ResponseMessage.of(AUTHORIZATION_FAIL);
+
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
 }

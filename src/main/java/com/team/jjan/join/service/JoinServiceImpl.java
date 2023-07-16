@@ -1,10 +1,9 @@
 package com.team.jjan.join.service;
 
 import com.team.jjan.join.dto.*;
-import jjan_back_renewal.join.dto.*;
+import com.team.jjan.jwt.support.JwtProvider;
 import com.team.jjan.user.dto.UserDto;
 import com.team.jjan.user.entitiy.UserEntity;
-import com.team.jjan.jwt.support.JwtProvider;
 import com.team.jjan.user.exception.NoSuchEmailException;
 import com.team.jjan.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

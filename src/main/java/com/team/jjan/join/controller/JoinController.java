@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import com.team.jjan.join.service.RandomNicknameGenerateService;
-import jjan_back_renewal.join.dto.*;
 import com.team.jjan.upload.FileUploadService;
 import com.team.jjan.user.dto.UserDto;
 import com.team.jjan.join.service.JoinService;
