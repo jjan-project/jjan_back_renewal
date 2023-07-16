@@ -1,4 +1,4 @@
-package jjan_back_renewal.config;
+package jjan_back_renewal.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

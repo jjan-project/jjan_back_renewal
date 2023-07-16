@@ -1,7 +1,7 @@
 package jjan_back_renewal.upload;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jjan_back_renewal.join.auth.JwtProvider;
+import jjan_back_renewal.jwt.support.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

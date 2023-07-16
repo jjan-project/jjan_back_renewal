@@ -99,7 +99,7 @@ public class JoinController {
     }
 
     private UserEntity saveEntityForLogin(String email, String password) {
-        return (UserEntity.builder()
+        return UserEntity.builder()
                 .email(email)
                 .nickName("nickName")
                 .password(password)
@@ -109,6 +109,6 @@ public class JoinController {
                 .birth("")
                 .roles(List.of(Role.ROLE_MEMBER))
                 .drinkCapacity("")
-                .build());
+                .build();
     }
 }

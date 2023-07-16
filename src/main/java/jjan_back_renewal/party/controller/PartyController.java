@@ -2,7 +2,7 @@ package jjan_back_renewal.party.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
-import jjan_back_renewal.join.auth.JwtProvider;
+import jjan_back_renewal.jwt.support.JwtProvider;
 import jjan_back_renewal.party.dto.PartyCreateRequestDto;
 import jjan_back_renewal.party.dto.PartyResponseDto;
 import jjan_back_renewal.party.dto.PartyDto;

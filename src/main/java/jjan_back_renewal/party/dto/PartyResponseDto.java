@@ -1,6 +1,6 @@
 package jjan_back_renewal.party.dto;
 
-import jjan_back_renewal.config.GenericResponse;
+import jjan_back_renewal.common.GenericResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

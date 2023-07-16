@@ -3,7 +3,7 @@ package jjan_back_renewal.join.service;
 import jjan_back_renewal.join.dto.*;
 import jjan_back_renewal.user.dto.UserDto;
 import jjan_back_renewal.user.entitiy.UserEntity;
-import jjan_back_renewal.join.auth.JwtProvider;
+import jjan_back_renewal.jwt.support.JwtProvider;
 import jjan_back_renewal.user.exception.NoSuchEmailException;
 import jjan_back_renewal.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -4,12 +4,9 @@ import jjan_back_renewal.user.dto.UserDto;
 import jjan_back_renewal.user.entitiy.UserEntity;
 import jjan_back_renewal.user.exception.NoSuchEmailException;
 import jjan_back_renewal.user.exception.NoSuchNicknameException;
-import jjan_back_renewal.join.auth.JwtProvider;
 import jjan_back_renewal.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

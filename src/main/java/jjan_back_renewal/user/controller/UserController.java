@@ -3,14 +3,11 @@ package jjan_back_renewal.user.controller;
 import io.micrometer.common.util.StringUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
-import jjan_back_renewal.join.auth.JwtProvider;
-import jjan_back_renewal.join.dto.JoinResponseDto;
+import jjan_back_renewal.jwt.support.JwtProvider;
 import jjan_back_renewal.user.dto.*;
 import jjan_back_renewal.user.service.UserService;
 import jjan_back_renewal.user.service.UserServiceImpl;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

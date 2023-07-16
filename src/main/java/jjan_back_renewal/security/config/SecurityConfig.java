@@ -1,10 +1,10 @@
-package jjan_back_renewal.config;
+package jjan_back_renewal.security.config;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jjan_back_renewal.join.auth.JwtAuthenticationFilter;
-import jjan_back_renewal.join.auth.JwtProvider;
+import jjan_back_renewal.jwt.filter.JwtAuthenticationFilter;
+import jjan_back_renewal.jwt.support.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,11 +20,8 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.io.IOException;
-import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -59,29 +56,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.httpBasic().disable()
-                .csrf().disable()
-                .cors(c -> {
-                    CorsConfigurationSource source = request -> {
-                        // Cors 허용 패턴
-                        CorsConfiguration config = new CorsConfiguration();
-                        config.setAllowedOrigins(
-                                List.of("*")
-                        );
-                        config.setAllowedMethods(
-                                List.of("*")
-                        );
-                        return config;
-                    };
-                    c.configurationSource(source);
-                })
+        http.httpBasic().disable().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(PERMIT_URL_ARRAY).permitAll()
                 .anyRequest().authenticated()
+                .anyRequest().hasRole("ROLE_MEMBER")
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .accessDeniedHandler(new AccessDeniedHandler() {
                     @Override
@@ -102,6 +84,9 @@ public class SecurityConfig {
                         response.getWriter().write("인증되지 않은 사용자입니다.");
                     }
                 });
+
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 }

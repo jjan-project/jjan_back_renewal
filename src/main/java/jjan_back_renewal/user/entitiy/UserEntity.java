@@ -4,21 +4,25 @@ package jjan_back_renewal.user.entitiy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jjan_back_renewal.party.entity.PartyEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "user")
-public class UserEntity {
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,23 +69,6 @@ public class UserEntity {
     @JsonIgnore
     private List<PartyEntity> parties = new ArrayList<>();
 
-    @Builder
-    public UserEntity(Long id, String email, String nickName, String password, String profile, String address, String gender, String birth, String drinkCapacity, Double location_x, Double location_y, boolean isNickNameChangeAvailable, List<Role> roles) {
-        this.id = id;
-        this.email = email;
-        this.nickName = nickName;
-        this.password = password;
-        this.profile = profile;
-        this.address = address;
-        this.gender = gender;
-        this.birth = birth;
-        this.drinkCapacity = drinkCapacity;
-        this.roles = roles;
-        this.location_x = location_x;
-        this.location_y = location_y;
-        this.isNickNameChangeAvailable = isNickNameChangeAvailable;
-    }
-
     public void addRole(Role role) {
         this.roles.add(role);
     }
@@ -89,5 +76,43 @@ public class UserEntity {
     public void setProfile(String profile) {
         this.profile = profile;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream().map(o -> new SimpleGrantedAuthority(
+                o.name()
+        )).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getPassword() {
+        return getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }
 

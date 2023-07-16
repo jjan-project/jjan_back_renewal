@@ -1,10 +1,11 @@
-package jjan_back_renewal.join.auth;
+package jjan_back_renewal.jwt.support;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jjan_back_renewal.join.dto.TokenDto;
+import jjan_back_renewal.security.service.UserDetailService;
 import jjan_back_renewal.user.entitiy.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,12 +26,11 @@ public class JwtProvider {
 
     @Value("${spring.jwt.secret}")
     private String salt;
-
     private Key secretKey;
 
-    public static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60; // 1 hour
-    public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 90; // 90 days
-    private final JjanUserDetailService userDetailService;
+    public static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 30;
+    public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 30;
+    private final UserDetailService userDetailService;
 
     @PostConstruct
     protected void init() {
@@ -74,7 +74,7 @@ public class JwtProvider {
         expireTime.setTime(getExpireTime(token));
         Calendar oneMonthLater = Calendar.getInstance();
         oneMonthLater.add(Calendar.MONTH, 1);
-        // now  expireTime now+1month
+
         return oneMonthLater.after(expireTime);
     }
 
@@ -85,8 +85,7 @@ public class JwtProvider {
 
     public String getUserEmail(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        token = token.split(" ")[1].trim();
-        UserDetails userDetails = userDetailService.loadUserByUsername(getAccount(token));
+        UserDetails userDetails = userDetailService.loadUserByUsername(getAccount(deleteStringGap(token)));
         return userDetails.getUsername();
     }
 
@@ -112,20 +111,20 @@ public class JwtProvider {
         return request.getHeader("Authorization");
     }
 
-    // 토큰 검증
     public boolean validateAccessToken(String token) {
         try {
-            // Bearer 검증
             if (!token.substring(0, "BEARER ".length()).equalsIgnoreCase("BEARER ")) {
                 return false;
-            } else {
-                token = token.split(" ")[1].trim();
             }
-            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(deleteStringGap(token));
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public String deleteStringGap(String token) {
+        return token.split(" ")[1].trim();
     }
 
     public boolean validateRefreshToken(String refreshToken) {
