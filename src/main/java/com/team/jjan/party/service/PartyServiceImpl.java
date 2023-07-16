@@ -2,7 +2,7 @@ package com.team.jjan.party.service;
 
 import com.team.jjan.party.repository.PartyRepository;
 import com.team.jjan.upload.FileUploadException;
-import com.team.jjan.upload.FileUploadResponseDto;
+import com.team.jjan.upload.FileUploadResponse;
 import com.team.jjan.upload.FileUploadService;
 import com.team.jjan.party.dto.PartyCreateRequestDto;
 import com.team.jjan.party.dto.PartyDto;
@@ -40,8 +40,8 @@ public class PartyServiceImpl implements PartyService {
                 .orElseThrow(() -> new NoSuchEmailException(userEmail));
         List<String> partyImageUrls = new ArrayList<>();
         try {
-            List<FileUploadResponseDto> fileUploadResponseDtos = fileUploadService.uploadPartyImages(UUID.randomUUID().toString(), partyImages);
-            for (FileUploadResponseDto dto : fileUploadResponseDtos) {
+            List<FileUploadResponse> fileUploadResponses = fileUploadService.uploadPartyImages(UUID.randomUUID().toString(), partyImages);
+            for (FileUploadResponse dto : fileUploadResponses) {
                 partyImageUrls.add(dto.getUrl());
             }
         } catch (IOException e) {
@@ -72,8 +72,8 @@ public class PartyServiceImpl implements PartyService {
                 .orElseThrow(() -> new NoSuchPartyException("해당하는 파티 id 를 찾을 수 없습니다. : " + requestDto.getId()));
         List<String> partyImageUrls = new ArrayList<>();
         try {
-            List<FileUploadResponseDto> fileUploadResponseDtos = fileUploadService.uploadPartyImages(UUID.randomUUID().toString(), partyImages);
-            for (FileUploadResponseDto dto : fileUploadResponseDtos) {
+            List<FileUploadResponse> fileUploadResponses = fileUploadService.uploadPartyImages(UUID.randomUUID().toString(), partyImages);
+            for (FileUploadResponse dto : fileUploadResponses) {
                 partyImageUrls.add(dto.getUrl());
             }
         } catch (IOException e) {

@@ -1,16 +1,16 @@
 package com.team.jjan.user.service;
 
-import com.team.jjan.user.dto.UserDto;
+import com.team.jjan.user.dto.JoinResponse;
 
 public interface UserService {
 
-    UserDto findByEmail(String email);
+    JoinResponse findByEmail(String email);
 
-    UserDto findByNickName(String nickName);
+    JoinResponse findByNickName(String nickName);
 
-    UserDto setNickName(String userEmail, String nickName);
+    JoinResponse setNickName(String userEmail, String nickName);
 
-    UserDto setDrinkCapacity(String userEmail, String capacity);
+    JoinResponse setDrinkCapacity(String userEmail, String capacity);
 
     Long isDuplicatedNickName(String nickName);
 

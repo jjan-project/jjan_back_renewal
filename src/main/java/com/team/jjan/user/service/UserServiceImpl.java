@@ -4,7 +4,7 @@ import com.team.jjan.user.entitiy.UserEntity;
 import com.team.jjan.user.exception.NoSuchEmailException;
 import com.team.jjan.user.exception.NoSuchNicknameException;
 import com.team.jjan.user.repository.UserRepository;
-import com.team.jjan.user.dto.UserDto;
+import com.team.jjan.user.dto.JoinResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,17 +20,17 @@ public class UserServiceImpl implements UserService {
     public static final Long NOT_DUPLICATED = -1L;
 
     @Override
-    public UserDto findByEmail(String email) {
+    public JoinResponse findByEmail(String email) {
         UserEntity byEmail = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchEmailException(email));
-        return new UserDto(byEmail);
+        return new JoinResponse(byEmail);
     }
 
     @Override
-    public UserDto findByNickName(String nickName) {
+    public JoinResponse findByNickName(String nickName) {
         UserEntity byNickName = userRepository.findByNickName(nickName)
                 .orElseThrow(() -> new NoSuchNicknameException(nickName));
-        return new UserDto(byNickName);
+        return new JoinResponse(byNickName);
     }
 
     @Override
@@ -61,22 +61,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto setNickName(String email, String nickName) {
+    public JoinResponse setNickName(String email, String nickName) {
         UserEntity targetUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchEmailException(email));
         targetUser.setNickName(nickName);
         targetUser.setNickNameChangeAvailable(false);
 
-        return new UserDto(targetUser);
+        return new JoinResponse(targetUser);
     }
 
     @Override
     @Transactional
-    public UserDto setDrinkCapacity(String email, String capacity) {
+    public JoinResponse setDrinkCapacity(String email, String capacity) {
         UserEntity targetUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchEmailException(email));
         targetUser.setDrinkCapacity(capacity);
-        return new UserDto(targetUser);
+        return new JoinResponse(targetUser);
     }
 
     @Override

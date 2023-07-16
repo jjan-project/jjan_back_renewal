@@ -1,22 +1,20 @@
 package com.team.jjan.join.controller;
 
+import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.join.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import com.team.jjan.join.service.RandomNicknameGenerateService;
-import com.team.jjan.upload.FileUploadService;
-import com.team.jjan.user.dto.UserDto;
+import com.team.jjan.user.dto.JoinResponse;
 import com.team.jjan.join.service.JoinService;
-import com.team.jjan.user.entitiy.Role;
-import com.team.jjan.user.entitiy.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
+
+import static com.team.jjan.jwt.support.JwtCookie.setRefreshTokenInCookie;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +22,6 @@ import java.util.List;
 public class JoinController {
 
     private final JoinService joinService;
-    private final FileUploadService fileUploadService;
     private final RandomNicknameGenerateService randomNicknameGenerateService;
 
     @Operation(summary = "비밀번호 찾기", description = "사용자 인증(현재는 이메일,닉네임 인증) 후 이메일로 임시 비밀번호를 발송합니다")
@@ -40,26 +37,22 @@ public class JoinController {
 
     @Operation(summary = "로그인", description = "로그인 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        LoginResponseDto loginResponseDto = joinService.login(loginRequestDto);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        LoginResponse loginResponse = joinService.login(loginRequest);
         // login failure
-        if (loginResponseDto.getUserDto() == null) {
-            loginResponseDto.response403();
-            return ResponseEntity.ok().body(loginResponseDto);
+        if (loginResponse.getJoinResponse() == null) {
+            loginResponse.response403();
+            return ResponseEntity.ok().body(loginResponse);
         }
-        setRefreshTokenInCookie(response, loginResponseDto.getToken().getRefreshToken());
-        return ResponseEntity.ok().body(loginResponseDto);
+        setRefreshTokenInCookie(response, loginResponse.getToken().getRefreshToken());
+
+        return ResponseEntity.ok().body(loginResponse);
     }
 
     @Operation(summary = "회원가입", description = "회원가입 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
     @PostMapping("/join")
-    public ResponseEntity<JoinResponseDto> join(@RequestBody UserDto userDto, @RequestParam(value = "profileImage") MultipartFile multipartFile, HttpServletResponse response) throws IOException {
-        JoinResponseDto joinResponseDto = joinService.join(userDto);
-        //유저가 회원가입시에 프로필 이미지를 등록할경우(multipartFile is not null)
-        if (!multipartFile.isEmpty())
-            fileUploadService.uploadProfileImage(userDto.getEmail(), multipartFile);
-        setRefreshTokenInCookie(response, joinResponseDto.getToken().getRefreshToken());
-        return ResponseEntity.ok().body(joinResponseDto);
+    public ResponseEntity<ResponseMessage> join(@RequestBody JoinRequest joinRequest, @RequestParam MultipartFile profileImage) throws IOException {
+        return ResponseEntity.ok().body(joinService.join(joinRequest , profileImage));
     }
 
     @Operation(summary = "랜덤 닉네임 생성", description = "유효한 랜덤 닉네임 생성 후 반환")
@@ -71,39 +64,5 @@ public class JoinController {
                 );
     }
 
-    @Operation(summary = "로그인 확인을 위해 해당하는 email, password 로 회원가입을 진행합니다.", description = "테스트용")
-    @GetMapping("/setup")
-    public ResponseEntity<JoinResponseDto> setup(@RequestParam("email") String email, @RequestParam("password") String password) {
-        JoinResponseDto join = joinService.join(new UserDto(saveEntityForLogin(email, password)));
-        return ResponseEntity.ok().body(join);
-    }
 
-    @Operation(summary = "로그인이 정상적으로 되었는지 확인합니다.", description = "테스트용")
-    @GetMapping("/index")
-    public String test() {
-        return "OK";
-    }
-
-    private void setRefreshTokenInCookie(HttpServletResponse response, String token) {
-        Cookie cookie = new Cookie("refresh_token", token);
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 24 * 90);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        response.addCookie(cookie);
-    }
-
-    private UserEntity saveEntityForLogin(String email, String password) {
-        return UserEntity.builder()
-                .email(email)
-                .nickName("nickName")
-                .password(password)
-                .profile("")
-                .address("")
-                .gender("")
-                .birth("")
-                .roles(List.of(Role.ROLE_MEMBER))
-                .drinkCapacity("")
-                .build();
-    }
 }

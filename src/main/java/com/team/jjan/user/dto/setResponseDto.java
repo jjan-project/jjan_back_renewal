@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class setResponseDto extends GenericResponse {
-    private UserDto userDto;
+    private JoinResponse joinResponse;
 }

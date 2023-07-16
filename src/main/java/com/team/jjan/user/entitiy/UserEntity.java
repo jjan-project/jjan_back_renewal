@@ -2,6 +2,9 @@ package com.team.jjan.user.entitiy;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.team.jjan.join.dto.JoinRequest;
+import com.team.jjan.join.dto.LoginRequest;
+import com.team.jjan.join.dto.LoginResponse;
 import com.team.jjan.party.entity.PartyEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,9 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -46,7 +47,7 @@ public class UserEntity implements UserDetails {
     private String gender;
 
     @Column(nullable = false)
-    private String birth;
+    private Date birth;
 
     @Column(nullable = false)
     private String drinkCapacity;
@@ -60,17 +61,26 @@ public class UserEntity implements UserDetails {
     @Column
     private boolean isNickNameChangeAvailable = true;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private List<Role> roles = new ArrayList<>();
+    private Role roles;
+
+    public static UserEntity createUserEntity(JoinRequest joinRequest , String encodedPassword) {
+        return UserEntity.builder()
+                .email(joinRequest.getEmail())
+                .password(encodedPassword)
+                .address(joinRequest.getAddress())
+                .birth(joinRequest.getBirth())
+                .gender(joinRequest.getGender())
+                .nickName(joinRequest.getNickname())
+                .drinkCapacity(joinRequest.getDrinkingCapacity())
+                .roles(Role.ROLE_MEMBER)
+                .build();
+    }
 
     @OneToMany(mappedBy = "author")
     @JsonIgnore
     private List<PartyEntity> parties = new ArrayList<>();
-
-    public void addRole(Role role) {
-        this.roles.add(role);
-    }
 
     public void setProfile(String profile) {
         this.profile = profile;
@@ -78,9 +88,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(o -> new SimpleGrantedAuthority(
-                o.name()
-        )).collect(Collectors.toList());
+        return Collections.singletonList(new SimpleGrantedAuthority(roles.getRole()));
     }
 
     @Override

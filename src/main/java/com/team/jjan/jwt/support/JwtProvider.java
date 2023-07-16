@@ -4,7 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
-import com.team.jjan.join.dto.TokenDto;
+import com.team.jjan.join.dto.TokenResponse;
 import com.team.jjan.security.service.UserDetailService;
 import com.team.jjan.user.entitiy.Role;
 import lombok.RequiredArgsConstructor;
@@ -37,15 +37,15 @@ public class JwtProvider {
         secretKey = Keys.hmacShaKeyFor(salt.getBytes(StandardCharsets.UTF_8));
     }
 
-    public TokenDto createToken(String email, List<Role> roles) {
-        return new TokenDto(createAccessToken(email, roles), createRefreshToken(email, roles));
+    public TokenResponse createToken(String email, Role roles) {
+        return new TokenResponse(createAccessToken(email, roles), createRefreshToken(email, roles));
     }
 
     public String createToken(String refreshToken) {
-        return createAccessToken(getAccount(refreshToken), List.of(Role.ROLE_MEMBER));
+        return createAccessToken(getAccount(refreshToken), Role.ROLE_MEMBER);
     }
 
-    public String createAccessToken(String email, List<Role> roles) {
+    public String createAccessToken(String email, Role roles) {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("roles", roles);
         Date now = new Date();
@@ -57,7 +57,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String createRefreshToken(String email, List<Role> roles) {
+    public String createRefreshToken(String email, Role roles) {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("roles", roles);
         Date now = new Date();

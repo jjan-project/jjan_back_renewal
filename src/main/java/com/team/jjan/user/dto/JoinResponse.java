@@ -4,15 +4,16 @@ import com.team.jjan.user.entitiy.Role;
 import com.team.jjan.user.entitiy.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
-public class UserDto {
+public class JoinResponse {
     private Long id;
     private String email;
     private String nickName;
@@ -20,14 +21,12 @@ public class UserDto {
     private String profile;
     private String address;
     private String gender;
-    private String birth;
+    private Date birth;
     private String drinkCapacity;
-    private Double location_x;
-    private Double location_y;
     private boolean isNickNameChangeAvailable = true;
-    private List<Role> roles = new ArrayList<>();
+    private Role roles;
 
-    public UserDto(UserEntity userEntity) {
+    public JoinResponse(UserEntity userEntity) {
         this.id = userEntity.getId();
         this.email = userEntity.getEmail();
         this.nickName = userEntity.getNickName();
@@ -38,27 +37,7 @@ public class UserDto {
         this.birth = userEntity.getBirth();
         this.drinkCapacity = userEntity.getDrinkCapacity();
         this.roles = userEntity.getRoles();
-        this.location_x = userEntity.getLocation_x();
-        this.location_y = userEntity.getLocation_y();
         this.isNickNameChangeAvailable = userEntity.isNickNameChangeAvailable();
-    }
-
-    public UserEntity toEntity() {
-        return UserEntity.builder()
-                .id(id)
-                .email(email)
-                .nickName(nickName)
-                .password(password)
-                .profile(profile)
-                .address(address)
-                .gender(gender)
-                .birth(birth)
-                .drinkCapacity(drinkCapacity)
-                .roles(roles)
-                .location_x(location_x)
-                .location_y(location_y)
-                .isNickNameChangeAvailable(isNickNameChangeAvailable)
-                .build();
     }
 }
 

@@ -1,7 +1,7 @@
 package com.team.jjan.join.dto;
 
 import com.team.jjan.common.GenericResponse;
-import com.team.jjan.user.dto.UserDto;
+import com.team.jjan.user.dto.JoinResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponseDto extends GenericResponse {
-    private UserDto userDto;
-    private TokenDto token;
+public class LoginResponse extends GenericResponse {
+    private JoinResponse joinResponse;
+    private TokenResponse token;
 }

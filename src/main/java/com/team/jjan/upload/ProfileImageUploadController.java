@@ -17,10 +17,10 @@ public class ProfileImageUploadController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/set-profile-image")
-    public ResponseEntity<FileUploadResponseDto> uploadProfileImage(HttpServletRequest request,
-                                                                    @RequestParam("profileImage") MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<FileUploadResponse> uploadProfileImage(HttpServletRequest request,
+                                                                 @RequestParam("profileImage") MultipartFile multipartFile) throws IOException {
         String email = jwtProvider.getUserEmail(request);
-        FileUploadResponseDto profileUploadResponse = fileUploadService.uploadProfileImage(email, multipartFile);
+        FileUploadResponse profileUploadResponse = fileUploadService.uploadProfileImage(email, multipartFile);
         return ResponseEntity.ok(profileUploadResponse);
     }
 }

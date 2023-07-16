@@ -2,7 +2,7 @@ package com.team.jjan.user.controller;
 
 import com.team.jjan.jwt.support.JwtProvider;
 import com.team.jjan.user.dto.UniqueTestResponseDto;
-import com.team.jjan.user.dto.UserDto;
+import com.team.jjan.user.dto.JoinResponse;
 import com.team.jjan.user.dto.setRequestDto;
 import com.team.jjan.user.dto.setResponseDto;
 import com.team.jjan.user.service.UserService;
@@ -31,8 +31,8 @@ public class UserController {
     public ResponseEntity<setResponseDto> setDrinkCapacity(HttpServletRequest request, @RequestBody setRequestDto setRequestDto) {
         String userEmail = jwtProvider.getUserEmail(request);
         String capacity = setRequestDto.getItem();
-        UserDto userDto = userService.setDrinkCapacity(userEmail,capacity);
-        return ResponseEntity.ok().body(new setResponseDto(userDto));
+        JoinResponse joinResponse = userService.setDrinkCapacity(userEmail,capacity);
+        return ResponseEntity.ok().body(new setResponseDto(joinResponse));
     }
     
     @Operation(summary = "닉네임 변경", description = "닉네임 중복 검사 이후 닉네임을 변경합니다")
@@ -44,8 +44,8 @@ public class UserController {
         if ((isNickNameLengthOK(newNickName) 
                 && userService.isDuplicatedNickName(newNickName) == UserServiceImpl.NOT_DUPLICATED)
                 && userService.isReplaceableUser(userEmail)) {
-            UserDto userDto = userService.setNickName(userEmail,newNickName);
-            return ResponseEntity.ok().body(new setResponseDto(userDto));
+            JoinResponse joinResponse = userService.setNickName(userEmail,newNickName);
+            return ResponseEntity.ok().body(new setResponseDto(joinResponse));
         } else {
             setResponseDto response = new setResponseDto();
             response.response403();
