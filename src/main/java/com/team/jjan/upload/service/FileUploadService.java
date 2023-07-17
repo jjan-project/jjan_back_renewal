@@ -35,7 +35,7 @@ public class FileUploadService {
     private String bucket;
 
     public String uploadFileToS3(MultipartFile file , String uuid) throws IOException {
-        if(isValidFile(file)) {
+        if(!isValidFile(file)) {
             throw new FileUploadException("올바르지 않은 파일입니다.");
         }
 
@@ -59,11 +59,11 @@ public class FileUploadService {
         String fileName = file.getOriginalFilename();
         String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 
-        if(!extension.equals("exe") || !extension.equals("bat")) {
-            return false;
+        if(extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png") || extension.equals("bmp") || extension.equals("svg")) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
 }

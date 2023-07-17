@@ -3,7 +3,7 @@ package com.team.jjan.join.controller;
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.join.dto.JoinRequest;
 import com.team.jjan.join.dto.LoginRequest;
-import com.team.jjan.join.dto.LoginResponse;
+import com.team.jjan.join.dto.ValidationRequest;
 import com.team.jjan.join.service.JoinService;
 import com.team.jjan.join.service.RandomNicknameGenerateService;
 import com.team.jjan.user.dto.JoinResponse;
@@ -50,7 +50,8 @@ public class JoinController {
     @Operation(summary = "회원가입", description = "회원가입 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
     @PostMapping(value = "/join" , consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ResponseMessage> join(@RequestPart(value = "data") JoinRequest joinRequest,
-                                                @RequestPart(value = "image" , required = false) MultipartFile profileImage) throws IOException {
+                                                @RequestPart(value = "image" , required = false) MultipartFile profileImage)
+            throws IOException, AccountException {
         return ResponseEntity.ok().body(joinService.join(joinRequest , profileImage));
     }
 
@@ -58,6 +59,18 @@ public class JoinController {
     @GetMapping("/random-nickname")
     public ResponseEntity<ResponseMessage> randomNickname() {
         return ResponseEntity.ok().body(randomNicknameGenerateService.generateRandomNickname());
+    }
+
+    @Operation(summary = "이메일 중복 체크")
+    @PostMapping("/unique-email")
+    public ResponseEntity<ResponseMessage> isDuplicatedEmail(@RequestBody ValidationRequest request) {
+        return ResponseEntity.ok().body(joinService.isDuplicateEmail(request.getData()));
+    }
+
+    @Operation(summary = "닉네임 중복 체크", description = "중복 닉네임일 시 403 status code 반환합니다.")
+    @PostMapping("/unique-nickname")
+    public ResponseEntity<ResponseMessage> isDuplicatedNickName(@RequestBody ValidationRequest request) {
+        return ResponseEntity.ok().body(joinService.isDuplicateNickName(request.getData()));
     }
 
 }
