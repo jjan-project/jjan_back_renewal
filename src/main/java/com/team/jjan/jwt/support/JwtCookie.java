@@ -1,6 +1,5 @@
 package com.team.jjan.jwt.support;
 
-import com.team.jjan.join.dto.TokenResponse;
 import com.team.jjan.jwt.dto.Token;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;

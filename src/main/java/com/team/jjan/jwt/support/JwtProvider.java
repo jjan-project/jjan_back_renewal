@@ -2,13 +2,13 @@ package com.team.jjan.jwt.support;
 
 import com.team.jjan.jwt.domain.RefreshToken;
 import com.team.jjan.jwt.dto.Token;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpServletRequest;
-import com.team.jjan.join.dto.TokenResponse;
 import com.team.jjan.security.service.UserDetailService;
 import com.team.jjan.user.entitiy.Role;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,11 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import static com.team.jjan.jwt.support.JwtCookie.ACCESS_TOKEN_MAX_AGE;
 import static com.team.jjan.jwt.support.JwtCookie.REFRESH_TOKEN_MAX_AGE;

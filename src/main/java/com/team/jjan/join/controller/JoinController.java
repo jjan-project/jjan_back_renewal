@@ -41,7 +41,7 @@ public class JoinController {
 
     @Operation(summary = "로그인", description = "로그인 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
     @PostMapping("/login")
-    public ResponseEntity<JoinResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response)
+    public ResponseEntity<ResponseMessage> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response)
             throws AccountException {
 
         return ResponseEntity.ok().body(joinService.login(loginRequest , response));

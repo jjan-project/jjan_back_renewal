@@ -30,7 +30,6 @@ import static com.team.jjan.common.ResponseCode.REQUEST_FAIL;
 import static com.team.jjan.common.ResponseCode.REQUEST_SUCCESS;
 import static com.team.jjan.jwt.support.JwtCookie.setCookieFromJwt;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JoinService {
@@ -41,7 +40,7 @@ public class JoinService {
     private final JavaMailSender mailSender;
     private final FileUploadService fileUploadService;
 
-    public JoinResponse login(LoginRequest loginRequest , HttpServletResponse response) throws AccountException {
+    public ResponseMessage login(LoginRequest loginRequest , HttpServletResponse response) throws AccountException {
         UserEntity userEntity = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new AccountException("사용자 정보를 찾을 수 없습니다."));
 
@@ -50,7 +49,7 @@ public class JoinService {
         }
         setCookieFromJwt(response, jwtProvider.createToken(userEntity.getEmail(), userEntity.getRoles()));
 
-        return new JoinResponse(userEntity);
+        return ResponseMessage.of(REQUEST_SUCCESS , new JoinResponse(userEntity));
     }
 
     @Transactional

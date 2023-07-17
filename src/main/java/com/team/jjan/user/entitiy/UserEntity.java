@@ -3,8 +3,6 @@ package com.team.jjan.user.entitiy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.team.jjan.join.dto.JoinRequest;
-import com.team.jjan.join.dto.LoginRequest;
-import com.team.jjan.join.dto.LoginResponse;
 import com.team.jjan.party.entity.PartyEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +11,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
