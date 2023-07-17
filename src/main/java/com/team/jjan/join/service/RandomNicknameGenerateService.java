@@ -1,6 +1,8 @@
 package com.team.jjan.join.service;
 
 import com.google.gson.Gson;
+import com.team.jjan.common.ResponseCode;
+import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.join.exception.ApiServerException;
 import com.team.jjan.join.dto.RandomNicknameApiResponseDto;
 import com.team.jjan.user.repository.UserRepository;
@@ -14,6 +16,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
+import static com.team.jjan.common.ResponseCode.REQUEST_SUCCESS;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -22,19 +26,19 @@ public class RandomNicknameGenerateService {
     private final UserRepository userRepository;
     private final Gson gson;
 
-    public String generateRandomNickname(int maxLength) {
-        if (maxLength < 6) {
-            log.warn("maxLength 는 6 이상이어야 하므로 자동으로 length = 6인 닉네임 생성");
-        }
+    public ResponseMessage generateRandomNickname() {
+        int maxLength = 8;
+
         String nickname = "";
         do {
             String response = randomNicknameAPI(1, maxLength);
             nickname = gson.fromJson(response, RandomNicknameApiResponseDto.class).getWords().get(0);
         } while (userRepository.findByNickName(nickname).isPresent());
-        return nickname;
+
+        return ResponseMessage.of(REQUEST_SUCCESS , nickname);
     }
 
-    private static String randomNicknameAPI(int count, int maxLength) {
+    private String randomNicknameAPI(int count, int maxLength) {
         URI uri = UriComponentsBuilder
                 .fromUriString("https://nickname.hwanmoo.kr/?format=json&count=" + count + "&max_length=" + maxLength)
                 .encode()
@@ -42,9 +46,9 @@ public class RandomNicknameGenerateService {
                 .toUri();
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(uri, String.class);
-        HttpStatusCode statusCode = responseEntity.getStatusCode();
-        if (!statusCode.is2xxSuccessful()) {
-            throw new ApiServerException("랜덤 닉네임 생성 API 서버에 문제가 있음");
+
+        if (!responseEntity.getStatusCode().is2xxSuccessful()) {
+            throw new ApiServerException("랜덤 닉네임 생성 API 서버에 문제가 발생했습니다.");
         }
         return responseEntity.getBody();
     }

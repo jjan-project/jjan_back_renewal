@@ -52,12 +52,6 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String drinkCapacity;
 
-    @Column(nullable = false)
-    private Double location_x;
-
-    @Column(nullable = false)
-    private Double location_y;
-
     @Column
     private boolean isNickNameChangeAvailable = true;
 
@@ -72,9 +66,10 @@ public class UserEntity implements UserDetails {
                 .address(joinRequest.getAddress())
                 .birth(joinRequest.getBirth())
                 .gender(joinRequest.getGender())
+                .profile("blank")
                 .nickName(joinRequest.getNickname())
                 .drinkCapacity(joinRequest.getDrinkingCapacity())
-                .roles(Role.ROLE_MEMBER)
+                .roles(Role.MEMBER)
                 .build();
     }
 
@@ -93,7 +88,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public String getPassword() {
-        return getPassword();
+        return password;
     }
 
     @Override

@@ -14,7 +14,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class JoinResponse {
-    private Long id;
     private String email;
     private String nickName;
     private String password;
@@ -23,11 +22,8 @@ public class JoinResponse {
     private String gender;
     private Date birth;
     private String drinkCapacity;
-    private boolean isNickNameChangeAvailable = true;
-    private Role roles;
 
     public JoinResponse(UserEntity userEntity) {
-        this.id = userEntity.getId();
         this.email = userEntity.getEmail();
         this.nickName = userEntity.getNickName();
         this.password = userEntity.getPassword();
@@ -36,8 +32,6 @@ public class JoinResponse {
         this.gender = userEntity.getGender();
         this.birth = userEntity.getBirth();
         this.drinkCapacity = userEntity.getDrinkCapacity();
-        this.roles = userEntity.getRoles();
-        this.isNickNameChangeAvailable = userEntity.isNickNameChangeAvailable();
     }
 }
 

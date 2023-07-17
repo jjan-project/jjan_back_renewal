@@ -9,6 +9,7 @@ import com.team.jjan.user.dto.JoinResponse;
 import com.team.jjan.user.entitiy.UserEntity;
 import com.team.jjan.user.exception.NoSuchEmailException;
 import com.team.jjan.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
@@ -19,13 +20,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.security.auth.login.AccountException;
 import java.io.IOException;
 
 import static com.team.jjan.common.ResponseCode.REQUEST_SUCCESS;
+import static com.team.jjan.jwt.support.JwtCookie.setRefreshTokenInCookie;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class JoinService {
 
     private final UserRepository userRepository;
@@ -34,17 +37,21 @@ public class JoinService {
     private final JavaMailSender mailSender;
     private final FileUploadService fileUploadService;
 
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest , HttpServletResponse response) throws AccountException {
         UserEntity userEntity = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new BadCredentialsException("Wrong Authentication"));
+                .orElseThrow(() -> new AccountException("사용자 정보를 찾을 수 없습니다."));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), userEntity.getPassword())) {
             throw new BadCredentialsException("Wrong Authentication");
         }
 
-        return new LoginResponse(new JoinResponse(userEntity), jwtProvider.createToken(userEntity.getEmail(), userEntity.getRoles()));
+        TokenResponse tokenResponse = jwtProvider.createToken(userEntity.getEmail(), userEntity.getRoles());
+        setRefreshTokenInCookie(response, tokenResponse.getRefreshToken());
+
+        return new LoginResponse(new JoinResponse(userEntity), tokenResponse);
     }
 
+    @Transactional
     public ResponseMessage join(JoinRequest joinRequest , MultipartFile profileImage) throws IOException {
         String encodedPassword = passwordEncoder.encode(joinRequest.getPassword());
         UserEntity userEntity = UserEntity.createUserEntity(joinRequest , encodedPassword);
@@ -56,7 +63,7 @@ public class JoinService {
     }
 
     public FileUploadResponse uploadProfileImage(UserEntity userEntity , MultipartFile profileImage) throws IOException {
-        if (!profileImage.isEmpty()) {
+        if (profileImage != null) {
             return fileUploadService.uploadProfileImageS3(userEntity.getEmail() , profileImage);
         }
 

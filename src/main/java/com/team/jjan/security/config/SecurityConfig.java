@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.jwt.filter.JwtAuthenticationFilter;
 import com.team.jjan.jwt.support.JwtProvider;
+import com.team.jjan.user.entitiy.Role;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -30,23 +32,10 @@ import java.io.IOException;
 import static com.team.jjan.common.ResponseCode.AUTHORIZATION_FAIL;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtProvider jwtProvider;
-
-    private static final String[] PERMIT_URL_ARRAY = {
-            /* swagger v3 */
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/api/user/unique-email",
-            "/api/user/unique-nickname",
-            "/api/user/login",
-            "/api/user/join",
-            "/api/user/random-nickname",
-            "/api/user/reset-password",
-            "/api/user/setup"
-    };
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -54,20 +43,20 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(
-                PERMIT_URL_ARRAY
-        );
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.httpBasic().disable().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().authorizeRequests()
+                .requestMatchers(HttpMethod.GET , "/**").permitAll()
+                .requestMatchers(HttpMethod.POST , "/api/user/login" , "/api/user/join").permitAll()
+                .requestMatchers(HttpMethod.DELETE , "/**").hasRole(Role.MEMBER.name())
+                .requestMatchers(HttpMethod.PATCH , "/**").hasRole(Role.MEMBER.name())
+                .requestMatchers(HttpMethod.PUT , "/**").hasRole(Role.MEMBER.name())
+                .requestMatchers(HttpMethod.POST , "/**").hasRole(Role.MEMBER.name())
                 .and()
-                .authorizeHttpRequests()
-                .requestMatchers(PERMIT_URL_ARRAY).permitAll()
-                .anyRequest().hasRole("MEMBER")
+                .logout()
+                .logoutUrl("/logout")
+                .deleteCookies("refreshToken")
                 .and()
                 .exceptionHandling()
                 .accessDeniedPage("/api/security/authentication")

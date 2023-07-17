@@ -31,4 +31,12 @@ public class ResponseMessage<T> {
                 .message(responseCode.getMessage())
                 .build();
     }
+
+    public static <T>ResponseMessage of(ResponseCode responseCode , T data) {
+        return ResponseMessage.builder()
+                .code(responseCode.getCode())
+                .message(responseCode.getMessage())
+                .data(data)
+                .build();
+    }
 }
