@@ -1,6 +1,8 @@
-package com.team.jjan.upload;
+package com.team.jjan.upload.controller;
 
 import com.team.jjan.jwt.support.JwtProvider;
+import com.team.jjan.upload.service.FileUploadService;
+import com.team.jjan.upload.dto.FileUploadResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ public class ProfileImageUploadController {
     private final FileUploadService fileUploadService;
     private final JwtProvider jwtProvider;
 
+    /*
     @PostMapping("/set-profile-image")
     public ResponseEntity<FileUploadResponse> uploadProfileImage(HttpServletRequest request,
                                                                  @RequestParam("profileImage") MultipartFile multipartFile) throws IOException {
@@ -23,4 +26,5 @@ public class ProfileImageUploadController {
         FileUploadResponse profileUploadResponse = fileUploadService.uploadProfileImage(email, multipartFile);
         return ResponseEntity.ok(profileUploadResponse);
     }
+    */
 }

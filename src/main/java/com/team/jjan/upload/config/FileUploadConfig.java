@@ -1,4 +1,4 @@
-package com.team.jjan.upload;
+package com.team.jjan.upload.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

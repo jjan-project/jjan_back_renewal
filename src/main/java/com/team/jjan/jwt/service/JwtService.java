@@ -1,7 +1,13 @@
 package com.team.jjan.jwt.service;
 
 import com.team.jjan.common.ResponseMessage;
+import com.team.jjan.jwt.domain.RefreshToken;
+import com.team.jjan.jwt.dto.Token;
+import com.team.jjan.jwt.exception.AuthenticationException;
+import com.team.jjan.jwt.exception.TokenForgeryException;
+import com.team.jjan.jwt.repository.RefreshTokenRepository;
 import com.team.jjan.jwt.support.JwtProvider;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+
+import static com.team.jjan.common.ResponseCode.CREATE_ACCESS_TOKEN;
+import static com.team.jjan.jwt.domain.RefreshToken.createRefreshToken;
+import static com.team.jjan.jwt.support.JwtCookie.createAccessToken;
+import static com.team.jjan.jwt.support.JwtCookie.deleteJwtTokenInCookie;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +31,7 @@ public class JwtService {
 
     @Transactional
     public void login(Token token) {
-        RefreshToken refreshToken = creareRefreshToken(token);
+        RefreshToken refreshToken = createRefreshToken(token);
         String loginUserEmail = refreshToken.getKeyEmail();
 
         refreshTokenRepository.existsByKeyEmail(loginUserEmail).ifPresent(a -> {

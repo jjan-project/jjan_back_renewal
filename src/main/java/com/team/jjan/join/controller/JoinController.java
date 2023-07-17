@@ -6,6 +6,7 @@ import com.team.jjan.join.dto.LoginRequest;
 import com.team.jjan.join.dto.LoginResponse;
 import com.team.jjan.join.service.JoinService;
 import com.team.jjan.join.service.RandomNicknameGenerateService;
+import com.team.jjan.user.dto.JoinResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -40,11 +41,10 @@ public class JoinController {
 
     @Operation(summary = "로그인", description = "로그인 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response)
+    public ResponseEntity<JoinResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response)
             throws AccountException {
-        LoginResponse loginResponse = joinService.login(loginRequest , response);
 
-        return ResponseEntity.ok().body(loginResponse);
+        return ResponseEntity.ok().body(joinService.login(loginRequest , response));
     }
 
     @Operation(summary = "회원가입", description = "회원가입 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")

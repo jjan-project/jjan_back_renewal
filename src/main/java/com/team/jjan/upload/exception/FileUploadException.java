@@ -1,4 +1,4 @@
-package com.team.jjan.upload;
+package com.team.jjan.upload.exception;
 
 import lombok.NoArgsConstructor;
 

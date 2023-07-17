@@ -1,5 +1,7 @@
 package com.team.jjan.jwt.support;
 
+import com.team.jjan.jwt.domain.RefreshToken;
+import com.team.jjan.jwt.dto.Token;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -20,6 +22,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.team.jjan.jwt.support.JwtCookie.ACCESS_TOKEN_MAX_AGE;
+import static com.team.jjan.jwt.support.JwtCookie.REFRESH_TOKEN_MAX_AGE;
+
 @RequiredArgsConstructor
 @Component
 public class JwtProvider {
@@ -27,18 +32,16 @@ public class JwtProvider {
     @Value("${spring.jwt.secret}")
     private String secretKey;
 
-    public static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 30;
-    public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 30;
     private final UserDetailService userDetailService;
 
-    public TokenResponse createToken(String email, Role roles) {
+    public Token createToken(String email, Role roles) {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("roles", roles);
 
         String accessToken = createAccessToken(claims);
         String refreshToken = createRefreshToken(claims);
 
-        return TokenResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+        return Token.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
     public String createAccessToken(Claims claims) {
@@ -47,7 +50,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_TIME))
+                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_MAX_AGE))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
@@ -58,7 +61,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_TIME))
+                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_MAX_AGE))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
@@ -89,10 +92,6 @@ public class JwtProvider {
                 .getSubject();
     }
 
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
-    }
-
     public boolean validateAccessToken(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
@@ -100,6 +99,25 @@ public class JwtProvider {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public String validateRefreshToken(RefreshToken refreshToken) {
+        String token = refreshToken.getToken();
+
+        Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+
+        if (!claims.getBody().getExpiration().before(new Date())) {
+            return recreationAccessToken(claims.getBody().get("sub").toString(), claims.getBody().get("roles"));
+        }
+
+        return null;
+    }
+
+    public String recreationAccessToken(String userEmail, Object roles) {
+        Claims claims = Jwts.claims().setSubject(userEmail);
+        claims.put("roles", roles);
+
+        return createAccessToken(claims);
     }
 
 }

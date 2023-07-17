@@ -1,9 +1,9 @@
 package com.team.jjan.party.service;
 
 import com.team.jjan.party.repository.PartyRepository;
-import com.team.jjan.upload.FileUploadException;
-import com.team.jjan.upload.FileUploadResponse;
-import com.team.jjan.upload.FileUploadService;
+import com.team.jjan.upload.exception.FileUploadException;
+import com.team.jjan.upload.dto.FileUploadResponse;
+import com.team.jjan.upload.service.FileUploadService;
 import com.team.jjan.party.dto.PartyCreateRequestDto;
 import com.team.jjan.party.dto.PartyDto;
 import com.team.jjan.party.dto.PartyUpdateRequestDto;
@@ -39,14 +39,14 @@ public class PartyServiceImpl implements PartyService {
         UserEntity author = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new NoSuchEmailException(userEmail));
         List<String> partyImageUrls = new ArrayList<>();
-        try {
-            List<FileUploadResponse> fileUploadResponses = fileUploadService.uploadPartyImages(UUID.randomUUID().toString(), partyImages);
-            for (FileUploadResponse dto : fileUploadResponses) {
-                partyImageUrls.add(dto.getUrl());
-            }
-        } catch (IOException e) {
-            throw new FileUploadException(e.getMessage());
-        }
+//        try {
+//            // List<FileUploadResponse> fileUploadResponses = fileUploadService.uploadPartyImages(UUID.randomUUID().toString(), partyImages);
+//            //for (FileUploadResponse dto : fileUploadResponses) {
+//            //    partyImageUrls.add(dto.getUrl());
+//            //}
+//        } catch (IOException e) {
+//            throw new FileUploadException(e.getMessage());
+//        }
         PartyDto partyDto = new PartyDto(author, requestDto, partyImageUrls);
         PartyEntity save = partyRepository.save(partyDto.toEntity());
         return new PartyDto(save);
@@ -71,14 +71,14 @@ public class PartyServiceImpl implements PartyService {
         PartyEntity party = partyRepository.findById(requestDto.getId())
                 .orElseThrow(() -> new NoSuchPartyException("해당하는 파티 id 를 찾을 수 없습니다. : " + requestDto.getId()));
         List<String> partyImageUrls = new ArrayList<>();
-        try {
-            List<FileUploadResponse> fileUploadResponses = fileUploadService.uploadPartyImages(UUID.randomUUID().toString(), partyImages);
-            for (FileUploadResponse dto : fileUploadResponses) {
-                partyImageUrls.add(dto.getUrl());
-            }
-        } catch (IOException e) {
-            throw new FileUploadException(e.getMessage());
-        }
+//        try {
+//            List<FileUploadResponse> fileUploadResponses = fileUploadService.uploadPartyImages(UUID.randomUUID().toString(), partyImages);
+//            for (FileUploadResponse dto : fileUploadResponses) {
+//                partyImageUrls.add(dto.getUrl());
+//            }
+//        } catch (IOException e) {
+//            throw new FileUploadException(e.getMessage());
+//        }
         party.update(requestDto, partyImageUrls);
         return new PartyDto(party);
     }

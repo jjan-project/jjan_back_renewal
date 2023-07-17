@@ -3,8 +3,8 @@ package com.team.jjan.join.service;
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.join.dto.*;
 import com.team.jjan.jwt.support.JwtProvider;
-import com.team.jjan.upload.FileUploadResponse;
-import com.team.jjan.upload.FileUploadService;
+import com.team.jjan.upload.dto.FileUploadResponse;
+import com.team.jjan.upload.service.FileUploadService;
 import com.team.jjan.user.dto.JoinResponse;
 import com.team.jjan.user.entitiy.UserEntity;
 import com.team.jjan.user.exception.NoSuchEmailException;
@@ -22,9 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.security.auth.login.AccountException;
 import java.io.IOException;
+import java.util.UUID;
 
 import static com.team.jjan.common.ResponseCode.REQUEST_SUCCESS;
-import static com.team.jjan.jwt.support.JwtCookie.setRefreshTokenInCookie;
+import static com.team.jjan.jwt.support.JwtCookie.setCookieFromJwt;
 
 @Slf4j
 @Service
@@ -37,18 +38,16 @@ public class JoinService {
     private final JavaMailSender mailSender;
     private final FileUploadService fileUploadService;
 
-    public LoginResponse login(LoginRequest loginRequest , HttpServletResponse response) throws AccountException {
+    public JoinResponse login(LoginRequest loginRequest , HttpServletResponse response) throws AccountException {
         UserEntity userEntity = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new AccountException("사용자 정보를 찾을 수 없습니다."));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), userEntity.getPassword())) {
             throw new BadCredentialsException("Wrong Authentication");
         }
+        setCookieFromJwt(response, jwtProvider.createToken(userEntity.getEmail(), userEntity.getRoles()));
 
-        TokenResponse tokenResponse = jwtProvider.createToken(userEntity.getEmail(), userEntity.getRoles());
-        setRefreshTokenInCookie(response, tokenResponse.getRefreshToken());
-
-        return new LoginResponse(new JoinResponse(userEntity), tokenResponse);
+        return new JoinResponse(userEntity);
     }
 
     @Transactional
@@ -62,12 +61,15 @@ public class JoinService {
         return ResponseMessage.of(REQUEST_SUCCESS);
     }
 
-    public FileUploadResponse uploadProfileImage(UserEntity userEntity , MultipartFile profileImage) throws IOException {
+    public void uploadProfileImage(UserEntity userEntity , MultipartFile profileImage) throws IOException {
+        String uuid = createUUIDString();
+        String imageUrl = "blank";
+
         if (profileImage != null) {
-            return fileUploadService.uploadProfileImageS3(userEntity.getEmail() , profileImage);
+            imageUrl = fileUploadService.uploadFileToS3(profileImage , uuid);
         }
 
-        return null;
+        userEntity.setProfile(imageUrl);
     }
 
     public PasswordResponseDto resetPassword(PasswordRequestDto passwordRequestDto) {
@@ -108,6 +110,10 @@ public class JoinService {
             str += charSet[idx];
         }
         return str;
+    }
+
+    public String createUUIDString() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
     @Transactional

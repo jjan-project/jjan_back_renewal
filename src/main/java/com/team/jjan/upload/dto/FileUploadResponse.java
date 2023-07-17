@@ -1,4 +1,4 @@
-package com.team.jjan.upload;
+package com.team.jjan.upload.dto;
 
 import com.team.jjan.common.GenericResponse;
 import lombok.AllArgsConstructor;
