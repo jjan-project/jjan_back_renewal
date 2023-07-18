@@ -2,18 +2,16 @@ package com.team.jjan.join.service;
 
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.join.dto.*;
+import com.team.jjan.jwt.dto.Token;
+import com.team.jjan.jwt.service.JwtService;
 import com.team.jjan.jwt.support.JwtProvider;
 import com.team.jjan.upload.service.FileUploadService;
 import com.team.jjan.user.dto.JoinResponse;
 import com.team.jjan.user.entitiy.UserEntity;
-import com.team.jjan.user.exception.NoSuchEmailException;
 import com.team.jjan.user.repository.UserRepository;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,6 +35,7 @@ public class JoinService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final JwtService jwtService;
     private final FileUploadService fileUploadService;
 
     public ResponseMessage login(LoginRequest loginRequest , HttpServletResponse response) throws AccountException {
@@ -46,9 +45,17 @@ public class JoinService {
         if (!passwordEncoder.matches(loginRequest.getPassword(), userEntity.getPassword())) {
             throw new BadCredentialsException("Wrong Authentication");
         }
-        setCookieFromJwt(response, jwtProvider.createToken(userEntity.getEmail(), userEntity.getRoles()));
+
+        createJwtToken(userEntity , response);
 
         return ResponseMessage.of(REQUEST_SUCCESS , new JoinResponse(userEntity));
+    }
+
+    public void createJwtToken(UserEntity user , HttpServletResponse response) {
+        Token token = jwtProvider.createJwtToken(user.getUsername(), user.getRoles());
+        jwtService.registerRefreshToken(token);
+
+        setCookieFromJwt(response , token);
     }
 
     @Transactional

@@ -1,7 +1,7 @@
 package com.team.jjan.jwt.service;
 
-import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.jwt.domain.RefreshToken;
+import com.team.jjan.jwt.dto.Token;
 import com.team.jjan.jwt.exception.AuthenticationException;
 import com.team.jjan.jwt.exception.TokenForgeryException;
 import com.team.jjan.jwt.repository.RefreshTokenRepository;
@@ -11,11 +11,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-import static com.team.jjan.common.ResponseCode.CREATE_ACCESS_TOKEN;
+import static com.team.jjan.jwt.domain.RefreshToken.createRefreshToken;
 import static com.team.jjan.jwt.support.JwtCookie.createAccessToken;
 import static com.team.jjan.jwt.support.JwtCookie.deleteJwtTokenInCookie;
 
@@ -26,6 +27,18 @@ public class JwtService {
     private final JwtProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    @Transactional
+    public void registerRefreshToken(Token token) {
+        RefreshToken refreshToken = createRefreshToken(token);
+        String loginUserEmail = refreshToken.getKeyEmail();
+
+        refreshTokenRepository.existsByKeyEmail(loginUserEmail).ifPresent(a -> {
+            refreshTokenRepository.deleteByKeyEmail(loginUserEmail);
+        });
+
+        refreshTokenRepository.save(refreshToken);
+    }
+
     public RefreshToken getRefreshToken(HttpServletRequest request) throws AuthenticationException {
         String refreshToken = getRefreshTokenFromHeader(request);
 
@@ -33,7 +46,7 @@ public class JwtService {
                 .orElseThrow(() -> new TokenForgeryException("알 수 없는 RefreshToken 입니다."));
     }
 
-    public ResponseMessage reissueAccessToken(HttpServletRequest request , HttpServletResponse response)
+    public void reissueAccessToken(HttpServletRequest request , HttpServletResponse response)
             throws AuthenticationException {
         try {
             RefreshToken token = getRefreshToken(request);
@@ -41,7 +54,6 @@ public class JwtService {
 
             response.addHeader("Set-Cookie" , createAccessToken(accessToken).toString());
 
-            return ResponseMessage.of(CREATE_ACCESS_TOKEN);
         } catch (NoSuchElementException e) {
             deleteJwtTokenInCookie(response);
 

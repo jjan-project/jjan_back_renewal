@@ -1,26 +1,15 @@
 package com.team.jjan.upload.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.team.jjan.upload.dto.FileUploadResponse;
 import com.team.jjan.upload.exception.FileUploadException;
-import com.team.jjan.user.entitiy.UserEntity;
-import com.team.jjan.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,9 +17,6 @@ import java.util.Optional;
 public class FileUploadService {
 
     private final AmazonS3Client amazonS3Client;
-    private final UserRepository userRepository;
-    private static final String PROFILE_IMAGE_DIR_NAME = "profile";
-    private static final String PARTY_IMAGE_DIR_NAME = "party";
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
@@ -39,12 +25,17 @@ public class FileUploadService {
             throw new FileUploadException("올바르지 않은 파일입니다.");
         }
 
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentType(file.getContentType());
-        metadata.setContentLength(file.getInputStream().available());
-        amazonS3Client.putObject(bucket , uuid ,file.getInputStream() , metadata);
+        amazonS3Client.putObject(bucket , uuid ,file.getInputStream() , createMetadata(file));
 
         return amazonS3Client.getUrl(bucket , uuid).toString();
+    }
+
+    public ObjectMetadata createMetadata(MultipartFile multipartFile) throws IOException {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(multipartFile.getContentType());
+        metadata.setContentLength(multipartFile.getInputStream().available());
+
+        return metadata;
     }
 
     public void deleteFile(String fileName) {

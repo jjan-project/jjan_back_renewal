@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FileUploadResponse extends GenericResponse {
+public class FileUploadResponse {
     private String identifier;
     private String fileName;
     private String url;

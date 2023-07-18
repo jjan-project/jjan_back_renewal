@@ -1,6 +1,7 @@
 package com.team.jjan.security.support;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.team.jjan.common.ResponseCode;
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.jwt.exception.TokenForgeryException;
 import com.team.jjan.jwt.service.JwtService;
@@ -33,7 +34,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         try {
             jwtService.reissueAccessToken(request , response);
 
-            setErrorResponse(response , HttpServletResponse.SC_OK , CREATE_ACCESS_TOKEN.getMessage());
+            setSuccessResponse(response , CREATE_ACCESS_TOKEN);
         } catch (TokenForgeryException e) {
             deleteJwtTokenInCookie(response);
 
@@ -50,6 +51,17 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         ResponseMessage errorResponse = ResponseMessage.of(AUTHENTICATION_ERROR , message);
+
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+    }
+
+    public static void setSuccessResponse(HttpServletResponse response , ResponseCode responseCode) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.setStatus(200);
+        response.setCharacterEncoding("utf-8");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        ResponseMessage errorResponse = ResponseMessage.of(responseCode);
 
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
