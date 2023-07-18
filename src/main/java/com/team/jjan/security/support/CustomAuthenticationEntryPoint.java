@@ -34,12 +34,12 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             jwtService.validateRefreshToken(request , response);
 
             setErrorResponse(response , HttpServletResponse.SC_OK , CREATE_ACCESS_TOKEN.getMessage());
-        } catch (AuthenticationException e) {
-            setErrorResponse(response , HttpServletResponse.SC_UNAUTHORIZED , "인증되지 않은 사용자입니다.");
         } catch (TokenForgeryException e) {
             deleteJwtTokenInCookie(response);
 
             setErrorResponse(response , HttpStatus.UNAUTHORIZED.value() , e.getMessage());
+        } catch (Exception e) {
+            setErrorResponse(response , HttpServletResponse.SC_UNAUTHORIZED , "인증되지 않은 사용자입니다.");
         }
     }
 

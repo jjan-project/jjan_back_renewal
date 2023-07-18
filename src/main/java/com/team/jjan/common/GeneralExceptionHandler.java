@@ -17,22 +17,23 @@ import javax.security.auth.login.AccountException;
 public class GeneralExceptionHandler {
 
     @ExceptionHandler({NoSuchEmailException.class , AuthenticationException.class})
-    public ResponseEntity<ResponseMessage> noSuchEmailError(NoSuchEmailException e) {
+    public ResponseEntity<ResponseMessage> noSuchEmailError(Exception e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ResponseMessage.of(ResponseCode.AUTHENTICATION_FAIL , e.getMessage()));
     }
 
     @ExceptionHandler(NoSuchNicknameException.class)
-    public ResponseEntity<ResponseMessage> noSuchNicknameError(NoSuchNicknameException e) {
+    public ResponseEntity<ResponseMessage> noSuchNicknameError(Exception e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ResponseMessage.of(ResponseCode.AUTHENTICATION_FAIL , e.getMessage()));
     }
 
     @ExceptionHandler({FileUploadException.class , AccountException.class , UsernameNotFoundException.class})
-    public ResponseEntity<ResponseMessage> fileConversionError(FileUploadException e) {
+    public ResponseEntity<ResponseMessage> fileConversionError(Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseMessage.of(ResponseCode.REQUEST_FAIL , e.getMessage()));
     }
 
     @ExceptionHandler(NoSuchPartyException.class)
-    public ResponseEntity<ResponseMessage> noSuchPartyException(NoSuchPartyException e) {
+    public ResponseEntity<ResponseMessage> noSuchPartyException(Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseMessage.of(ResponseCode.REQUEST_FAIL , e.getMessage()));
     }
+
 }

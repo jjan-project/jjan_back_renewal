@@ -6,7 +6,6 @@ import com.team.jjan.join.dto.LoginRequest;
 import com.team.jjan.join.dto.ValidationRequest;
 import com.team.jjan.join.service.JoinService;
 import com.team.jjan.join.service.RandomNicknameGenerateService;
-import com.team.jjan.user.dto.JoinResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,19 +24,6 @@ public class JoinController {
 
     private final JoinService joinService;
     private final RandomNicknameGenerateService randomNicknameGenerateService;
-
-    /*
-    @Operation(summary = "비밀번호 찾기", description = "사용자 인증(현재는 이메일,닉네임 인증) 후 이메일로 임시 비밀번호를 발송합니다")
-    @PostMapping("/reset-password")
-    public ResponseEntity<PasswordResponseDto> resetPassword(@RequestBody PasswordRequestDto passwordRequestDto) {
-        PasswordResponseDto passwordResponseDto = joinService.resetPassword(passwordRequestDto);
-        //reset failure
-        if (passwordResponseDto.getEmail() == null)
-            passwordResponseDto.response404();
-
-        return ResponseEntity.ok().body(passwordResponseDto);
-    }
-    */
 
     @Operation(summary = "로그인", description = "로그인 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
     @PostMapping("/login")
