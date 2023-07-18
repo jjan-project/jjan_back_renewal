@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean{
         Cookie cookies[] = request.getCookies();
         String accessToken = null;
 
-        if (cookies != null && cookies.length != 0) {
+        if (cookies != null) {
             accessToken = Arrays.stream(cookies)
                     .filter(c -> c.getName().equals("accessToken")).findFirst().map(Cookie::getValue)
                     .orElse(null);

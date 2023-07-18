@@ -1,6 +1,5 @@
 package com.team.jjan.party.entity;
 
-import com.team.jjan.config.BaseTimeEntity;
 import jakarta.persistence.*;
 import com.team.jjan.party.dto.PartyUpdateRequestDto;
 import com.team.jjan.user.entitiy.UserEntity;

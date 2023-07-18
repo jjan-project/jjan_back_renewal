@@ -44,6 +44,7 @@ public class RandomNicknameGenerateService {
                 .encode()
                 .build()
                 .toUri();
+
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(uri, String.class);
 

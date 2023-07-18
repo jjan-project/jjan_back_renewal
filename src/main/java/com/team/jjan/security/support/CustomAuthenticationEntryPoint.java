@@ -31,7 +31,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             throws IOException, ServletException {
 
         try {
-            jwtService.validateRefreshToken(request , response);
+            jwtService.reissueAccessToken(request , response);
 
             setErrorResponse(response , HttpServletResponse.SC_OK , CREATE_ACCESS_TOKEN.getMessage());
         } catch (TokenForgeryException e) {
