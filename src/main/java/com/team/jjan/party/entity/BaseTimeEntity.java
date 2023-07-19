@@ -1,4 +1,4 @@
-package com.team.jjan.config;
+package com.team.jjan.party.entity;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

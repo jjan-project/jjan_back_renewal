@@ -14,13 +14,4 @@ public class GenericResponse {
     public int statusCode;
     public String message;
 
-    public void response403() {
-        statusCode = 403;
-        message = "FORBIDDEN";
-    }
-
-    public void response404() {
-        statusCode = 404;
-        message = "NOT FOUND";
-    }
 }

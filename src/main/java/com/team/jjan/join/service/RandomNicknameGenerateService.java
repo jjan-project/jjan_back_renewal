@@ -35,7 +35,7 @@ public class RandomNicknameGenerateService {
             nickname = gson.fromJson(response, RandomNicknameApiResponseDto.class).getWords().get(0);
         } while (userRepository.findByNickName(nickname).isPresent());
 
-        return ResponseMessage.of(REQUEST_SUCCESS , nickname);
+        return ResponseMessage.of(REQUEST_SUCCESS , REQUEST_SUCCESS.getMessage() , nickname);
     }
 
     private String randomNicknameAPI(int count, int maxLength) {
@@ -44,6 +44,7 @@ public class RandomNicknameGenerateService {
                 .encode()
                 .build()
                 .toUri();
+
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(uri, String.class);
 

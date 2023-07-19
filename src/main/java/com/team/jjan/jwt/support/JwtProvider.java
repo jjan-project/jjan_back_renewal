@@ -30,14 +30,14 @@ public class JwtProvider {
 
     private final UserDetailService userDetailService;
 
-    public Token createToken(String email, Role roles) {
+    public Token createJwtToken(String email, Role roles) {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("roles", roles);
 
         String accessToken = createAccessToken(claims);
         String refreshToken = createRefreshToken(claims);
 
-        return Token.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+        return Token.builder().accessToken(accessToken).refreshToken(refreshToken).key(email).build();
     }
 
     public String createAccessToken(Claims claims) {

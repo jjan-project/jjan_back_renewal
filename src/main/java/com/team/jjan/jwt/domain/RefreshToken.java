@@ -24,14 +24,6 @@ public class RefreshToken {
     @Column(nullable = false)
     private String keyEmail;
 
-    public static RefreshToken defaultRefreshToken() {
-        return RefreshToken.builder()
-                .tokenId(1L)
-                .token(" ")
-                .keyEmail(" ")
-                .build();
-    }
-
     public static RefreshToken createRefreshToken(Token token) {
         return RefreshToken.builder()
                 .keyEmail(token.getKey())

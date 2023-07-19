@@ -1,6 +1,7 @@
 package com.team.jjan.security.support;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.team.jjan.common.ResponseCode;
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.jwt.exception.TokenForgeryException;
 import com.team.jjan.jwt.service.JwtService;
@@ -31,15 +32,15 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             throws IOException, ServletException {
 
         try {
-            jwtService.validateRefreshToken(request , response);
+            jwtService.reissueAccessToken(request , response);
 
-            setErrorResponse(response , HttpServletResponse.SC_OK , CREATE_ACCESS_TOKEN.getMessage());
-        } catch (AuthenticationException e) {
-            setErrorResponse(response , HttpServletResponse.SC_UNAUTHORIZED , "인증되지 않은 사용자입니다.");
+            setSuccessResponse(response , CREATE_ACCESS_TOKEN);
         } catch (TokenForgeryException e) {
             deleteJwtTokenInCookie(response);
 
             setErrorResponse(response , HttpStatus.UNAUTHORIZED.value() , e.getMessage());
+        } catch (Exception e) {
+            setErrorResponse(response , HttpServletResponse.SC_UNAUTHORIZED , "인증되지 않은 사용자입니다.");
         }
     }
 
@@ -50,6 +51,17 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         ResponseMessage errorResponse = ResponseMessage.of(AUTHENTICATION_ERROR , message);
+
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+    }
+
+    public static void setSuccessResponse(HttpServletResponse response , ResponseCode responseCode) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.setStatus(200);
+        response.setCharacterEncoding("utf-8");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        ResponseMessage errorResponse = ResponseMessage.of(responseCode);
 
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }

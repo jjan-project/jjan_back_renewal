@@ -38,7 +38,6 @@ public class JwtCookie {
     }
 
     public static void setCookieFromJwt(HttpServletResponse response , Token token) {
-        System.out.println(createAccessToken(token.getAccessToken()).toString());
         response.addHeader("Set-Cookie" , createAccessToken(token.getAccessToken()).toString());
         response.addHeader("Set-Cookie" , createRefreshToken(token.getRefreshToken()).toString());
     }
