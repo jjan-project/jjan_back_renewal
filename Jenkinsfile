@@ -5,7 +5,17 @@ pipeline {
         stage('git Clone') {
             steps {
                 git branch: 'dev', url: 'https://github.com/jjan-project/jjan_back_renewal'
+                git branch: 'main', url: 'https://github.com/jjan-project/jjan-back-security'
                 echo 'Clone Success'
+            }
+        }
+
+        stage('file merge') {
+            steps {
+                sh '''
+                    mv ./resources ./src
+                '''
+                echo 'file merge Success'
             }
         }
 
@@ -27,12 +37,12 @@ pipeline {
                     if [ -z ${CURRENT_PID} ] ; then
                         echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다."
                     else
-                        echo "> 실행중인 어플리케이션 : $CURRENT_PID"
+                        echo "> 실행중인 어플리케이션을 종료합니다. : $CURRENT_PID"
                         sudo kill -9 $CURRENT_PID
                         sleep 10
                     fi
 
-                    echo "> comma 배포 작업 시작"
+                    echo "> jjan 배포 작업 시작"
                     JENKINS_NODE_COOKIE=dontKillMe nohup java -jar jjan_back_renewal-0.0.1-SNAPSHOT.jar &
                     '''
                 }
