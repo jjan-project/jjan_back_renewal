@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class SessionUser {
+public class CurrentUser {
 
     private Long id;
 
@@ -16,7 +16,7 @@ public class SessionUser {
 
     private String nickName;
 
-    public static SessionUser of(UserEntity user){
-        return new SessionUser(user.getId(), user.getEmail(), user.getNickName());
+    public static CurrentUser of(UserEntity user){
+        return new CurrentUser(user.getId(), user.getEmail(), user.getNickName());
     }
 }
