@@ -1,7 +1,8 @@
 package com.team.jjan.party.dto;
 
+import com.team.jjan.party.entity.Location;
 import com.team.jjan.party.entity.PartyTag;
-import com.team.jjan.user.entitiy.UserEntity;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,16 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class PartyUpdateRequestDto {
-    private Long id;
-    private UserEntity userEntity;
     private String title;
     private String content;
     private int maxPartyNum;
-    private double partyLatitude;
-    private double partyLongitude;
+    private Location location;
     private String partyDate;
     private List<PartyTag> partyTags = new ArrayList<>();
 }
