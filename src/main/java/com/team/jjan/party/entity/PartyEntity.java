@@ -20,9 +20,14 @@ public class PartyEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //작성 유저
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity author;
+
+    //가입 유저
+    @OneToMany(mappedBy = "joinUser")
+    private List<PartyJoin> joinUsers = new ArrayList<>();
 
     @Column(nullable = false)
     private String title;
