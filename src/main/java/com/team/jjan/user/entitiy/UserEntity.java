@@ -29,8 +29,8 @@ public class UserEntity implements UserDetails {
     private List<PartyEntity> createParties = new ArrayList<>();
 
     //가입한 파티
-    @OneToMany(mappedBy = "joinParty")
-    private List<PartyJoin> joinParties = new ArrayList<>();
+    @OneToMany(mappedBy = "joinUser")
+    private List<PartyJoin> partyJoins = new ArrayList<>();
 
     @Column(nullable = false, unique = true)
     private String email;

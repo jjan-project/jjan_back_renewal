@@ -26,8 +26,8 @@ public class PartyEntity extends BaseTimeEntity {
     private UserEntity author;
 
     //가입 유저
-    @OneToMany(mappedBy = "joinUser")
-    private List<PartyJoin> joinUsers = new ArrayList<>();
+    @OneToMany(mappedBy = "joinParty")
+    private List<PartyJoin> partyJoins = new ArrayList<>();
 
     @Column(nullable = false)
     private String title;
