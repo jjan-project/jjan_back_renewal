@@ -33,7 +33,8 @@ public class SessionUserArgumentResolver implements HandlerMethodArgumentResolve
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String email = jwtProvider.getUserEmail(request);
+
         return CurrentUser.of(userRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchEmailException(email)));
+                .orElseThrow(() -> new NoSuchEmailException("사용자 정보를 찾을 수 없습니다.")));
     }
 }

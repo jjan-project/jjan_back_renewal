@@ -18,6 +18,7 @@ public class GeneralExceptionHandler {
 
     @ExceptionHandler({NoSuchEmailException.class , AuthenticationException.class})
     public ResponseEntity<ResponseMessage> noSuchEmailError(Exception e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ResponseMessage.of(ResponseCode.AUTHENTICATION_FAIL , e.getMessage()));
     }
 

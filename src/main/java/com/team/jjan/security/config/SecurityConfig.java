@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
                 .requestMatchers(HttpMethod.POST , "/api/user/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE , "/api/user/**").permitAll()
                 .requestMatchers(HttpMethod.DELETE , "/**").hasRole(Role.MEMBER.name())
                 .requestMatchers(HttpMethod.PATCH , "/**").hasRole(Role.MEMBER.name())
                 .requestMatchers(HttpMethod.PUT , "/**").hasRole(Role.MEMBER.name())

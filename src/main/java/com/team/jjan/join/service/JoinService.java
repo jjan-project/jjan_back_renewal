@@ -63,6 +63,9 @@ public class JoinService {
         if (userRepository.findByEmail(joinRequest.getEmail()).isPresent()) {
             throw new AccountException("이미 존재하는 사용자입니다.");
         }
+        if(!checkDuplicatedNickName(joinRequest.getNickname())) {
+            throw new AccountException("사용중인 닉네임입니다.");
+        }
 
         String encodedPassword = passwordEncoder.encode(joinRequest.getPassword());
         UserEntity userEntity = UserEntity.createUserEntity(joinRequest , encodedPassword);
@@ -122,11 +125,11 @@ public class JoinService {
         return true;
     }
 
-    public String createUUIDString() {
+    public static String createUUIDString() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
-    private boolean isNickNameLengthOK(String nickName) {
+    public boolean isNickNameLengthOK(String nickName) {
         if (nickName.length() >= 4 && nickName.length() <= 16) {
             return true;
         }

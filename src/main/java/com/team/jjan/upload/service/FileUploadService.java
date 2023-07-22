@@ -1,6 +1,8 @@
 package com.team.jjan.upload.service;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.team.jjan.upload.exception.FileUploadException;
 import lombok.RequiredArgsConstructor;
@@ -39,10 +41,15 @@ public class FileUploadService {
     }
 
     public void deleteFile(String fileName) {
-        boolean isObjectExist = amazonS3Client.doesObjectExist(bucket, fileName);
+        if(fileName.equals("blank")) {
+            return;
+        }
 
-        if(isObjectExist) {
-            amazonS3Client.deleteObject(bucket, fileName);
+        String fileKey[] = fileName.split("/");
+        int length = fileKey.length - 1;
+
+        if (amazonS3Client.doesObjectExist(bucket, fileKey[length])) {
+            amazonS3Client.deleteObject(bucket, fileKey[length]);
         }
     }
 
