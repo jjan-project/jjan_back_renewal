@@ -2,12 +2,14 @@ package com.team.jjan.jwt.support;
 
 import com.team.jjan.jwt.domain.RefreshToken;
 import com.team.jjan.jwt.dto.Token;
+import com.team.jjan.jwt.exception.AuthenticationException;
 import com.team.jjan.security.service.UserDetailService;
 import com.team.jjan.user.entitiy.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import static com.team.jjan.jwt.support.JwtCookie.ACCESS_TOKEN_MAX_AGE;
@@ -73,10 +76,22 @@ public class JwtProvider {
     }
 
     public String getUserEmail(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
+        String token = getAccessTokenFromHeader(request);
         UserDetails userDetails = userDetailService.loadUserByUsername(getAccount(token));
 
         return userDetails.getUsername();
+    }
+
+    public String getAccessTokenFromHeader(HttpServletRequest request) throws AuthenticationException {
+        Cookie cookies[] = request.getCookies();
+
+        if (cookies != null) {
+            return Arrays.stream(cookies)
+                    .filter(c -> c.getName().equals("accessToken")).findFirst().map(Cookie::getValue)
+                    .orElseThrow(() -> new AuthenticationException("인증되지 않은 사용자입니다."));
+        }
+
+        throw new AuthenticationException("인증되지 않은 사용자입니다.");
     }
 
     public String getAccount(String token) {

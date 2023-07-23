@@ -38,7 +38,6 @@ public class PartyController {
     }
 
     @Operation(summary = "파티 수정", description = "PartyUpdateRequestDto와 List<MultipartFile> 분리, 글 수정 시 로그인 정보 확인,  Parameter 변수 id로 정보 전달")
-    @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}")
     public ResponseEntity<ResponseMessage> updateParty(@PathVariable("id") Long partyId,
                                         @RequestPart PartyUpdateRequestDto updateRequestDto,
@@ -48,7 +47,6 @@ public class PartyController {
     }
 
     @Operation(summary = "파티 삭제", description = "삭제 성공 시 SUCCESS code 반환")
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseMessage> deleteParty(@PathVariable("id") Long partyId){
         return ResponseEntity.ok(partyService.deleteParty(partyId));
