@@ -16,7 +16,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 @RequiredArgsConstructor
-public class SessionUserArgumentResolver implements HandlerMethodArgumentResolver {
+public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
