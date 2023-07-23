@@ -25,15 +25,17 @@ public class UserController {
 
     @Operation(summary = "주량 변경", description = "주량을 변경합니다")
     @PatchMapping("/drink-capacity")
-    public ResponseEntity<ResponseMessage> setDrinkCapacity(HttpServletRequest request, @RequestBody RequestData requestData) {
-        return ResponseEntity.ok().body(userService.setDrinkCapacity(request , requestData));
+    public ResponseEntity<ResponseMessage> setDrinkCapacity(@LogIn CurrentUser currentUser
+            , @RequestBody RequestData requestData) {
+        return ResponseEntity.ok().body(userService.setDrinkCapacity(currentUser , requestData));
     }
 
 
     @Operation(summary = "닉네임 변경", description = "닉네임 중복 검사 이후 닉네임을 변경합니다")
     @PatchMapping("/nickname")
-    public ResponseEntity<ResponseMessage> setNickName(HttpServletRequest request, @RequestBody RequestData requestData) throws AccountException {
-        return ResponseEntity.ok().body(userService.setNickName(request , requestData));
+    public ResponseEntity<ResponseMessage> setNickName(@LogIn CurrentUser currentUser
+            , @RequestBody RequestData requestData) throws AccountException {
+        return ResponseEntity.ok().body(userService.setNickName(currentUser , requestData));
     }
 
     @Operation(summary = "사용자 이메일로 사용자 제거")
@@ -44,13 +46,14 @@ public class UserController {
 
     @Operation(summary = "AccessToken을 이용하여 사용자 제거")
     @DeleteMapping
-    public ResponseEntity deleteUserByToken(HttpServletRequest request , HttpServletResponse response) {
-        return ResponseEntity.ok().body(userService.deleteUser(request , response));
+    public ResponseEntity deleteUserByToken(@LogIn CurrentUser currentUser , HttpServletResponse response) {
+        return ResponseEntity.ok().body(userService.deleteUser(currentUser , response));
     }
 
     @Operation(summary = "프로필 이미지 변경")
     @PatchMapping("/profile-image")
-    public ResponseEntity<ResponseMessage> setProfileImage(HttpServletRequest request, @RequestPart(value = "image") MultipartFile multipartFile) throws IOException {
-        return ResponseEntity.ok().body(userService.setProfileImage(request , multipartFile));
+    public ResponseEntity<ResponseMessage> setProfileImage(@LogIn CurrentUser currentUser
+            , @RequestPart(value = "image") MultipartFile multipartFile) throws IOException {
+        return ResponseEntity.ok().body(userService.setProfileImage(currentUser , multipartFile));
     }
 }

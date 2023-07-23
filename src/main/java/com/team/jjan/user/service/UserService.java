@@ -1,6 +1,7 @@
 package com.team.jjan.user.service;
 
 import com.team.jjan.common.ResponseMessage;
+import com.team.jjan.common.dto.CurrentUser;
 import com.team.jjan.join.service.JoinService;
 import com.team.jjan.jwt.support.JwtProvider;
 import com.team.jjan.upload.service.FileUploadService;
@@ -28,13 +29,12 @@ import static com.team.jjan.jwt.support.JwtCookie.deleteJwtTokenInCookie;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final JwtProvider jwtProvider;
     private final JoinService joinService;
     private final FileUploadService fileUploadService;
 
     @Transactional
-    public ResponseMessage setNickName(HttpServletRequest request, RequestData RequestData) throws AccountException {
-        String userEmail = jwtProvider.getUserEmail(request);
+    public ResponseMessage setNickName(CurrentUser currentUser, RequestData RequestData) throws AccountException {
+        String userEmail = currentUser.getEmail();
         String nickName = RequestData.getData();
 
         if (!joinService.isNickNameLengthOK(nickName)) {
@@ -53,8 +53,8 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseMessage setDrinkCapacity(HttpServletRequest request, RequestData RequestData) {
-        String userEmail = jwtProvider.getUserEmail(request);
+    public ResponseMessage setDrinkCapacity(CurrentUser currentUser, RequestData RequestData) {
+        String userEmail = currentUser.getEmail();
         String capacity = RequestData.getData();
 
         setDrinkCapacity(userEmail,capacity);
@@ -63,8 +63,8 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseMessage setProfileImage(HttpServletRequest request, MultipartFile multipartFile) throws IOException {
-        String userEmail = jwtProvider.getUserEmail(request);
+    public ResponseMessage setProfileImage(CurrentUser currentUser, MultipartFile multipartFile) throws IOException {
+        String userEmail = currentUser.getEmail();
 
         setProfileImage(userEmail , multipartFile);
 
@@ -72,8 +72,8 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseMessage deleteUser(HttpServletRequest request , HttpServletResponse response) {
-        String userEmail = jwtProvider.getUserEmail(request);
+    public ResponseMessage deleteUser(CurrentUser currentUser , HttpServletResponse response) {
+        String userEmail = currentUser.getEmail();
 
         deleteUserByEmail(userEmail);
         deleteJwtTokenInCookie(response);
