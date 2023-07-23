@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -19,7 +20,7 @@ public class PartyCreateRequestDto {
     private String content;
     private int maxPartyNum;
     private Location location;
-    private String partyDate;
+    private Date partyDate;
     private List<PartyTag> partyTags;
 
     public PartyEntity toEntity(UserEntity author, List<String> partyImages){
