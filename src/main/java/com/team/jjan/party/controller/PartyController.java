@@ -25,10 +25,10 @@ public class PartyController {
 
     @Operation(summary = "파티 생성", description = "PartyCreateRequestDto와 List<MultipartFile> 분리, 글 작성 시 로그인 정보 확인")
     @PostMapping
-    public ResponseEntity<ResponseMessage> createParty(@RequestPart PartyCreateRequestDto createRequestDto,
-                                                       @RequestPart  List<MultipartFile> images,
-                                                       @LogIn CurrentUser sessionUser) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(partyService.createParty(createRequestDto, images, sessionUser));
+    public ResponseEntity<ResponseMessage> createParty(@RequestPart(value = "data") PartyCreateRequestDto createRequestDto,
+                                                       @RequestPart(value = "images", required = false) List<MultipartFile> images,
+                                                       @LogIn CurrentUser currentUser) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(partyService.createParty(createRequestDto, images, currentUser));
     }
 
     @Operation(summary = "파티 조회", description = "파티 정보를 조회, Parameter 변수 id로 정보 전달")
@@ -40,15 +40,16 @@ public class PartyController {
     @Operation(summary = "파티 수정", description = "PartyUpdateRequestDto와 List<MultipartFile> 분리, 글 수정 시 로그인 정보 확인,  Parameter 변수 id로 정보 전달")
     @PatchMapping("/{id}")
     public ResponseEntity<ResponseMessage> updateParty(@PathVariable("id") Long partyId,
-                                        @RequestPart PartyUpdateRequestDto updateRequestDto,
-                                        @RequestPart List<MultipartFile> images,
-                                        @LogIn CurrentUser sessionUser){
-        return ResponseEntity.ok().body(partyService.updateParty(partyId, updateRequestDto, images, sessionUser));
+                                        @RequestPart(value = "data") PartyUpdateRequestDto updateRequestDto,
+                                        @RequestPart(value = "images", required = false) List<MultipartFile> images,
+                                        @LogIn CurrentUser currentUser){
+        return ResponseEntity.ok().body(partyService.updateParty(partyId, updateRequestDto, images, currentUser));
     }
 
     @Operation(summary = "파티 삭제", description = "삭제 성공 시 SUCCESS code 반환")
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseMessage> deleteParty(@PathVariable("id") Long partyId){
-        return ResponseEntity.ok(partyService.deleteParty(partyId));
+    public ResponseEntity<ResponseMessage> deleteParty(@PathVariable("id") Long partyId,
+                                                       @LogIn CurrentUser currentUser){
+        return ResponseEntity.ok(partyService.deleteParty(partyId, currentUser));
     }
 }

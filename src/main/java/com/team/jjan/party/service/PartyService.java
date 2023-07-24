@@ -34,15 +34,15 @@ public class PartyService {
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
 
-    public ResponseMessage createParty(PartyCreateRequestDto partyCreateRequestDto, List<MultipartFile> images, CurrentUser sessionUser){
+    public ResponseMessage createParty(PartyCreateRequestDto partyCreateRequestDto, List<MultipartFile> images, CurrentUser currentUser){
 
         //파티 생성 유저
-        UserEntity createUser = userRepository.findByEmail(sessionUser.getEmail())
-                .orElseThrow(() -> new NoSuchEmailException(sessionUser.getEmail()));
+        UserEntity authorUser = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
         //파티 이미지 저장 & 변환
         List<String> imagesName = uploadImage(images);
         //파티 생성
-        PartyEntity createParty = partyRepository.save(partyCreateRequestDto.toEntity(createUser, imagesName));
+        PartyEntity createParty = partyRepository.save(partyCreateRequestDto.toEntity(authorUser, imagesName));
         return ResponseMessage.of(REQUEST_SUCCESS, PartyDto.of(createParty));
     }
 
@@ -54,16 +54,16 @@ public class PartyService {
     }
 
     public ResponseMessage updateParty(Long partyId, PartyUpdateRequestDto partyUpdateRequestDto,
-                                List<MultipartFile> images, CurrentUser sessionUser){
+                                List<MultipartFile> images, CurrentUser currentUser){
 
         //접속 유저
-        UserEntity createUser = userRepository.findByEmail(sessionUser.getEmail())
-                .orElseThrow(() -> new NoSuchEmailException(sessionUser.getEmail()));
+        UserEntity authorUser = userRepository.findByEmail(currentUser.getEmail())
+                .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
         //수정 대상 파티
         PartyEntity updateParty = partyRepository.findById(partyId)
                 .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
         //인가 확인
-        if(!createUser.equals(updateParty.getAuthor())) throw new BadCredentialsException("권한이 없습니다");
+        if(!authorUser.equals(updateParty.getAuthor())) throw new BadCredentialsException("권한이 없습니다");
         //파티 이미지 저장 & 변환
         List<String> imagesName = uploadImage(images);
 
@@ -71,12 +71,19 @@ public class PartyService {
         return ResponseMessage.of(REQUEST_SUCCESS, PartyDto.of(updateParty));
     }
 
-    public ResponseMessage deleteParty(Long partyId){
-        PartyEntity findParty = partyRepository.findById(partyId)
+    public ResponseMessage deleteParty(Long partyId, CurrentUser currentUser){
+
+        //접속 유저
+        UserEntity authorUser = userRepository.findByEmail(currentUser.getEmail())
+                .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
+        //삭제 대상 파티
+        PartyEntity deleteParty = partyRepository.findById(partyId)
                 .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
-
-        findParty.getPartyImages().forEach(fileUploadService::deleteFile);
-
+        //인가 확인
+        if(!authorUser.equals(deleteParty.getAuthor())) throw new BadCredentialsException("권한이 없습니다");
+        //이미지 삭제
+        deleteParty.getPartyImages().forEach(fileUploadService::deleteFile);
+        //파티 삭제
         partyRepository.deleteById(partyId);
 
         return ResponseMessage.of(REQUEST_SUCCESS);
