@@ -6,6 +6,7 @@ import com.team.jjan.user.entitiy.UserEntity;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,7 +36,7 @@ public class PartyEntity extends BaseTimeEntity {
 
     private int maxPartyNum;
 
-    private String partyDate;
+    private Date partyDate;
 
     @ElementCollection(fetch = FetchType.LAZY)
     private List<PartyTag> partyTags = new ArrayList<>();
