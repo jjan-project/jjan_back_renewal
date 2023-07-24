@@ -1,9 +1,9 @@
 package com.team.jjan.user.entitiy;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.team.jjan.join.dto.JoinRequest;
 import com.team.jjan.party.entity.PartyEntity;
+import com.team.jjan.party.entity.PartyJoin;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +24,14 @@ public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "author")
+    @JsonIgnore
+    private List<PartyEntity> createParty = new ArrayList<>();
+
+    @OneToMany(mappedBy = "joinUser")
+    @JsonIgnore
+    private List<PartyJoin> joinParty = new ArrayList<>();
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -69,10 +77,6 @@ public class UserEntity implements UserDetails {
                 .roles(Role.MEMBER)
                 .build();
     }
-
-    @OneToMany(mappedBy = "author")
-    @JsonIgnore
-    private List<PartyEntity> parties = new ArrayList<>();
 
     public void setProfile(String profile) {
         this.profile = profile;

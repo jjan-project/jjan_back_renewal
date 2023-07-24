@@ -1,5 +1,6 @@
 package com.team.jjan.party.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import com.team.jjan.party.dto.PartyUpdateRequestDto;
 import com.team.jjan.user.entitiy.UserEntity;
@@ -21,9 +22,13 @@ public class PartyEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity author;
+
+    @OneToMany(mappedBy = "joinParty", orphanRemoval = true)
+    @JsonIgnore
+    private List<PartyJoin> joinUser = new ArrayList<>();
 
     @Column(nullable = false)
     private String title;
