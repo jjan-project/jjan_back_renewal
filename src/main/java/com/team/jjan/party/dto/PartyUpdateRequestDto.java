@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -18,6 +19,6 @@ public class PartyUpdateRequestDto {
     private String content;
     private int maxPartyNum;
     private Location location;
-    private String partyDate;
+    private Date partyDate;
     private List<PartyTag> partyTags = new ArrayList<>();
 }

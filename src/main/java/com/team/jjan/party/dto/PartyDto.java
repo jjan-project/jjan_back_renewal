@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -25,7 +26,7 @@ public class PartyDto {
     private String content;
     private int maxPartyNum;
     private Location location;
-    private String partyDate;
+    private Date partyDate;
     private List<PartyTag> partyTags = new ArrayList<>();
     private List<String> partyImages = new ArrayList<>();
     private LocalDateTime createdAt;
