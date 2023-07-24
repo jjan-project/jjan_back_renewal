@@ -2,9 +2,7 @@ package com.team.jjan.party.service;
 
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.common.dto.CurrentUser;
-import com.team.jjan.party.dto.PartyCreateRequestDto;
-import com.team.jjan.party.dto.PartyDto;
-import com.team.jjan.party.dto.PartyUpdateRequestDto;
+import com.team.jjan.party.dto.*;
 import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.upload.service.FileUploadService;
 import com.team.jjan.user.entitiy.UserEntity;
@@ -43,18 +41,17 @@ public class PartyService {
         List<String> imagesName = uploadImage(images);
         //파티 생성
         PartyEntity createParty = partyRepository.save(partyCreateRequestDto.toEntity(authorUser, imagesName));
-        return ResponseMessage.of(REQUEST_SUCCESS, PartyDto.of(createParty));
+        return ResponseMessage.of(REQUEST_SUCCESS, PartyCreateResponseDto.of(createParty));
     }
 
     public ResponseMessage getParty(Long partyId){
         PartyEntity getParty = partyRepository.findById(partyId)
                 .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
 
-        return ResponseMessage.of(REQUEST_SUCCESS, PartyDto.of(getParty));
+        return ResponseMessage.of(REQUEST_SUCCESS);
     }
 
-    public ResponseMessage updateParty(Long partyId, PartyUpdateRequestDto partyUpdateRequestDto,
-                                List<MultipartFile> images, CurrentUser currentUser){
+    public ResponseMessage updateParty(Long partyId, PartyUpdateRequestDto partyUpdateRequestDto, List<MultipartFile> images, CurrentUser currentUser){
 
         //접속 유저
         UserEntity authorUser = userRepository.findByEmail(currentUser.getEmail())
@@ -68,7 +65,7 @@ public class PartyService {
         List<String> imagesName = uploadImage(images);
 
         updateParty.update(partyUpdateRequestDto, imagesName);
-        return ResponseMessage.of(REQUEST_SUCCESS, PartyDto.of(updateParty));
+        return ResponseMessage.of(REQUEST_SUCCESS, PartyUpdateResponseDto.of(updateParty, imagesName));
     }
 
     public ResponseMessage deleteParty(Long partyId, CurrentUser currentUser){
