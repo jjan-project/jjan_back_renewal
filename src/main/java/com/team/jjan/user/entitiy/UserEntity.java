@@ -3,7 +3,7 @@ package com.team.jjan.user.entitiy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.team.jjan.join.dto.JoinRequest;
 import com.team.jjan.party.entity.PartyEntity;
-import com.team.jjan.party.entity.PartyJoin;
+import com.team.jjan.partyJoin.entity.PartyJoin;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -80,6 +80,10 @@ public class UserEntity implements UserDetails {
 
     public void setProfile(String profile) {
         this.profile = profile;
+    }
+
+    public void partyJoin(PartyJoin join){
+        joinParty.add(join);
     }
 
     @Override

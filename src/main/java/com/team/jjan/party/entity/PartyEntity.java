@@ -1,6 +1,7 @@
 package com.team.jjan.party.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.team.jjan.partyJoin.entity.PartyJoin;
 import jakarta.persistence.*;
 import com.team.jjan.party.dto.PartyUpdateRequestDto;
 import com.team.jjan.user.entitiy.UserEntity;
@@ -57,5 +58,9 @@ public class PartyEntity extends BaseTimeEntity {
         this.partyDate = partyUpdateRequestDto.getPartyDate();
         this.partyTags = partyUpdateRequestDto.getPartyTags();
         this.partyImages = updateImages;
+    }
+
+    public void userJoin(PartyJoin join){
+        joinUser.add(join);
     }
 }

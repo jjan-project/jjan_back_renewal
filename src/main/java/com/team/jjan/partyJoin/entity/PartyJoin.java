@@ -1,5 +1,6 @@
-package com.team.jjan.party.entity;
+package com.team.jjan.partyJoin.entity;
 
+import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.user.entitiy.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,7 +31,8 @@ public class PartyJoin {
                 .joinParty(party)
                 .build();
 
-
+        user.partyJoin(partyJoin);
+        party.userJoin(partyJoin);
 
         return partyJoin;
     }
