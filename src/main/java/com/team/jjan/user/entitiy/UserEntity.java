@@ -26,11 +26,9 @@ public class UserEntity implements UserDetails {
     private Long id;
 
     @OneToMany(mappedBy = "author")
-    @JsonIgnore
     private List<PartyEntity> createParty = new ArrayList<>();
 
     @OneToMany(mappedBy = "joinUser")
-    @JsonIgnore
     private List<PartyJoin> joinParty = new ArrayList<>();
 
     @Column(nullable = false, unique = true)
