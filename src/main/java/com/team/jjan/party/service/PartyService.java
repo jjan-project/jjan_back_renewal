@@ -55,8 +55,7 @@ public class PartyService {
         //접속 유저
         UserEntity authorUser = getAuthorUser(currentUser);
         //수정 대상 파티
-        PartyEntity updateParty = partyRepository.findById(partyId)
-                .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
+        PartyEntity updateParty = getPartyFromId(partyId);
         //인가 확인
         if(!authorUser.equals(updateParty.getAuthor())) throw new BadCredentialsException("권한이 없습니다");
         //파티 이미지 저장 & 변환
@@ -71,8 +70,7 @@ public class PartyService {
         //접속 유저
         UserEntity authorUser = getAuthorUser(currentUser);
         //삭제 대상 파티
-        PartyEntity deleteParty = partyRepository.findById(partyId)
-                .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
+        PartyEntity deleteParty = getPartyFromId(partyId);
         //인가 확인
         if(!authorUser.equals(deleteParty.getAuthor())) throw new BadCredentialsException("권한이 없습니다");
         //이미지 삭제
@@ -87,6 +85,12 @@ public class PartyService {
     private UserEntity getAuthorUser(CurrentUser currentUser){
         return userRepository.findByEmail(currentUser.getEmail())
                 .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
+    }
+
+    //파티 추출
+    private PartyEntity getPartyFromId(Long partyId){
+        return partyRepository.findById(partyId)
+                .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
     }
 
     //이미지 저장
