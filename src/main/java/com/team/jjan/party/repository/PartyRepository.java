@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface PartyRepository extends JpaRepository<PartyEntity, Long> {
 
-//    @Override
-//    @EntityGraph(attributePaths = {"author"})
-//    Optional<PartyEntity> findById(Long aLong);
+    @Override
+    @EntityGraph(attributePaths = {"author"})
+    Optional<PartyEntity> findById(Long aLong);
 }
