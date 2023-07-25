@@ -7,22 +7,14 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import com.team.jjan.jwt.exception.AuthenticationException;
-import com.team.jjan.jwt.exception.SessionExpireException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.GenericFilterBean;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
-
-import static com.team.jjan.jwt.support.JwtCookie.deleteJwtTokenInCookie;
-import static com.team.jjan.security.support.CustomAuthenticationEntryPoint.setErrorResponse;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,13 +27,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean{
         String token = getAccessTokenFromHeader((HttpServletRequest) request);
 
         if (jwtProvider.validateAccessToken(token)) {
-            try {
-                setAuthentication(token);
-            } catch (UsernameNotFoundException e) {
-                deleteJwtTokenInCookie((HttpServletResponse) response);
-
-                setErrorResponse((HttpServletResponse) response , HttpServletResponse.SC_UNAUTHORIZED , "토큰이 변조되었거나 유효하지 않습니다.");
-            }
+            setAuthentication(token);
         }
 
         chain.doFilter(request, response);

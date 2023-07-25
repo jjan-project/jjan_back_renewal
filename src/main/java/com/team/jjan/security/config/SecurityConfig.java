@@ -3,6 +3,7 @@ package com.team.jjan.security.config;
 import com.team.jjan.jwt.filter.JwtAuthenticationFilter;
 import com.team.jjan.jwt.support.JwtProvider;
 import com.team.jjan.security.support.CustomAuthenticationEntryPoint;
+import com.team.jjan.security.support.ExceptionHandlerFilter;
 import com.team.jjan.user.entitiy.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -49,6 +50,8 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .accessDeniedPage("/api/security/authentication")
                 .authenticationEntryPoint(customAuthenticationEntryPoint);
+
+        http.addFilterBefore(new ExceptionHandlerFilter() , UsernamePasswordAuthenticationFilter.class);
 
         http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
