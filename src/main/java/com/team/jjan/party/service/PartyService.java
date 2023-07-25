@@ -35,8 +35,7 @@ public class PartyService {
     public ResponseMessage createParty(PartyCreateRequestDto partyCreateRequestDto, List<MultipartFile> images, CurrentUser currentUser){
 
         //파티 생성 유저
-        UserEntity authorUser = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
+        UserEntity authorUser = getAuthorUser(currentUser);
         //파티 이미지 저장 & 변환
         List<String> imagesName = uploadImage(images);
         //파티 생성
@@ -54,8 +53,7 @@ public class PartyService {
     public ResponseMessage updateParty(Long partyId, PartyUpdateRequestDto partyUpdateRequestDto, List<MultipartFile> images, CurrentUser currentUser){
 
         //접속 유저
-        UserEntity authorUser = userRepository.findByEmail(currentUser.getEmail())
-                .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
+        UserEntity authorUser = getAuthorUser(currentUser);
         //수정 대상 파티
         PartyEntity updateParty = partyRepository.findById(partyId)
                 .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
@@ -71,8 +69,7 @@ public class PartyService {
     public ResponseMessage deleteParty(Long partyId, CurrentUser currentUser){
 
         //접속 유저
-        UserEntity authorUser = userRepository.findByEmail(currentUser.getEmail())
-                .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
+        UserEntity authorUser = getAuthorUser(currentUser);
         //삭제 대상 파티
         PartyEntity deleteParty = partyRepository.findById(partyId)
                 .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
@@ -86,8 +83,14 @@ public class PartyService {
         return ResponseMessage.of(REQUEST_SUCCESS);
     }
 
+    //유저 추출
+    private UserEntity getAuthorUser(CurrentUser currentUser){
+        return userRepository.findByEmail(currentUser.getEmail())
+                .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
+    }
+
     //이미지 저장
-    public List<String> uploadImage(List<MultipartFile> images){
+    private List<String> uploadImage(List<MultipartFile> images){
         return images.stream().map(image -> {
             try {
                 return fileUploadService.uploadFileToS3(image, UUID.randomUUID().toString());
