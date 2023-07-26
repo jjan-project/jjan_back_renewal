@@ -20,8 +20,8 @@ public class JwtCookie {
                 .path("/")
                 .maxAge(ACCESS_TOKEN_MAX_AGE)
                 //.secure(true)
-                .domain(DOMAIN_URL)
-                //.httpOnly(true)
+                //.domain(DOMAIN_URL)
+                .httpOnly(true)
                 //.sameSite("none")
                 .build();
     }
@@ -31,8 +31,8 @@ public class JwtCookie {
                 .path("/")
                 .maxAge(REFRESH_TOKEN_MAX_AGE)
                 //.secure(true)
-                .domain(DOMAIN_URL)
-                //.httpOnly(true)
+                //.domain(DOMAIN_URL)
+                .httpOnly(true)
                 //.sameSite("none")
                 .build();
     }
@@ -46,12 +46,12 @@ public class JwtCookie {
         Cookie accessToken = new Cookie("accessToken", null);
         accessToken.setPath("/");
         accessToken.setMaxAge(0);
-        accessToken.setDomain(DOMAIN_URL);
+        //accessToken.setDomain(DOMAIN_URL);
 
         Cookie refreshToken = new Cookie("refreshToken", null);
         refreshToken.setPath("/");
         refreshToken.setMaxAge(0);
-        refreshToken.setDomain(DOMAIN_URL);
+        //refreshToken.setDomain(DOMAIN_URL);
 
         response.addCookie(accessToken);
         response.addCookie(refreshToken);
