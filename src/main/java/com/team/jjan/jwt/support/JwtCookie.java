@@ -9,9 +9,6 @@ import org.springframework.http.ResponseCookie;
 
 public class JwtCookie {
 
-    @Value("${client.url}")
-    private static String DOMAIN_URL;
-
     public static long ACCESS_TOKEN_MAX_AGE = 1000 * 60 * 30;
 
     public static long REFRESH_TOKEN_MAX_AGE = 1000L * 60 * 60 * 24 * 30;
@@ -20,9 +17,9 @@ public class JwtCookie {
         return ResponseCookie.from("accessToken" , accessToken)
                 .path("/")
                 .maxAge(1000 * 60 * 30)
-                .secure(true)
+                // .secure(true)
                 .httpOnly(true)
-                .sameSite("none")
+                // .sameSite("none")
                 .domain("localhost")
                 .build();
     }
@@ -31,8 +28,8 @@ public class JwtCookie {
         return ResponseCookie.from("refreshToken" , refreshToken)
                 .path("/")
                 .maxAge(1000L * 60 * 60 * 24 * 30)
-                .sameSite("none")
-                .secure(true)
+                // .sameSite("none")
+                // .secure(true)
                 .httpOnly(true)
                 .domain("localhost")
                 .build();
