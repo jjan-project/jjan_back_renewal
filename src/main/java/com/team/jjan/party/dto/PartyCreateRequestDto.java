@@ -20,7 +20,8 @@ public class PartyCreateRequestDto {
     private String title;
     private String content;
     private int maxPartyNum;
-    private Location location;
+    private double partyLatitude;   //위도
+    private double partyLongitude;  //경도
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/mm/dd", timezone = "Asia/Seoul")
     private Date partyDate;
     private List<PartyTag> partyTags;
@@ -31,7 +32,7 @@ public class PartyCreateRequestDto {
                 .content(content)
                 .author(author)
                 .maxPartyNum(maxPartyNum)
-                .location(location)
+                .location(new Location(partyLatitude, partyLongitude))
                 .partyDate(partyDate)
                 .partyTags(partyTags)
                 .partyImages(partyImages)
