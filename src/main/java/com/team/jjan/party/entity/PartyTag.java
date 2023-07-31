@@ -1,5 +1,6 @@
 package com.team.jjan.party.entity;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ public enum PartyTag {
     TAG_12("미팅"), TAG_13("맥주"), TAG_14("대학생"),
     TAG_15("직장인"), TAG_16("친해져요");
 
+    @JsonValue
     private String tagName;
 
     public static PartyTag of(String tagName) {

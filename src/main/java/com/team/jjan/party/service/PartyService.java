@@ -2,9 +2,7 @@ package com.team.jjan.party.service;
 
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.common.dto.CurrentUser;
-import com.team.jjan.party.dto.PartyCreateRequestDto;
-import com.team.jjan.party.dto.PartyDto;
-import com.team.jjan.party.dto.PartyUpdateRequestDto;
+import com.team.jjan.party.dto.*;
 import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.upload.service.FileUploadService;
 import com.team.jjan.user.entitiy.UserEntity;
@@ -34,56 +32,69 @@ public class PartyService {
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
 
-    public ResponseMessage createParty(PartyCreateRequestDto partyCreateRequestDto, List<MultipartFile> images, CurrentUser sessionUser){
+    public ResponseMessage createParty(PartyCreateRequestDto partyCreateRequestDto, List<MultipartFile> images, CurrentUser currentUser){
 
         //파티 생성 유저
-        UserEntity createUser = userRepository.findByEmail(sessionUser.getEmail())
-                .orElseThrow(() -> new NoSuchEmailException(sessionUser.getEmail()));
+        UserEntity authorUser = getAuthorUser(currentUser);
         //파티 이미지 저장 & 변환
         List<String> imagesName = uploadImage(images);
         //파티 생성
-        PartyEntity createParty = partyRepository.save(partyCreateRequestDto.toEntity(createUser, imagesName));
-        return ResponseMessage.of(REQUEST_SUCCESS, PartyDto.of(createParty));
+        PartyEntity createParty = partyRepository.save(partyCreateRequestDto.toEntity(authorUser, imagesName));
+        return ResponseMessage.of(REQUEST_SUCCESS, PartyCreateResponseDto.of(createParty));
     }
 
     public ResponseMessage getParty(Long partyId){
         PartyEntity getParty = partyRepository.findById(partyId)
                 .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
 
-        return ResponseMessage.of(REQUEST_SUCCESS, PartyDto.of(getParty));
+        return ResponseMessage.of(REQUEST_SUCCESS);
     }
 
-    public ResponseMessage updateParty(Long partyId, PartyUpdateRequestDto partyUpdateRequestDto,
-                                List<MultipartFile> images, CurrentUser sessionUser){
+    public ResponseMessage updateParty(Long partyId, PartyUpdateRequestDto partyUpdateRequestDto, List<MultipartFile> images, CurrentUser currentUser){
 
         //접속 유저
-        UserEntity createUser = userRepository.findByEmail(sessionUser.getEmail())
-                .orElseThrow(() -> new NoSuchEmailException(sessionUser.getEmail()));
+        UserEntity authorUser = getAuthorUser(currentUser);
         //수정 대상 파티
-        PartyEntity updateParty = partyRepository.findById(partyId)
-                .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
+        PartyEntity updateParty = getPartyFromId(partyId);
         //인가 확인
-        if(!createUser.equals(updateParty.getAuthor())) throw new BadCredentialsException("권한이 없습니다");
+        if(!authorUser.equals(updateParty.getAuthor())) throw new BadCredentialsException("권한이 없습니다");
         //파티 이미지 저장 & 변환
         List<String> imagesName = uploadImage(images);
 
         updateParty.update(partyUpdateRequestDto, imagesName);
-        return ResponseMessage.of(REQUEST_SUCCESS, PartyDto.of(updateParty));
+        return ResponseMessage.of(REQUEST_SUCCESS, PartyUpdateResponseDto.of(updateParty, imagesName));
     }
 
-    public ResponseMessage deleteParty(Long partyId){
-        PartyEntity findParty = partyRepository.findById(partyId)
-                .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
+    public ResponseMessage deleteParty(Long partyId, CurrentUser currentUser){
 
-        findParty.getPartyImages().forEach(fileUploadService::deleteFile);
-
+        //접속 유저
+        UserEntity authorUser = getAuthorUser(currentUser);
+        //삭제 대상 파티
+        PartyEntity deleteParty = getPartyFromId(partyId);
+        //인가 확인
+        if(!authorUser.equals(deleteParty.getAuthor())) throw new BadCredentialsException("권한이 없습니다");
+        //이미지 삭제
+        deleteParty.getPartyImages().forEach(fileUploadService::deleteFile);
+        //파티 삭제
         partyRepository.deleteById(partyId);
 
         return ResponseMessage.of(REQUEST_SUCCESS);
     }
 
+    //유저 추출
+    private UserEntity getAuthorUser(CurrentUser currentUser){
+        return userRepository.findByEmail(currentUser.getEmail())
+                .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
+    }
+
+    //파티 추출
+    private PartyEntity getPartyFromId(Long partyId){
+        return partyRepository.findById(partyId)
+                .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
+    }
+
     //이미지 저장
-    public List<String> uploadImage(List<MultipartFile> images){
+    private List<String> uploadImage(List<MultipartFile> images){
         return images.stream().map(image -> {
             try {
                 return fileUploadService.uploadFileToS3(image, UUID.randomUUID().toString());
