@@ -1,5 +1,6 @@
 package com.team.jjan.party.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.team.jjan.party.entity.Location;
 import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.party.entity.PartyTag;
@@ -19,6 +20,7 @@ public class PartyUpdateResponseDto {
     private String content;
     private Location location;
     private int maxPartyNum;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/mm/dd", timezone = "Asia/Seoul")
     private Date partyDate;
     private List<PartyTag> partyTags = new ArrayList<>();
     private List<String> partyImages = new ArrayList<>();
