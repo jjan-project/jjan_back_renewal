@@ -44,8 +44,7 @@ public class PartyService {
     }
 
     public ResponseMessage getParty(Long partyId){
-        PartyEntity getParty = partyRepository.findById(partyId)
-                .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
+        PartyEntity getParty = getPartyFromId(partyId);
 
         return ResponseMessage.of(REQUEST_SUCCESS);
     }
