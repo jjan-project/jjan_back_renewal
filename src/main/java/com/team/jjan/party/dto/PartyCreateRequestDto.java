@@ -1,5 +1,6 @@
 package com.team.jjan.party.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.team.jjan.party.entity.Location;
 import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.party.entity.PartyTag;
@@ -9,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -18,8 +20,10 @@ public class PartyCreateRequestDto {
     private String title;
     private String content;
     private int maxPartyNum;
-    private Location location;
-    private String partyDate;
+    private double partyLatitude;   //위도
+    private double partyLongitude;  //경도
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/mm/dd", timezone = "Asia/Seoul")
+    private Date partyDate;
     private List<PartyTag> partyTags;
 
     public PartyEntity toEntity(UserEntity author, List<String> partyImages){
@@ -28,7 +32,7 @@ public class PartyCreateRequestDto {
                 .content(content)
                 .author(author)
                 .maxPartyNum(maxPartyNum)
-                .location(location)
+                .location(new Location(partyLatitude, partyLongitude))
                 .partyDate(partyDate)
                 .partyTags(partyTags)
                 .partyImages(partyImages)

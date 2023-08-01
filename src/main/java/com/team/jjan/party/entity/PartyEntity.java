@@ -1,11 +1,13 @@
 package com.team.jjan.party.entity;
 
+import com.team.jjan.partyJoin.entity.PartyJoin;
 import jakarta.persistence.*;
 import com.team.jjan.party.dto.PartyUpdateRequestDto;
 import com.team.jjan.user.entitiy.UserEntity;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,9 +22,12 @@ public class PartyEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity author;
+
+    @OneToMany(mappedBy = "joinParty", orphanRemoval = true)
+    private List<PartyJoin> joinUser = new ArrayList<>();
 
     @Column(nullable = false)
     private String title;
@@ -35,7 +40,7 @@ public class PartyEntity extends BaseTimeEntity {
 
     private int maxPartyNum;
 
-    private String partyDate;
+    private Date partyDate;
 
     @ElementCollection(fetch = FetchType.LAZY)
     private List<PartyTag> partyTags = new ArrayList<>();
@@ -46,10 +51,14 @@ public class PartyEntity extends BaseTimeEntity {
     public void update(PartyUpdateRequestDto partyUpdateRequestDto, List<String> updateImages){
         this.title = partyUpdateRequestDto.getTitle();
         this.content = partyUpdateRequestDto.getContent();
-        this.location = partyUpdateRequestDto.getLocation();
+        this.location = new Location(partyUpdateRequestDto.getPartyLatitude(), partyUpdateRequestDto.getPartyLongitude());
         this.maxPartyNum = partyUpdateRequestDto.getMaxPartyNum();
         this.partyDate = partyUpdateRequestDto.getPartyDate();
         this.partyTags = partyUpdateRequestDto.getPartyTags();
         this.partyImages = updateImages;
+    }
+
+    public void userJoin(PartyJoin join){
+        joinUser.add(join);
     }
 }
