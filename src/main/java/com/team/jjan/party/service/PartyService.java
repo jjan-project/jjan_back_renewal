@@ -58,6 +58,8 @@ public class PartyService {
         PartyEntity updateParty = getPartyFromId(partyId);
         //인가 확인
         if(!authorUser.equals(updateParty.getAuthor())) throw new BadCredentialsException("권한이 없습니다");
+        //이미지 삭제
+        updateParty.getPartyImages().forEach(fileUploadService::deleteFile);
         //파티 이미지 저장 & 변환
         List<String> imagesName = uploadImage(images);
 
