@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import com.team.jjan.party.dto.PartyUpdateRequestDto;
 import com.team.jjan.user.entitiy.UserEntity;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +27,7 @@ public class PartyEntity extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private UserEntity author;
 
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "joinParty", orphanRemoval = true)
     private List<PartyJoin> joinUser = new ArrayList<>();
 

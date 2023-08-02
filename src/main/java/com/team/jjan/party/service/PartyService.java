@@ -4,6 +4,8 @@ import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.common.dto.CurrentUser;
 import com.team.jjan.party.dto.*;
 import com.team.jjan.party.entity.PartyEntity;
+import com.team.jjan.partyJoin.entity.PartyJoin;
+import com.team.jjan.partyJoin.repository.PartyJoinRepository;
 import com.team.jjan.upload.service.FileUploadService;
 import com.team.jjan.user.entitiy.UserEntity;
 import com.team.jjan.user.exception.NoSuchEmailException;
@@ -29,6 +31,7 @@ import static com.team.jjan.common.ResponseCode.*;
 public class PartyService {
 
     private final PartyRepository partyRepository;
+    private final PartyJoinRepository partyJoinRepository;
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
 
@@ -47,7 +50,9 @@ public class PartyService {
         PartyEntity getParty = partyRepository.findById(partyId)
                 .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
 
-        return ResponseMessage.of(REQUEST_SUCCESS);
+        List<PartyJoin> getPartyJoinInfo = partyJoinRepository.findPartyJoinByJoinParty(getParty);
+
+        return ResponseMessage.of(REQUEST_SUCCESS, new PartyGetResponseDto(getParty, getPartyJoinInfo));
     }
 
     public ResponseMessage updateParty(Long partyId, PartyUpdateRequestDto partyUpdateRequestDto, List<MultipartFile> images, CurrentUser currentUser){
