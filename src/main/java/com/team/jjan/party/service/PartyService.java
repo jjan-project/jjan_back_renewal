@@ -4,6 +4,8 @@ import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.common.dto.CurrentUser;
 import com.team.jjan.party.dto.*;
 import com.team.jjan.party.entity.PartyEntity;
+import com.team.jjan.partyJoin.entity.PartyJoin;
+import com.team.jjan.partyJoin.repository.PartyJoinRepository;
 import com.team.jjan.upload.service.FileUploadService;
 import com.team.jjan.user.entitiy.UserEntity;
 import com.team.jjan.user.exception.NoSuchEmailException;
@@ -11,6 +13,7 @@ import com.team.jjan.user.repository.UserRepository;
 import com.team.jjan.party.exception.NoSuchPartyException;
 import com.team.jjan.party.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +32,7 @@ import static com.team.jjan.common.ResponseCode.*;
 public class PartyService {
 
     private final PartyRepository partyRepository;
+    private final PartyJoinRepository partyJoinRepository;
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
 
@@ -47,7 +51,14 @@ public class PartyService {
         PartyEntity getParty = partyRepository.findById(partyId)
                 .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
 
-        return ResponseMessage.of(REQUEST_SUCCESS);
+        List<PartyJoin> getPartyJoinInfo = partyJoinRepository.findPartyJoinByJoinParty(getParty);
+
+        return ResponseMessage.of(REQUEST_SUCCESS, new PartyGetResponseDto(getParty, getPartyJoinInfo));
+    }
+
+    public ResponseMessage getAllParty(Pageable pageable){
+        List<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllParty(pageable).stream().map(PartyGetAllResponseDto::new).collect(Collectors.toList());
+        return ResponseMessage.of(REQUEST_SUCCESS, allPartyDto);
     }
 
     public ResponseMessage updateParty(Long partyId, PartyUpdateRequestDto partyUpdateRequestDto, List<MultipartFile> images, CurrentUser currentUser){
@@ -58,6 +69,8 @@ public class PartyService {
         PartyEntity updateParty = getPartyFromId(partyId);
         //인가 확인
         if(!authorUser.equals(updateParty.getAuthor())) throw new BadCredentialsException("권한이 없습니다");
+        //이미지 삭제
+        updateParty.getPartyImages().forEach(fileUploadService::deleteFile);
         //파티 이미지 저장 & 변환
         List<String> imagesName = uploadImage(images);
 

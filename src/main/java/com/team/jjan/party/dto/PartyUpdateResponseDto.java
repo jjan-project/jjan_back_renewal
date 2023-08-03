@@ -20,7 +20,7 @@ public class PartyUpdateResponseDto {
     private String content;
     private Location location;
     private int maxPartyNum;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/mm/dd", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm", timezone = "Asia/Seoul")
     private Date partyDate;
     private List<PartyTag> partyTags = new ArrayList<>();
     private List<String> partyImages = new ArrayList<>();

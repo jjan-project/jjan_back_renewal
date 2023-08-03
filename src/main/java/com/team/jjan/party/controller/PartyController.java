@@ -8,6 +8,8 @@ import com.team.jjan.party.dto.PartyUpdateRequestDto;
 import com.team.jjan.party.service.PartyService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +33,16 @@ public class PartyController {
         return ResponseEntity.status(HttpStatus.CREATED).body(partyService.createParty(createRequestDto, images, currentUser));
     }
 
-    @Operation(summary = "파티 조회", description = "파티 정보를 조회, Parameter 변수 id로 파티 정보 전달")
+    @Operation(summary = "파티 단일 조회", description = "파티 정보를 조회, Parameter 변수 id로 파티 정보 전달")
     @GetMapping("/{id}")
     public ResponseEntity<ResponseMessage> getParty(@PathVariable("id") Long partyId){
         return ResponseEntity.ok().body(partyService.getParty(partyId));
+    }
+
+    @Operation(summary = "파티 전체 조회", description = "파티 전체 정보 조회")
+    @GetMapping
+    public ResponseEntity<ResponseMessage> getAllParty(@PageableDefault(sort = "partyDate") Pageable pageable){
+        return ResponseEntity.ok().body(partyService.getAllParty(pageable));
     }
 
     @Operation(summary = "파티 수정", description = "PartyUpdateRequestDto와 List<MultipartFile> 분리, 글 수정 시 로그인 정보 확인, Parameter 변수 id로 파티 정보 전달")

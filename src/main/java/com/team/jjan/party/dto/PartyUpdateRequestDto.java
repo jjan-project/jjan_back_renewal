@@ -20,7 +20,7 @@ public class PartyUpdateRequestDto {
     private int maxPartyNum;
     private double partyLatitude;   //위도
     private double partyLongitude;  //경도
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/mm/dd", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm", timezone = "Asia/Seoul")
     private Date partyDate;
     private List<PartyTag> partyTags = new ArrayList<>();
 }
