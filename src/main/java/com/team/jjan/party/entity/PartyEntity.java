@@ -47,6 +47,7 @@ public class PartyEntity extends BaseTimeEntity {
     @ElementCollection(fetch = FetchType.LAZY)
     private List<PartyTag> partyTags = new ArrayList<>();
 
+    @BatchSize(size = 100)
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> partyImages = new ArrayList<>();
 

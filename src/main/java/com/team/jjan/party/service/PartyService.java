@@ -13,6 +13,7 @@ import com.team.jjan.user.repository.UserRepository;
 import com.team.jjan.party.exception.NoSuchPartyException;
 import com.team.jjan.party.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +54,11 @@ public class PartyService {
         List<PartyJoin> getPartyJoinInfo = partyJoinRepository.findPartyJoinByJoinParty(getParty);
 
         return ResponseMessage.of(REQUEST_SUCCESS, new PartyGetResponseDto(getParty, getPartyJoinInfo));
+    }
+
+    public ResponseMessage getAllParty(Pageable pageable){
+        List<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllParty(pageable).stream().map(PartyGetAllResponseDto::new).collect(Collectors.toList());
+        return ResponseMessage.of(REQUEST_SUCCESS, allPartyDto);
     }
 
     public ResponseMessage updateParty(Long partyId, PartyUpdateRequestDto partyUpdateRequestDto, List<MultipartFile> images, CurrentUser currentUser){

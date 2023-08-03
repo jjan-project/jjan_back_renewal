@@ -53,18 +53,3 @@ public class PartyGetResponseDto {
     }
 }
 
-@Getter
-@Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-class UserInfo{
-    private Long id;
-    private String profile;
-
-    public static UserInfo of(UserEntity user){
-        return UserInfo.builder()
-                .id(user.getId())
-                .profile(user.getProfile())
-                .build();
-    }
-}
