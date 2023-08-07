@@ -18,9 +18,9 @@ public class JwtCookie {
                 .path("/")
                 .maxAge(1000 * 60 * 30)
                 // .secure(true)
-                .httpOnly(true)
                 // .sameSite("none")
-                .domain("localhost")
+                .httpOnly(true)
+                // .domain("localhost")
                 .build();
     }
 
@@ -31,7 +31,7 @@ public class JwtCookie {
                 // .sameSite("none")
                 // .secure(true)
                 .httpOnly(true)
-                .domain("localhost")
+                // .domain("localhost")
                 .build();
     }
 
