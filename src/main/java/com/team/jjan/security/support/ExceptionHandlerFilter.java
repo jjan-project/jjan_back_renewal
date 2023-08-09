@@ -36,10 +36,6 @@ public class ExceptionHandlerFilter extends GenericFilterBean {
             } else {
                 setErrorResponse((HttpServletResponse) response , HttpStatus.BAD_REQUEST.value(), e.getMessage());
             }
-
-        } catch (Exception e) {
-
-            setErrorResponse((HttpServletResponse) response , HttpStatus.UNAUTHORIZED.value(), e.getMessage());
         }
     }
 
