@@ -36,6 +36,8 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
     implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
 
+    // [ H2 ]
+    runtimeOnly 'com.h2database:h2'
 
     //[ Mail ]
     implementation 'org.springframework.boot:spring-boot-starter-mail'
