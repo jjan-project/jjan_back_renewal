@@ -55,7 +55,7 @@ public class FileUploadService {
 
     public boolean isValidFile(MultipartFile file) {
         String fileName = file.getOriginalFilename();
-        String extension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+        String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 
         if(extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png") || extension.equals("bmp") || extension.equals("svg")) {
             return true;

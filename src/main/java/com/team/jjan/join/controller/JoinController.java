@@ -1,15 +1,12 @@
 package com.team.jjan.join.controller;
 
 import com.team.jjan.common.ResponseMessage;
-import com.team.jjan.common.dto.CurrentUser;
-import com.team.jjan.common.dto.LogIn;
 import com.team.jjan.join.dto.JoinRequest;
 import com.team.jjan.join.dto.LoginRequest;
 import com.team.jjan.join.dto.ValidationRequest;
 import com.team.jjan.join.service.JoinService;
 import com.team.jjan.join.service.RandomNicknameGenerateService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -42,12 +39,6 @@ public class JoinController {
                                                 @RequestPart(value = "image" , required = false) MultipartFile profileImage)
             throws IOException, AccountException {
         return ResponseEntity.ok().body(joinService.join(joinRequest , profileImage));
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity sdsd(@LogIn CurrentUser currentUser) {
-
-        return ResponseEntity.ok().body(currentUser.getEmail());
     }
 
     @Operation(summary = "랜덤 닉네임 생성", description = "유효한 랜덤 닉네임 생성 후 반환")
