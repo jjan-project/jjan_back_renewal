@@ -20,7 +20,7 @@ public class JwtCookie {
                 // .secure(true)
                 // .sameSite("none")
                 .httpOnly(true)
-                // .domain("localhost")
+                .domain("jjan.p-e.kr")
                 .build();
     }
 
@@ -31,7 +31,7 @@ public class JwtCookie {
                 // .sameSite("none")
                 // .secure(true)
                 .httpOnly(true)
-                // .domain("localhost")
+                .domain("jjan.p-e.kr")
                 .build();
     }
 
