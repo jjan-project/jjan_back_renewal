@@ -39,6 +39,12 @@ public class PartyController {
         return ResponseEntity.ok().body(partyService.getParty(partyId));
     }
 
+    @Operation(summary = "나의 파티 조회", description = "현재 로그인 유저의 가입 파티 조회")
+    @GetMapping("/my")
+    public ResponseEntity<ResponseMessage> getJoinParty(@LogIn CurrentUser currentUser){
+        return ResponseEntity.ok().body(partyService.getJoinParty(currentUser));
+    }
+
     @Operation(summary = "파티 전체 조회", description = "파티 전체 정보 조회")
     @GetMapping
     public ResponseEntity<ResponseMessage> getAllParty(@PageableDefault(sort = "partyDate") Pageable pageable){
