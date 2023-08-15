@@ -59,6 +59,11 @@ public class PartyJoinService {
             return partyService.deleteParty(partyId, currentUser);
         }
 
+        //가입되어 있는지 확인
+        if(!partyJoinRepository.existsPartyJoinByJoinUserAndJoinParty(exitUser, party)){
+            throw new AlreadyJoinException("가입하지 않은 파티입니다.");
+        }
+
         //일반 가입 유저라면
         partyJoinRepository.deletePartyJoinByJoinUserAndJoinParty(exitUser, party);
 
