@@ -2,6 +2,7 @@ package com.team.jjan.partyJoin.service;
 
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.common.dto.CurrentUser;
+import com.team.jjan.party.entity.Message;
 import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.party.service.PartyService;
 import com.team.jjan.partyJoin.dto.PartyExitRequestDto;
@@ -42,6 +43,8 @@ public class PartyJoinService {
             throw new AlreadyJoinException("이미 가입되어 있습니다");
         }
 
+//        party.getMessages().add(new Message(false, joinUser.getNickName() + " 님이 " + party.getTitle() + "파티에 가입하셨습니다."));
+
         partyJoinRepository.save(PartyJoin.createJoin(joinUser, party));
         return ResponseMessage.of(REQUEST_SUCCESS);
     }
@@ -65,11 +68,8 @@ public class PartyJoinService {
         }
 
         //일반 가입 유저라면
+//        party.getMessages().add(new Message(false, exitUser.getNickName() + " 님이 " + party.getTitle() + "파티에 나갔습니다."));
         partyJoinRepository.deletePartyJoinByJoinUserAndJoinParty(exitUser, party);
-
-        /*
-        나가는 이유 알림 기능
-        */
 
         return ResponseMessage.of(REQUEST_SUCCESS);
     }
