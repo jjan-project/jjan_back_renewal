@@ -18,6 +18,7 @@ public enum PartyTag {
 
     @JsonValue
     private String tagName;
+    static final int size = 17;
 
     public static PartyTag of(String tagName) {
         for (PartyTag tag : PartyTag.values()) {

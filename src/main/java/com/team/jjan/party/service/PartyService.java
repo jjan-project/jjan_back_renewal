@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -54,6 +55,22 @@ public class PartyService {
         List<PartyJoin> getPartyJoinInfo = partyJoinRepository.findPartyJoinByJoinParty(getParty);
 
         return ResponseMessage.of(REQUEST_SUCCESS, new PartyGetResponseDto(getParty, getPartyJoinInfo));
+    }
+
+    public ResponseMessage getJoinParty(CurrentUser currentUser){
+
+        List<PartyGetAllResponseDto> allJoinParty = new ArrayList<>();
+
+        //현재 로그인 유저
+        UserEntity user = getAuthorUser(currentUser);
+
+        //현재 로그인 유저가 만든 파티
+        partyRepository.findByAuthor(user).stream().map(PartyGetAllResponseDto::new).forEach(allJoinParty::add);
+
+        //현재 로그인 유저가 가입한 파티
+        partyRepository.findMyJoinParty(user).stream().map(PartyGetAllResponseDto::new).forEach(allJoinParty::add);
+
+        return ResponseMessage.of(REQUEST_SUCCESS, allJoinParty);
     }
 
     public ResponseMessage getAllParty(Pageable pageable){

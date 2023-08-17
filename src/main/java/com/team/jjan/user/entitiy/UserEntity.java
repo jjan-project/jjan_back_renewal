@@ -1,6 +1,5 @@
 package com.team.jjan.user.entitiy;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.team.jjan.join.dto.JoinRequest;
 import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.partyJoin.entity.PartyJoin;
