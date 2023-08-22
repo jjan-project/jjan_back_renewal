@@ -5,6 +5,7 @@ import com.team.jjan.common.dto.CurrentUser;
 import com.team.jjan.join.service.JoinService;
 import com.team.jjan.jwt.support.JwtProvider;
 import com.team.jjan.upload.service.FileUploadService;
+import com.team.jjan.user.dto.JoinResponse;
 import com.team.jjan.user.dto.RequestData;
 import com.team.jjan.user.entitiy.UserEntity;
 import com.team.jjan.user.exception.NoSuchEmailException;
@@ -119,5 +120,13 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchEmailException("사용자 정보를 찾을 수 없습니다."));
 
         return targetUser.isNickNameChangeAvailable();
+    }
+
+
+    public JoinResponse getUserInfo(CurrentUser currentUser) {
+        UserEntity targetUser = userRepository.findByEmail(currentUser.getEmail())
+                .orElseThrow(() -> new NoSuchEmailException("사용자 정보를 찾을 수 없습니다."));
+
+        return new JoinResponse(targetUser);
     }
 }
