@@ -28,7 +28,6 @@ public class JoinController {
     private final JoinService joinService;
     private final RandomNicknameGenerateService randomNicknameGenerateService;
 
-    @Operation(summary = "로그인", description = "로그인 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
     @PostMapping("/login")
     public ResponseEntity<ResponseMessage> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response)
             throws AccountException {
@@ -36,33 +35,23 @@ public class JoinController {
         return ResponseEntity.ok().body(joinService.login(loginRequest , response));
     }
 
-    @Operation(summary = "회원가입", description = "회원가입 성공 후 Request 헤더의 Authorization 헤더에 토큰 값을 넣어줘야 합니다.")
-    @PostMapping(value = "/join" , consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/join")
     public ResponseEntity<ResponseMessage> join(@RequestPart(value = "data") JoinRequest joinRequest,
                                                 @RequestPart(value = "image" , required = false) MultipartFile profileImage)
             throws IOException, AccountException {
         return ResponseEntity.ok().body(joinService.join(joinRequest , profileImage));
     }
 
-    @GetMapping("/test")
-    public ResponseEntity sdsd(@LogIn CurrentUser currentUser) {
-
-        return ResponseEntity.ok().body(currentUser.getEmail());
-    }
-
-    @Operation(summary = "랜덤 닉네임 생성", description = "유효한 랜덤 닉네임 생성 후 반환")
     @GetMapping("/random-nickname")
     public ResponseEntity<ResponseMessage> randomNickname() {
         return ResponseEntity.ok().body(randomNicknameGenerateService.generateRandomNickname());
     }
 
-    @Operation(summary = "이메일 중복 체크")
     @PostMapping("/unique-email")
     public ResponseEntity<ResponseMessage> isDuplicatedEmail(@RequestBody ValidationRequest request) {
         return ResponseEntity.ok().body(joinService.isDuplicateEmail(request.getData()));
     }
 
-    @Operation(summary = "닉네임 중복 체크", description = "중복 닉네임일 시 403 status code 반환합니다.")
     @PostMapping("/unique-nickname")
     public ResponseEntity<ResponseMessage> isDuplicatedNickName(@RequestBody ValidationRequest request) {
         return ResponseEntity.ok().body(joinService.isDuplicateNickName(request.getData()));

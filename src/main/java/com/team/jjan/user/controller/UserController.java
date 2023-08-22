@@ -3,6 +3,7 @@ package com.team.jjan.user.controller;
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.common.dto.CurrentUser;
 import com.team.jjan.common.dto.LogIn;
+import com.team.jjan.user.dto.JoinResponse;
 import com.team.jjan.user.dto.RequestData;
 import com.team.jjan.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +31,6 @@ public class UserController {
         return ResponseEntity.ok().body(userService.setDrinkCapacity(currentUser , requestData));
     }
 
-
     @Operation(summary = "닉네임 변경", description = "닉네임 중복 검사 이후 닉네임을 변경합니다")
     @PatchMapping("/nickname")
     public ResponseEntity<ResponseMessage> setNickName(@LogIn CurrentUser currentUser
@@ -56,4 +56,10 @@ public class UserController {
             , @RequestPart(value = "image") MultipartFile multipartFile) throws IOException {
         return ResponseEntity.ok().body(userService.setProfileImage(currentUser , multipartFile));
     }
+
+    @GetMapping("/info")
+    public ResponseEntity<JoinResponse> getUserInfo(@LogIn CurrentUser currentUser) {
+        return ResponseEntity.ok().body(userService.getUserInfo(currentUser));
+    }
+
 }

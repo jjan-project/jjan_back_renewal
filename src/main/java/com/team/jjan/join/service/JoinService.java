@@ -69,9 +69,9 @@ public class JoinService {
 
         String encodedPassword = passwordEncoder.encode(joinRequest.getPassword());
         UserEntity userEntity = UserEntity.createUserEntity(joinRequest , encodedPassword);
+        uploadProfileImage(userEntity , profileImage);
 
-        UserEntity result = userRepository.save(userEntity);
-        uploadProfileImage(result , profileImage);
+        userRepository.save(userEntity);
 
         return ResponseMessage.of(REQUEST_SUCCESS);
     }
