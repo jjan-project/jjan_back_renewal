@@ -42,6 +42,11 @@ public class JoinController {
         return ResponseEntity.ok().body(joinService.join(joinRequest , profileImage));
     }
 
+    @PostMapping(value = "/logout")
+    public ResponseEntity<ResponseMessage> logout(HttpServletResponse response) {
+        return ResponseEntity.ok().body(joinService.logout(response));
+    }
+
     @GetMapping("/random-nickname")
     public ResponseEntity<ResponseMessage> randomNickname() {
         return ResponseEntity.ok().body(randomNicknameGenerateService.generateRandomNickname());
