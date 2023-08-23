@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 
 import static com.team.jjan.common.ResponseCode.REQUEST_FAIL;
 import static com.team.jjan.common.ResponseCode.REQUEST_SUCCESS;
+import static com.team.jjan.jwt.support.JwtCookie.deleteJwtTokenInCookie;
 import static com.team.jjan.jwt.support.JwtCookie.setCookieFromJwt;
 
 @Service
@@ -151,4 +152,9 @@ public class JoinService {
         return validation;
     }
 
+    public ResponseMessage logout(HttpServletResponse response) {
+        deleteJwtTokenInCookie(response);
+
+        return ResponseMessage.of(REQUEST_SUCCESS);
+    }
 }

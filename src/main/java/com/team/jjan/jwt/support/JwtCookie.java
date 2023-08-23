@@ -17,8 +17,6 @@ public class JwtCookie {
         return ResponseCookie.from("accessToken" , accessToken)
                 .path("/")
                 .maxAge(1000 * 60 * 30)
-                // .secure(true)
-                // .sameSite("none")
                 .httpOnly(true)
                 .domain("jjan.p-e.kr")
                 .build();
@@ -28,8 +26,6 @@ public class JwtCookie {
         return ResponseCookie.from("refreshToken" , refreshToken)
                 .path("/")
                 .maxAge(1000L * 60 * 60 * 24 * 30)
-                // .sameSite("none")
-                // .secure(true)
                 .httpOnly(true)
                 .domain("jjan.p-e.kr")
                 .build();
