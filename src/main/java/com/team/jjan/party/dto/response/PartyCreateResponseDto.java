@@ -1,4 +1,4 @@
-package com.team.jjan.party.dto;
+package com.team.jjan.party.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.team.jjan.party.entity.Location;
@@ -14,26 +14,32 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class PartyUpdateResponseDto {
+public class PartyCreateResponseDto {
 
+    private Long id;
+    private String author;
+    private String authorEmail;
     private String title;
     private String content;
-    private Location location;
     private int maxPartyNum;
+    private Location location;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm", timezone = "Asia/Seoul")
     private Date partyDate;
     private List<PartyTag> partyTags = new ArrayList<>();
     private List<String> partyImages = new ArrayList<>();
 
-    public static PartyUpdateResponseDto of(PartyEntity partyEntity, List<String> partyImages){
-        return PartyUpdateResponseDto.builder()
+    public static PartyCreateResponseDto of(PartyEntity partyEntity){
+        return PartyCreateResponseDto.builder()
+                .id(partyEntity.getId())
+                .author(partyEntity.getAuthor().getNickName())
+                .authorEmail(partyEntity.getAuthor().getEmail())
                 .title(partyEntity.getTitle())
                 .content(partyEntity.getContent())
-                .location(partyEntity.getLocation())
                 .maxPartyNum(partyEntity.getMaxPartyNum())
+                .location(partyEntity.getLocation())
                 .partyDate(partyEntity.getPartyDate())
                 .partyTags(partyEntity.getPartyTags())
-                .partyImages(partyImages)
+                .partyImages(partyEntity.getPartyImages())
                 .build();
     }
 }
