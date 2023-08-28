@@ -14,6 +14,8 @@ public class JoinResponse {
     private String nickName;
     private String profile;
     private String address;
+    private double locateX;
+    private double locateY;
     private String gender;
     @JsonFormat(shape = JsonFormat.Shape.STRING , pattern = "yyyy/MM/dd" , timezone = "Asia/Seoul")
     private Date birth;
@@ -24,6 +26,8 @@ public class JoinResponse {
         this.nickName = userEntity.getNickName();
         this.profile = userEntity.getProfile();
         this.address = userEntity.getAddress();
+        this.locateX = userEntity.getLocateX();
+        this.locateY = userEntity.getLocateY();
         this.gender = userEntity.getGender();
         this.birth = userEntity.getBirth();
         this.drinkCapacity = userEntity.getDrinkCapacity();
