@@ -3,6 +3,7 @@ package com.team.jjan.user.entitiy;
 import com.team.jjan.join.dto.JoinRequest;
 import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.partyJoin.entity.PartyJoin;
+import com.team.jjan.user.dto.AddressRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,6 +46,10 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String address;
 
+    private double locateX;
+
+    private double locateY;
+
     @Column(nullable = false)
     private String gender;
 
@@ -60,6 +65,12 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role roles;
+
+    public void updateAddress(AddressRequest addressRequest) {
+        this.address = addressRequest.getAddress();
+        this.locateX = addressRequest.getLocateX();
+        this.locateY = addressRequest.getLocateY();
+    }
 
     public static UserEntity createUserEntity(JoinRequest joinRequest , String encodedPassword) {
         return UserEntity.builder()

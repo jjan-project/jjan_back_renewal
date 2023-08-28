@@ -3,11 +3,11 @@ package com.team.jjan.user.controller;
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.common.dto.CurrentUser;
 import com.team.jjan.common.dto.LogIn;
+import com.team.jjan.user.dto.AddressRequest;
 import com.team.jjan.user.dto.JoinResponse;
 import com.team.jjan.user.dto.RequestData;
 import com.team.jjan.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +29,11 @@ public class UserController {
     public ResponseEntity<ResponseMessage> setDrinkCapacity(@LogIn CurrentUser currentUser
             , @RequestBody RequestData requestData) {
         return ResponseEntity.ok().body(userService.setDrinkCapacity(currentUser , requestData));
+    }
+
+    @PatchMapping("/address")
+    public ResponseEntity<ResponseMessage> setAddress(@LogIn CurrentUser currentUser , @RequestBody AddressRequest addressRequest) {
+        return ResponseEntity.ok().body(userService.setAddress(currentUser , addressRequest));
     }
 
     @Operation(summary = "닉네임 변경", description = "닉네임 중복 검사 이후 닉네임을 변경합니다")
