@@ -80,6 +80,15 @@ public class PartyService {
         return ResponseMessage.of(REQUEST_SUCCESS, allJoinParty);
     }
 
+    public ResponseMessage getSearchParty(Pageable pageable, PartySearchCondition searchCondition, CurrentUser currentUser){
+
+        //현재 로그인 유저
+        UserEntity user = getAuthorUser(currentUser);
+
+        List<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllBySearch(pageable, searchCondition, user).stream().map(PartyGetAllResponseDto::new).collect(Collectors.toList());
+        return ResponseMessage.of(REQUEST_SUCCESS, allPartyDto);
+    }
+
     public ResponseMessage getAllParty(Pageable pageable){
         List<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllParty(pageable).stream().map(PartyGetAllResponseDto::new).collect(Collectors.toList());
         return ResponseMessage.of(REQUEST_SUCCESS, allPartyDto);

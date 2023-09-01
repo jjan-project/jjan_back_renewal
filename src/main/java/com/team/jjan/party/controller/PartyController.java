@@ -3,8 +3,9 @@ package com.team.jjan.party.controller;
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.common.dto.LogIn;
 import com.team.jjan.common.dto.CurrentUser;
-import com.team.jjan.party.dto.PartyCreateRequestDto;
-import com.team.jjan.party.dto.PartyUpdateRequestDto;
+import com.team.jjan.party.dto.request.PartyCreateRequestDto;
+import com.team.jjan.party.dto.request.PartySearchCondition;
+import com.team.jjan.party.dto.request.PartyUpdateRequestDto;
 import com.team.jjan.party.service.PartyService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -45,9 +46,17 @@ public class PartyController {
         return ResponseEntity.ok().body(partyService.getJoinParty(currentUser));
     }
 
+    @Operation(summary = "파티 검색 조회", description = "필터를 이용한 조회")
+    @GetMapping("/search")
+    public ResponseEntity<ResponseMessage> getSearchParty(@PageableDefault(size = 100, page = 0, sort = "partyDate") Pageable pageable,
+                                                       @RequestBody PartySearchCondition searchCondition,
+                                                       @LogIn CurrentUser currentUser){
+        return ResponseEntity.ok().body(partyService.getSearchParty(pageable, searchCondition, currentUser));
+    }
+
     @Operation(summary = "파티 전체 조회", description = "파티 전체 정보 조회")
     @GetMapping
-    public ResponseEntity<ResponseMessage> getAllParty(@PageableDefault(sort = "partyDate") Pageable pageable){
+    public ResponseEntity<ResponseMessage> getAllParty(@PageableDefault(size = 100, sort = "partyDate") Pageable pageable){
         return ResponseEntity.ok().body(partyService.getAllParty(pageable));
     }
 

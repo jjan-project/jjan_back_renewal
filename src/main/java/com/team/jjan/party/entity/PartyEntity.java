@@ -44,6 +44,8 @@ public class PartyEntity extends BaseTimeEntity {
 
     private Date partyDate;
 
+    private Long averageAge;
+
     @BatchSize(size = PartyTag.size)
     @ElementCollection(fetch = FetchType.LAZY)
     private List<PartyTag> partyTags = new ArrayList<>();
