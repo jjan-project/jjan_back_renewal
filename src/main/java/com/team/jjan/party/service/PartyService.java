@@ -2,7 +2,13 @@ package com.team.jjan.party.service;
 
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.common.dto.CurrentUser;
-import com.team.jjan.party.dto.*;
+import com.team.jjan.party.dto.request.PartyCreateRequestDto;
+import com.team.jjan.party.dto.request.PartySearchCondition;
+import com.team.jjan.party.dto.request.PartyUpdateRequestDto;
+import com.team.jjan.party.dto.response.PartyCreateResponseDto;
+import com.team.jjan.party.dto.response.PartyGetAllResponseDto;
+import com.team.jjan.party.dto.response.PartyGetResponseDto;
+import com.team.jjan.party.dto.response.PartyUpdateResponseDto;
 import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.partyJoin.entity.PartyJoin;
 import com.team.jjan.partyJoin.repository.PartyJoinRepository;
@@ -17,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -73,6 +80,15 @@ public class PartyService {
         return ResponseMessage.of(REQUEST_SUCCESS, allJoinParty);
     }
 
+    public ResponseMessage getSearchParty(Pageable pageable, PartySearchCondition searchCondition, CurrentUser currentUser){
+
+        //현재 로그인 유저
+        UserEntity user = getAuthorUser(currentUser);
+
+        List<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllBySearch(pageable, searchCondition, user).stream().map(PartyGetAllResponseDto::new).collect(Collectors.toList());
+        return ResponseMessage.of(REQUEST_SUCCESS, allPartyDto);
+    }
+
     public ResponseMessage getAllParty(Pageable pageable){
         List<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllParty(pageable).stream().map(PartyGetAllResponseDto::new).collect(Collectors.toList());
         return ResponseMessage.of(REQUEST_SUCCESS, allPartyDto);
@@ -125,6 +141,11 @@ public class PartyService {
 
     //이미지 저장
     private List<String> uploadImage(List<MultipartFile> images){
+        //이미지 미 업로드 시
+        if(CollectionUtils.isEmpty(images)){
+            return new ArrayList<>();
+        }
+
         return images.stream().map(image -> {
             try {
                 return fileUploadService.uploadFileToS3(image, UUID.randomUUID().toString());

@@ -1,4 +1,4 @@
-package com.team.jjan.party.dto;
+package com.team.jjan.party.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.team.jjan.party.entity.PartyEntity;
@@ -25,7 +25,7 @@ public class PartyGetAllResponseDto {
         this.id = party.getId();
         this.title = party.getTitle();
         this.partyDate = party.getPartyDate();
-        this.thumbnail = party.getPartyImages().get(0);
+        this.thumbnail = !party.getPartyImages().isEmpty()?party.getPartyImages().get(0):null;
 
         this.joinUser.add(UserInfo.of(party.getAuthor()));
 

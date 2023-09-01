@@ -2,7 +2,7 @@ package com.team.jjan.party.entity;
 
 import com.team.jjan.partyJoin.entity.PartyJoin;
 import jakarta.persistence.*;
-import com.team.jjan.party.dto.PartyUpdateRequestDto;
+import com.team.jjan.party.dto.request.PartyUpdateRequestDto;
 import com.team.jjan.user.entitiy.UserEntity;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
@@ -43,6 +43,8 @@ public class PartyEntity extends BaseTimeEntity {
     private int maxPartyNum;
 
     private Date partyDate;
+
+    private Long averageAge;
 
     @BatchSize(size = PartyTag.size)
     @ElementCollection(fetch = FetchType.LAZY)

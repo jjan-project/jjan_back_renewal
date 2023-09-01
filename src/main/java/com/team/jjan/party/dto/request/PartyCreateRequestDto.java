@@ -1,4 +1,4 @@
-package com.team.jjan.party.dto;
+package com.team.jjan.party.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.team.jjan.party.entity.Location;
