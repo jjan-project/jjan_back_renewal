@@ -5,8 +5,7 @@ import com.team.jjan.party.entity.Location;
 import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.party.entity.PartyTag;
 import com.team.jjan.party.repository.PartyRepository;
-import com.team.jjan.partyJoin.entity.PartyJoin;
-import com.team.jjan.partyJoin.repository.PartyJoinRepository;
+import com.team.jjan.user.dto.AddressRequest;
 import com.team.jjan.user.entitiy.UserEntity;
 import com.team.jjan.user.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
@@ -36,7 +35,6 @@ public class InitData {
 
         private final UserRepository userRepository;
         private final PartyRepository partyRepository;
-        private final PartyJoinRepository partyJoinRepository;
         private final PasswordEncoder passwordEncoder;
 
         public void init() {
@@ -52,6 +50,8 @@ public class InitData {
                         i + "번째 사용자",
                         "30");
                 UserEntity user = UserEntity.createUserEntity(joinRequest, passwordEncoder.encode(joinRequest.getPassword()));
+                AddressRequest addressRequest = new AddressRequest("서울시 구로구", 37.487266, 126.854187);
+                user.updateAddress(addressRequest);
                 userRepository.save(user);
 
                 //파티 생성
@@ -63,7 +63,7 @@ public class InitData {
                         .title(i + "의 게시글")
                         .content("서울에서 보자")
                         .maxPartyNum(4)
-                        .location(new Location(126.882685, 37.501096))
+                        .location(new Location(37.501096, 126.882685))
                         .partyDate(new Date(2023 - 1900, Calendar.OCTOBER, 2, 19, 12))
                         .partyTags(tags)
                         .author(user)
@@ -71,18 +71,6 @@ public class InitData {
 
                 partyRepository.save(party);
             }
-
-            //파티 가입
-            for (int i = 2; i <=5 ; i++) {
-                UserEntity user = userRepository.findById((long) i).orElseThrow();
-                PartyEntity party = partyRepository.findById((long) (i-1)).orElseThrow();
-
-                partyJoinRepository.save(PartyJoin.builder()
-                        .joinUser(user)
-                        .joinParty(party)
-                        .build());
-            }
-
         }
 
     }
