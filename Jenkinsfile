@@ -10,7 +10,7 @@ pipeline {
                 }
 
                 dir('security') {
-                    git branch: 'main', credentialsId: 'github-5tr1ker', url: 'https://github.com/jjan-project/jjan-back-security'
+                    git branch: 'main', credentialsId: 'jjan_UserPassword' , url: 'https://github.com/jjan-project/jjan-back-security'
                     echo 'back-security Clone Success'
                 }
                 echo 'Clone Success'
