@@ -28,7 +28,7 @@ public class JwtService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public void registerRefreshToken(Token token) {
+    public void login(Token token) {
         RefreshToken refreshToken = createRefreshToken(token);
         String loginUserEmail = refreshToken.getKeyEmail();
 
@@ -53,7 +53,6 @@ public class JwtService {
             String accessToken = jwtTokenProvider.validateRefreshToken(token);
 
             response.addHeader("Set-Cookie" , createAccessToken(accessToken).toString());
-
         } catch (NoSuchElementException e) {
             deleteJwtTokenInCookie(response);
 

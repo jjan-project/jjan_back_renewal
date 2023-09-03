@@ -47,16 +47,16 @@ public class JoinService {
             throw new BadCredentialsException("Wrong Authentication");
         }
 
-        createJwtToken(userEntity , response);
+        setCookieFromJwt(response , createJwtToken(userEntity));
 
         return ResponseMessage.of(REQUEST_SUCCESS , new JoinResponse(userEntity));
     }
 
-    public void createJwtToken(UserEntity user , HttpServletResponse response) {
+    public Token createJwtToken(UserEntity user) {
         Token token = jwtProvider.createJwtToken(user.getUsername(), user.getRoles());
-        jwtService.registerRefreshToken(token);
+        jwtService.login(token);
 
-        setCookieFromJwt(response , token);
+        return token;
     }
 
     @Transactional
