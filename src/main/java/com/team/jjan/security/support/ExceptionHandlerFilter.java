@@ -3,6 +3,7 @@ package com.team.jjan.security.support;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team.jjan.common.ResponseCode;
 import com.team.jjan.common.ResponseMessage;
+import com.team.jjan.jwt.exception.TokenForgeryException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -29,6 +30,10 @@ public class ExceptionHandlerFilter extends GenericFilterBean {
             deleteJwtTokenInCookie((HttpServletResponse) response);
 
             setErrorResponse((HttpServletResponse) response , HttpServletResponse.SC_UNAUTHORIZED , "토큰이 변조되었거나 유효하지 않습니다.");
+        } catch (TokenForgeryException e) {
+            deleteJwtTokenInCookie((HttpServletResponse) response);
+
+            setErrorResponse((HttpServletResponse) response , HttpServletResponse.SC_UNAUTHORIZED , "토큰이 만료되었거나 유효하지 않습니다.");
         } catch (ServletException e) {
             Throwable rootCause = findRootCause(e);
             if (rootCause != null) {
@@ -39,7 +44,7 @@ public class ExceptionHandlerFilter extends GenericFilterBean {
         }
     }
 
-    public static Throwable findRootCause(Throwable throwable) {
+    public Throwable findRootCause(Throwable throwable) {
         Throwable cause = throwable.getCause();
         if (cause == null) {
             return throwable;

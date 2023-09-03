@@ -1,14 +1,10 @@
 package com.team.jjan.security.config;
 
 import com.team.jjan.jwt.filter.JwtAuthenticationFilter;
-import com.team.jjan.jwt.support.JwtProvider;
-import com.team.jjan.security.support.CustomAuthenticationEntryPoint;
 import com.team.jjan.security.support.ExceptionHandlerFilter;
-import com.team.jjan.user.entitiy.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,16 +12,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtProvider jwtProvider;
-    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -49,15 +41,11 @@ public class SecurityConfig {
                 .logout()
                 .logoutUrl("/logout")
                 .deleteCookies("accessToken")
-                .deleteCookies("refreshToken")
-                .and()
-                .exceptionHandling()
-                .accessDeniedPage("/api/security/authentication")
-                .authenticationEntryPoint(customAuthenticationEntryPoint);
+                .deleteCookies("refreshToken");
 
         http.addFilterBefore(new ExceptionHandlerFilter() , UsernamePasswordAuthenticationFilter.class);
 
-        http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter , UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
