@@ -18,7 +18,7 @@ public class JwtCookie {
                 .path("/")
                 .maxAge(1000 * 60 * 30)
                 .httpOnly(true)
-                .domain("localhost")
+                .domain("jjan.p-e.kr")
                 .build();
     }
 
@@ -27,7 +27,7 @@ public class JwtCookie {
                 .path("/")
                 .maxAge(1000L * 60 * 60 * 24 * 30)
                 .httpOnly(true)
-                .domain("localhost")
+                .domain("jjan.p-e.kr")
                 .build();
     }
 
