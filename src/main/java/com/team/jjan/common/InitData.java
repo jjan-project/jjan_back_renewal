@@ -63,7 +63,7 @@ public class InitData {
                         .title(i + "의 게시글")
                         .content("서울에서 보자")
                         .maxPartyNum(4)
-                        .location(new Location(37.501096, 126.882685))
+                        .location(new Location(37.512296-(5-i)*0.05, 127.102385-(5-i)*0.05))
                         .partyDate(new Date(2023 - 1900, Calendar.OCTOBER, 2, 19, 12))
                         .partyTags(tags)
                         .author(user)
