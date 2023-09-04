@@ -9,8 +9,8 @@ public class AddressRequest {
 
     private String address;
 
-    private double locateX;
+    private double latitude;     //위도
 
-    private double locateY;
+    private double longitude;     //경도
 
 }

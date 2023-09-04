@@ -46,9 +46,9 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String address;
 
-    private double locateX;
+    private double latitude;         //위도
 
-    private double locateY;
+    private double longitude;         //경도
 
     @Column(nullable = false)
     private String gender;
@@ -68,8 +68,8 @@ public class UserEntity implements UserDetails {
 
     public void updateAddress(AddressRequest addressRequest) {
         this.address = addressRequest.getAddress();
-        this.locateX = addressRequest.getLocateX();
-        this.locateY = addressRequest.getLocateY();
+        this.latitude = addressRequest.getLatitude();
+        this.longitude = addressRequest.getLongitude();
     }
 
     public static UserEntity createUserEntity(JoinRequest joinRequest , String encodedPassword) {
