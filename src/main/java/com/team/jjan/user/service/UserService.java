@@ -7,6 +7,7 @@ import com.team.jjan.jwt.support.JwtProvider;
 import com.team.jjan.upload.service.FileUploadService;
 import com.team.jjan.user.dto.AddressRequest;
 import com.team.jjan.user.dto.JoinResponse;
+import com.team.jjan.user.dto.LocateRequest;
 import com.team.jjan.user.dto.RequestData;
 import com.team.jjan.user.entitiy.UserEntity;
 import com.team.jjan.user.exception.NoSuchEmailException;
@@ -137,6 +138,16 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchEmailException("사용자 정보를 찾을 수 없습니다."));
 
         targetUser.updateAddress(addressRequest);
+
+        return ResponseMessage.of(REQUEST_SUCCESS);
+    }
+
+    @Transactional
+    public ResponseMessage modifyLocate(CurrentUser currentUser, LocateRequest locateRequest) {
+        UserEntity targetUser = userRepository.findByEmail(currentUser.getEmail())
+                .orElseThrow(() -> new NoSuchEmailException("사용자 정보를 찾을 수 없습니다."));
+
+        targetUser.updateLocate(locateRequest);
 
         return ResponseMessage.of(REQUEST_SUCCESS);
     }

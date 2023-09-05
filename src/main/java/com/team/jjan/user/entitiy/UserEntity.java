@@ -4,6 +4,7 @@ import com.team.jjan.join.dto.JoinRequest;
 import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.partyJoin.entity.PartyJoin;
 import com.team.jjan.user.dto.AddressRequest;
+import com.team.jjan.user.dto.LocateRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -80,6 +81,8 @@ public class UserEntity implements UserDetails {
                 .birth(joinRequest.getBirth())
                 .gender(joinRequest.getGender())
                 .profile("blank")
+                .locateX(joinRequest.getLocateX())
+                .locateY(joinRequest.getLocateY())
                 .nickName(joinRequest.getNickname())
                 .drinkCapacity(joinRequest.getDrinkingCapacity())
                 .roles(Role.MEMBER)
@@ -129,5 +132,9 @@ public class UserEntity implements UserDetails {
         return true;
     }
 
+    public void updateLocate(LocateRequest locateRequest) {
+        this.locateX = locateRequest.getLocateX();
+        this.locateY = locateRequest.getLocateY();
+    }
 }
 

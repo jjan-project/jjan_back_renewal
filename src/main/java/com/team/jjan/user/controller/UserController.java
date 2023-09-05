@@ -5,6 +5,7 @@ import com.team.jjan.common.dto.CurrentUser;
 import com.team.jjan.common.dto.LogIn;
 import com.team.jjan.user.dto.AddressRequest;
 import com.team.jjan.user.dto.JoinResponse;
+import com.team.jjan.user.dto.LocateRequest;
 import com.team.jjan.user.dto.RequestData;
 import com.team.jjan.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -65,6 +66,11 @@ public class UserController {
     @GetMapping("/info")
     public ResponseEntity<JoinResponse> getUserInfo(@LogIn CurrentUser currentUser) {
         return ResponseEntity.ok().body(userService.getUserInfo(currentUser));
+    }
+
+    @PatchMapping("/locate")
+    public ResponseEntity modifyLocate(@LogIn CurrentUser currentUser , @RequestBody LocateRequest locateRequest ) {
+        return ResponseEntity.ok().body(userService.modifyLocate(currentUser , locateRequest));
     }
 
 }
