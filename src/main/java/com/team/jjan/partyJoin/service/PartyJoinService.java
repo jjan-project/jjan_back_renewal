@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 import static com.team.jjan.common.ResponseCode.*;
 
 @Service
@@ -45,6 +47,7 @@ public class PartyJoinService {
 
 //        party.getMessages().add(new Message(false, joinUser.getNickName() + " 님이 " + party.getTitle() + "파티에 가입하셨습니다."));
 
+        party.updateAverageAge((long) LocalDate.now().getYear()-joinUser.getBirth().getYear()+1-1900, true);
         partyJoinRepository.save(PartyJoin.createJoin(joinUser, party));
         return ResponseMessage.of(REQUEST_SUCCESS);
     }
@@ -69,6 +72,8 @@ public class PartyJoinService {
 
         //일반 가입 유저라면
 //        party.getMessages().add(new Message(false, exitUser.getNickName() + " 님이 " + party.getTitle() + "파티에 나갔습니다."));
+
+        party.updateAverageAge((long) LocalDate.now().getYear()-exitUser.getBirth().getYear()+1-1900, false);
         partyJoinRepository.deletePartyJoinByJoinUserAndJoinParty(exitUser, party);
 
         return ResponseMessage.of(REQUEST_SUCCESS);

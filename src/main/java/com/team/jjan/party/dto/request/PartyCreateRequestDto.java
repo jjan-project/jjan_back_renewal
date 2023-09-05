@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class PartyCreateRequestDto {
                 .partyDate(partyDate)
                 .partyTags(partyTags)
                 .partyImages(partyImages)
+                .averageAge((long)LocalDate.now().getYear()-author.getBirth().getYear()+1-1900)
                 .build();
     }
 }

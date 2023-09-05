@@ -68,6 +68,21 @@ public class PartyEntity extends BaseTimeEntity {
         this.partyImages = updateImages;
     }
 
+    public void updateAverageAge(Long age, Boolean plus){
+
+        int personnel = joinUser.size()+1;
+
+        Long temp = averageAge * personnel;
+        if(plus){
+            temp+=age;
+            averageAge=temp/(personnel+1);
+        }
+        else {
+            temp-=age;
+            averageAge=temp/(personnel-1);
+        }
+    }
+
     public void userJoin(PartyJoin join){
         joinUser.add(join);
     }
