@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,6 +38,8 @@ public class InitData {
         private final PartyRepository partyRepository;
         private final PasswordEncoder passwordEncoder;
 
+        private final PartyTag[] partyTags = new PartyTag[]{PartyTag.TAG_00, PartyTag.TAG_02, PartyTag.TAG_04, PartyTag.TAG_06, PartyTag.TAG_01, PartyTag.TAG_03, PartyTag.TAG_05, PartyTag.TAG_07, PartyTag.TAG_09, PartyTag.TAG_14};
+
         public void init() {
 
             //유저 정보
@@ -45,7 +48,7 @@ public class InitData {
                         "email" + i + "@naver.com",
                         "password",
                         "address",
-                        new Date(2000 - 1900, Calendar.MARCH, 2),
+                        new Date(2003-(i*2)-1900, Calendar.MARCH, 2),
                         "남성",
                         i + "번째 사용자",
                         "30");
@@ -56,8 +59,9 @@ public class InitData {
 
                 //파티 생성
                 List<PartyTag> tags = new ArrayList<>();
-                tags.add(PartyTag.TAG_01);
-                tags.add(PartyTag.TAG_03);
+                tags.add(partyTags[i-1]);
+                tags.add(partyTags[i]);
+
 
                 PartyEntity party = PartyEntity.builder()
                         .title(i + "의 게시글")
@@ -67,6 +71,7 @@ public class InitData {
                         .partyDate(new Date(2023 - 1900, Calendar.OCTOBER, 2, 19, 12))
                         .partyTags(tags)
                         .author(user)
+                        .averageAge((long) LocalDate.now().getYear()-user.getBirth().getYear()+1-1900)
                         .build();
 
                 partyRepository.save(party);
