@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LocateRequest {
 
-    private double locateX;
-    private double locateY;
+    private double latitude;
+    private double longitude;
 
 }

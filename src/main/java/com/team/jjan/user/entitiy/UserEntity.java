@@ -47,9 +47,9 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String address;
 
-    private double locateX;
+    private double latitude;
 
-    private double locateY;
+    private double longitude;
 
     @Column(nullable = false)
     private String gender;
@@ -69,8 +69,8 @@ public class UserEntity implements UserDetails {
 
     public void updateAddress(AddressRequest addressRequest) {
         this.address = addressRequest.getAddress();
-        this.locateX = addressRequest.getLocateX();
-        this.locateY = addressRequest.getLocateY();
+        this.latitude = addressRequest.getLatitude();
+        this.longitude = addressRequest.getLongitude();
     }
 
     public static UserEntity createUserEntity(JoinRequest joinRequest , String encodedPassword) {
@@ -81,8 +81,8 @@ public class UserEntity implements UserDetails {
                 .birth(joinRequest.getBirth())
                 .gender(joinRequest.getGender())
                 .profile("blank")
-                .locateX(joinRequest.getLocateX())
-                .locateY(joinRequest.getLocateY())
+                .latitude(joinRequest.getLatitude())
+                .longitude(joinRequest.getLongitude())
                 .nickName(joinRequest.getNickname())
                 .drinkCapacity(joinRequest.getDrinkingCapacity())
                 .roles(Role.MEMBER)
@@ -133,8 +133,8 @@ public class UserEntity implements UserDetails {
     }
 
     public void updateLocate(LocateRequest locateRequest) {
-        this.locateX = locateRequest.getLocateX();
-        this.locateY = locateRequest.getLocateY();
+        this.latitude = locateRequest.getLatitude();
+        this.longitude = locateRequest.getLongitude();
     }
 }
 
