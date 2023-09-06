@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Location {
-    private double partyLatitude;   //위도
 
-    private double partyLongitude;  //경도
+    private double latitude;    //위도
+
+    private double longitude;   //경도
 }

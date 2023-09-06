@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -20,8 +21,8 @@ public class PartyCreateRequestDto {
     private String title;
     private String content;
     private int maxPartyNum;
-    private double partyLatitude;   //위도
     private double partyLongitude;  //경도
+    private double partyLatitude;   //위도
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm", timezone = "Asia/Seoul")
     private Date partyDate;
     private List<PartyTag> partyTags;
@@ -32,10 +33,11 @@ public class PartyCreateRequestDto {
                 .content(content)
                 .author(author)
                 .maxPartyNum(maxPartyNum)
-                .location(new Location(partyLatitude, partyLongitude))
+                .location(new Location(partyLongitude, partyLatitude))
                 .partyDate(partyDate)
                 .partyTags(partyTags)
                 .partyImages(partyImages)
+                .averageAge((long)LocalDate.now().getYear()-author.getBirth().getYear()+1-1900)
                 .build();
     }
 }

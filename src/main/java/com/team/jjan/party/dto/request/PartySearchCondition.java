@@ -29,5 +29,6 @@ public class PartySearchCondition {
     private Integer personnelLoe;
 
     //연령대
+    private AgeTag ageTag;
 
 }
