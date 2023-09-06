@@ -48,6 +48,8 @@ public class InitData {
                         "password",
                         "address",
                         new Date(2000 - 1900, Calendar.MARCH, 2),
+                        1.1 ,
+                        1.1 ,
                         "남성",
                         i + "번째 사용자",
                         "30");

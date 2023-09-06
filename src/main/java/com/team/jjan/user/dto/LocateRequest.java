@@ -7,12 +7,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddressRequest {
-
-    private String address;
+public class LocateRequest {
 
     private double latitude;
-
     private double longitude;
 
 }

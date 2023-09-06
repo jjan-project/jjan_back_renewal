@@ -4,6 +4,7 @@ import com.team.jjan.join.dto.JoinRequest;
 import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.partyJoin.entity.PartyJoin;
 import com.team.jjan.user.dto.AddressRequest;
+import com.team.jjan.user.dto.LocateRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,9 +47,9 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String address;
 
-    private double locateX;
+    private double latitude;
 
-    private double locateY;
+    private double longitude;
 
     @Column(nullable = false)
     private String gender;
@@ -68,8 +69,8 @@ public class UserEntity implements UserDetails {
 
     public void updateAddress(AddressRequest addressRequest) {
         this.address = addressRequest.getAddress();
-        this.locateX = addressRequest.getLocateX();
-        this.locateY = addressRequest.getLocateY();
+        this.latitude = addressRequest.getLatitude();
+        this.longitude = addressRequest.getLongitude();
     }
 
     public static UserEntity createUserEntity(JoinRequest joinRequest , String encodedPassword) {
@@ -80,6 +81,8 @@ public class UserEntity implements UserDetails {
                 .birth(joinRequest.getBirth())
                 .gender(joinRequest.getGender())
                 .profile("blank")
+                .latitude(joinRequest.getLatitude())
+                .longitude(joinRequest.getLongitude())
                 .nickName(joinRequest.getNickname())
                 .drinkCapacity(joinRequest.getDrinkingCapacity())
                 .roles(Role.MEMBER)
@@ -129,5 +132,9 @@ public class UserEntity implements UserDetails {
         return true;
     }
 
+    public void updateLocate(LocateRequest locateRequest) {
+        this.latitude = locateRequest.getLatitude();
+        this.longitude = locateRequest.getLongitude();
+    }
 }
 
