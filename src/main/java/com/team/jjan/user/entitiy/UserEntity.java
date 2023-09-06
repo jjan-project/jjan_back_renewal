@@ -46,9 +46,9 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String address;
 
-    private double latitude;         //위도
+    private double latitude;
 
-    private double longitude;         //경도
+    private double longitude;
 
     @Column(nullable = false)
     private String gender;

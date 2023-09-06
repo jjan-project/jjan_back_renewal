@@ -48,7 +48,9 @@ public class InitData {
                         "email" + i + "@naver.com",
                         "password",
                         "address",
-                        new Date(2003-(i*2)-1900, Calendar.MARCH, 2),
+                        new Date(2000 - 1900, Calendar.MARCH, 2),
+                        1.1 ,
+                        1.1 ,
                         "남성",
                         i + "번째 사용자",
                         "30");

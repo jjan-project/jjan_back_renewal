@@ -14,6 +14,8 @@ public class JoinRequest {
     private String password;
     private String address;
     private Date birth;
+    private double latitude;
+    private double longitude;
     private String gender;
     private String nickname;
     private String drinkingCapacity;
