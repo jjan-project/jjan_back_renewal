@@ -18,14 +18,14 @@ public class PartyJoinController {
     private final PartyJoinService partyJoinService;
 
     @Operation(summary = "파티 가입", description = "가입 성공 시 SUCCESS code 반환, 파티 가입 시 로그인 정보 확인, Parameter 변수 id로 파티 정보 전달")
-    @PostMapping("/{id}/join")
+    @PostMapping("/join/{id}")
     public ResponseEntity<ResponseMessage> joinParty(@PathVariable("id") Long partyId,
                                                      @LogIn CurrentUser currentUser){
         return ResponseEntity.ok().body(partyJoinService.joinParty(partyId, currentUser));
     }
 
     @Operation(summary = "파티 탈퇴", description = "탈퇴 성공 시 SUCCESS code 반환, 파티 탈퇴 시 로그인 정보 확인, Parameter 변수 id로 파티 정보 전달")
-    @PostMapping("/{id}/exit")
+    @PostMapping("/exit/{id}")
     public ResponseEntity<ResponseMessage> exitParty(@PathVariable("id") Long partyId,
                                                      @RequestBody PartyExitRequestDto partyExitRequestDto,
                                                      @LogIn CurrentUser currentUser){
