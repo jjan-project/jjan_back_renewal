@@ -52,7 +52,7 @@ public class PartyJoinService {
         return ResponseMessage.of(REQUEST_SUCCESS);
     }
 
-    public ResponseMessage exitParty(Long partyId, PartyExitRequestDto partyExitRequestDto, CurrentUser currentUser){
+    public ResponseMessage exitParty(Long partyId, CurrentUser currentUser){
         //탈퇴 유저
         UserEntity exitUser = userRepository.findByEmail(currentUser.getEmail())
                 .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
