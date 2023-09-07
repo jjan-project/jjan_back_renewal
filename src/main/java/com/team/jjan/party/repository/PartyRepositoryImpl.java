@@ -49,7 +49,7 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom{
     }
 
     private BooleanExpression useTag(List<PartyTag> partyTagList) {
-        return Expressions.anyOf(partyTagList.stream().map(this::isFilteredPartyTag).toArray(BooleanExpression[]::new));
+        return !partyTagList.isEmpty()?Expressions.anyOf(partyTagList.stream().map(this::isFilteredPartyTag).toArray(BooleanExpression[]::new)):null;
     }
 
     private BooleanExpression isFilteredPartyTag(PartyTag partyTag){

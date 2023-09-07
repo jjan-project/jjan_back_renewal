@@ -18,6 +18,7 @@ public class PartyUpdateRequestDto {
     private String title;
     private String content;
     private int maxPartyNum;
+    private String address;
     private double partyLatitude;   //위도
     private double partyLongitude;  //경도
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm", timezone = "Asia/Seoul")

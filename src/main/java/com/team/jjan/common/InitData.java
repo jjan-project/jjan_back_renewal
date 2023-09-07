@@ -48,15 +48,13 @@ public class InitData {
                         "email" + i + "@naver.com",
                         "password",
                         "address",
-                        new Date(2000 - 1900, Calendar.MARCH, 2),
-                        1.1 ,
-                        1.1 ,
+                        new Date(2003-(i*2)-1900, Calendar.MARCH, 2),
+                        37.487266 ,
+                        126.854187 ,
                         "남성",
                         i + "번째 사용자",
                         "30");
                 UserEntity user = UserEntity.createUserEntity(joinRequest, passwordEncoder.encode(joinRequest.getPassword()));
-                AddressRequest addressRequest = new AddressRequest("서울시 구로구", 37.487266, 126.854187);
-                user.updateAddress(addressRequest);
                 userRepository.save(user);
 
                 //파티 생성
@@ -69,8 +67,8 @@ public class InitData {
                         .title(i + "의 게시글")
                         .content("서울에서 보자")
                         .maxPartyNum(4)
-                        .location(new Location(37.512296-(5-i)*0.05, 127.102385-(5-i)*0.05))
-                        .partyDate(new Date(2023 - 1900, Calendar.OCTOBER, 2, 19, 12))
+                        .location(new Location("서울시 어딘가", 37.512296-(5-i)*0.05, 127.102385-(5-i)*0.05))
+                        .partyDate(new Date(2023 - 1900, Calendar.OCTOBER, 2+i, 19+i, 12+i))
                         .partyTags(tags)
                         .author(user)
                         .averageAge((long) LocalDate.now().getYear()-user.getBirth().getYear()+1-1900)
