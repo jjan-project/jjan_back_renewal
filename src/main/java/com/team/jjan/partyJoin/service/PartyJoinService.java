@@ -45,14 +45,12 @@ public class PartyJoinService {
             throw new AlreadyJoinException("이미 가입되어 있습니다");
         }
 
-//        party.getMessages().add(new Message(false, joinUser.getNickName() + " 님이 " + party.getTitle() + "파티에 가입하셨습니다."));
-
         party.updateAverageAge((long) LocalDate.now().getYear()-joinUser.getBirth().getYear()+1-1900, true);
         partyJoinRepository.save(PartyJoin.createJoin(joinUser, party));
         return ResponseMessage.of(REQUEST_SUCCESS);
     }
 
-    public ResponseMessage exitParty(Long partyId, PartyExitRequestDto partyExitRequestDto, CurrentUser currentUser){
+    public ResponseMessage exitParty(Long partyId, CurrentUser currentUser){
         //탈퇴 유저
         UserEntity exitUser = userRepository.findByEmail(currentUser.getEmail())
                 .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
@@ -69,9 +67,6 @@ public class PartyJoinService {
         if(!partyJoinRepository.existsPartyJoinByJoinUserAndJoinParty(exitUser, party)){
             throw new AlreadyJoinException("가입하지 않은 파티입니다.");
         }
-
-        //일반 가입 유저라면
-//        party.getMessages().add(new Message(false, exitUser.getNickName() + " 님이 " + party.getTitle() + "파티에 나갔습니다."));
 
         party.updateAverageAge((long) LocalDate.now().getYear()-exitUser.getBirth().getYear()+1-1900, false);
         partyJoinRepository.deletePartyJoinByJoinUserAndJoinParty(exitUser, party);
