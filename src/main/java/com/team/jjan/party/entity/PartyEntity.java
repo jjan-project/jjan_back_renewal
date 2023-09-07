@@ -61,7 +61,7 @@ public class PartyEntity extends BaseTimeEntity {
     public void update(PartyUpdateRequestDto partyUpdateRequestDto, List<String> updateImages){
         this.title = partyUpdateRequestDto.getTitle();
         this.content = partyUpdateRequestDto.getContent();
-        this.location = new Location(partyUpdateRequestDto.getPartyLongitude(), partyUpdateRequestDto.getPartyLatitude());
+        this.location = new Location(partyUpdateRequestDto.getAddress(), partyUpdateRequestDto.getPartyLongitude(), partyUpdateRequestDto.getPartyLatitude());
         this.maxPartyNum = partyUpdateRequestDto.getMaxPartyNum();
         this.partyDate = partyUpdateRequestDto.getPartyDate();
         this.partyTags = partyUpdateRequestDto.getPartyTags();

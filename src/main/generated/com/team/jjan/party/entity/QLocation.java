@@ -19,9 +19,11 @@ public class QLocation extends BeanPath<Location> {
 
     public static final QLocation location = new QLocation("location");
 
-    public final NumberPath<Double> partyLatitude = createNumber("partyLatitude", Double.class);
+    public final StringPath address = createString("address");
 
-    public final NumberPath<Double> partyLongitude = createNumber("partyLongitude", Double.class);
+    public final NumberPath<Double> latitude = createNumber("latitude", Double.class);
+
+    public final NumberPath<Double> longitude = createNumber("longitude", Double.class);
 
     public QLocation(String variable) {
         super(Location.class, forVariable(variable));
