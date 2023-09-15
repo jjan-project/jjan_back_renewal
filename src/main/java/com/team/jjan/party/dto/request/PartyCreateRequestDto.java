@@ -34,7 +34,7 @@ public class PartyCreateRequestDto {
                 .content(content)
                 .author(author)
                 .maxPartyNum(maxPartyNum)
-                .location(new Location(address, partyLongitude, partyLatitude))
+                .location(new Location(address, partyLatitude, partyLongitude))
                 .partyDate(partyDate)
                 .partyTags(partyTags)
                 .partyImages(partyImages)
