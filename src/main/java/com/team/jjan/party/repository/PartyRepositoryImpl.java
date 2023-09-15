@@ -57,10 +57,12 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom{
     }
 
     private BooleanExpression partition(Integer personnelGoe, Integer personnelLoe) {
-        return partyEntity.maxPartyNum.between(personnelGoe, personnelLoe);
+        return !(personnelGoe==null||personnelLoe==null)?partyEntity.maxPartyNum.between(personnelGoe, personnelLoe):null;
     }
 
     private BooleanExpression radius(Integer radiusRange, UserEntity user) {
+        if(radiusRange==null) return null;
+
         NumberExpression<Double> theta = partyEntity.location.longitude.add(-user.getLongitude());
         NumberExpression<Double> dist = MathExpressions.sin(DegreeToRadianExpression(partyEntity.location.latitude))
                 .multiply(Math.sin(DegreeToRadian(user.getLatitude())))
