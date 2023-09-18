@@ -1,5 +1,6 @@
 package com.team.jjan.party.repository;
 
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -40,7 +41,7 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom{
                     useTag(searchCondition.getPartyTagList()),                                              //어떤 술 모임에 가고 싶으세요?
                     partition(searchCondition.getPersonnelGoe(), searchCondition.getPersonnelLoe()),        //모집 인원을 선택해주세요
                     radius(searchCondition.getRadiusRange(), user),                                         //동네 반경 범위
-                    ageTag(searchCondition.getAgeTag())                                                     //연령대
+                    ageTag(searchCondition.getAgeTag())                                                 //연령대
                 )
                 .orderBy(
                     sorting(searchCondition.getSort(), user)                                                 //정렬
@@ -49,11 +50,19 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom{
     }
 
     private BooleanExpression useTag(List<PartyTag> partyTagList) {
-        return !partyTagList.isEmpty()?Expressions.anyOf(partyTagList.stream().map(this::isFilteredPartyTag).toArray(BooleanExpression[]::new)):null;
+        return !partyTagList.isEmpty()?Expressions.allOf(partyTagList.stream().map(this::isFilteredPartyTag).toArray(BooleanExpression[]::new)):null;
     }
 
     private BooleanExpression isFilteredPartyTag(PartyTag partyTag){
         return partyEntity.partyTags.contains(partyTag);
+    }
+
+    private BooleanExpression ageTag(List<AgeTag> ageTagList) {
+        return !ageTagList.isEmpty()?Expressions.anyOf(ageTagList.stream().map(this::ageTag).toArray(BooleanExpression[]::new)):null;
+    }
+
+    private BooleanExpression ageTag(AgeTag ageTag) {
+        return ageTag!=null?partyEntity.averageAge.between(ageTag.getStartAge(), ageTag.getEndAge()):null;
     }
 
     private BooleanExpression partition(Integer personnelGoe, Integer personnelLoe) {
@@ -89,10 +98,6 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom{
 
     private double DegreeToRadian(double degree) {
         return degree * (Math.PI / 180.0);
-    }
-
-    private BooleanExpression ageTag(AgeTag ageTag) {
-        return ageTag!=null?partyEntity.averageAge.between(ageTag.getStartAge(), ageTag.getEndAge()):null;
     }
 
     private OrderSpecifier<?> sorting(SortSelection sort, UserEntity user) {
