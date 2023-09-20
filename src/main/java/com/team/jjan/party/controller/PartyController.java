@@ -47,7 +47,7 @@ public class PartyController {
     }
 
     @Operation(summary = "파티 검색 조회", description = "필터를 이용한 조회")
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<ResponseMessage> getSearchParty(@PageableDefault(size = 100, page = 0, sort = "partyDate") Pageable pageable,
                                                        @RequestBody PartySearchCondition searchCondition,
                                                        @LogIn CurrentUser currentUser){
