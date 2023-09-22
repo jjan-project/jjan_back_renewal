@@ -57,7 +57,7 @@ public class ChatRepositoryImpl implements CustomChatRepository {
                 .fetch();
 
         // 내가 생성한 파티 룸
-        result.add(jpaQueryFactory.select(Projections.constructor(
+        List<ChatRoomResponse> result_2 = jpaQueryFactory.select(Projections.constructor(
                         ChatRoomResponse.class,
                         chatRoom.chatId,
                         partyEntity.id,
@@ -65,7 +65,11 @@ public class ChatRepositoryImpl implements CustomChatRepository {
                 )).from(partyEntity)
                 .innerJoin(partyEntity.author, userEntity).on(userEntity.email.eq(userEmail))
                 .innerJoin(partyEntity.chatRoom , chatRoom)
-                .fetchOne());
+                .fetch();
+
+        for(ChatRoomResponse response : result_2) {
+            result.add(response);
+        }
 
         return result;
     }
