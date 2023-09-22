@@ -1,5 +1,6 @@
 package com.team.jjan.common;
 
+import com.team.jjan.chat.entity.ChatRoom;
 import com.team.jjan.join.dto.JoinRequest;
 import com.team.jjan.party.entity.Location;
 import com.team.jjan.party.entity.PartyEntity;
@@ -12,6 +13,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class InitData {
     }
 
     @Component
+    @Transactional
     @RequiredArgsConstructor
     static class InitDataService {
 
@@ -75,6 +78,7 @@ public class InitData {
                         .build();
 
                 partyRepository.save(party);
+                party.setChatRoom(ChatRoom.createChatRoom(party));
             }
         }
 

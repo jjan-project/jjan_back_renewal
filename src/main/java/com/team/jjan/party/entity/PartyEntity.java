@@ -1,5 +1,7 @@
 package com.team.jjan.party.entity;
 
+import com.team.jjan.chat.entity.Chat;
+import com.team.jjan.chat.entity.ChatRoom;
 import com.team.jjan.partyJoin.entity.PartyJoin;
 import jakarta.persistence.*;
 import com.team.jjan.party.dto.request.PartyUpdateRequestDto;
@@ -9,6 +11,7 @@ import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -57,6 +60,14 @@ public class PartyEntity extends BaseTimeEntity {
     @BatchSize(size = 50)
     @ElementCollection(fetch = FetchType.LAZY)
     List<Message> messages = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "party" , cascade = { CascadeType.REMOVE } , orphanRemoval = true)
+    List<Chat> chatList = new LinkedList<>();
+
+    @Setter
+    @OneToOne(cascade = { CascadeType.PERSIST , CascadeType.REMOVE } , orphanRemoval = true)
+    private ChatRoom chatRoom;
 
     public void update(PartyUpdateRequestDto partyUpdateRequestDto, List<String> updateImages){
         this.title = partyUpdateRequestDto.getTitle();

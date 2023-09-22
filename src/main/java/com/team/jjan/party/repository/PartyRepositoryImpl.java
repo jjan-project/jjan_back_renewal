@@ -17,6 +17,7 @@ import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.team.jjan.party.entity.QPartyEntity.*;
 import static com.team.jjan.partyJoin.entity.QPartyJoin.*;
@@ -47,6 +48,18 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom{
                     sorting(searchCondition.getSort(), user)                                                 //정렬
                 )
                 .fetch();
+    }
+
+    @Override
+    public Optional<PartyEntity> findPartyAndChatById(long partyId) {
+        PartyEntity result = queryFactory
+                .select(partyEntity)
+                .from(partyEntity)
+                .leftJoin(partyEntity.chatList).fetchJoin()
+                .where(partyEntity.id.eq(partyId))
+                .fetchOne();
+
+        return Optional.ofNullable(result);
     }
 
     private BooleanExpression useTag(List<PartyTag> partyTagList) {

@@ -10,14 +10,14 @@ import com.team.jjan.party.dto.response.PartyGetAllResponseDto;
 import com.team.jjan.party.dto.response.PartyGetResponseDto;
 import com.team.jjan.party.dto.response.PartyUpdateResponseDto;
 import com.team.jjan.party.entity.PartyEntity;
+import com.team.jjan.party.exception.NoSuchPartyException;
+import com.team.jjan.party.repository.PartyRepository;
 import com.team.jjan.partyJoin.entity.PartyJoin;
 import com.team.jjan.partyJoin.repository.PartyJoinRepository;
 import com.team.jjan.upload.service.FileUploadService;
 import com.team.jjan.user.entitiy.UserEntity;
 import com.team.jjan.user.exception.NoSuchEmailException;
 import com.team.jjan.user.repository.UserRepository;
-import com.team.jjan.party.exception.NoSuchPartyException;
-import com.team.jjan.party.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,7 +32,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.team.jjan.common.ResponseCode.*;
+import static com.team.jjan.chat.entity.ChatRoom.createChatRoom;
+import static com.team.jjan.common.ResponseCode.REQUEST_SUCCESS;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +53,8 @@ public class PartyService {
         List<String> imagesName = uploadImage(images);
         //파티 생성
         PartyEntity createParty = partyRepository.save(partyCreateRequestDto.toEntity(authorUser, imagesName));
+        createParty.setChatRoom(createChatRoom(createParty));
+
         return ResponseMessage.of(REQUEST_SUCCESS, PartyCreateResponseDto.of(createParty));
     }
 
