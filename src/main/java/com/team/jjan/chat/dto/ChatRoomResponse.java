@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,4 +18,12 @@ public class ChatRoomResponse {
 
     private String partyTitle;
 
+    private String partyImages;
+
+    public ChatRoomResponse(ChatRoomDTO chatRoomDTO) {
+        this.chatId = chatRoomDTO.getChatId();
+        this.partyId = chatRoomDTO.getParty().getId();
+        this.partyTitle = chatRoomDTO.getParty().getTitle();
+        this.partyImages = !chatRoomDTO.getParty().getPartyImages().isEmpty()? chatRoomDTO.getParty().getPartyImages().get(0):null;
+    }
 }
