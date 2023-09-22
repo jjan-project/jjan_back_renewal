@@ -16,10 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -74,6 +71,7 @@ public class InitData {
                         .partyDate(new Date(2023 - 1900, Calendar.OCTOBER, 2+i, 19+i, 12+i))
                         .partyTags(tags)
                         .author(user)
+                        .partyImages(new ArrayList<>(Arrays.asList("image1" , "image2" , "image3")))
                         .averageAge((long) LocalDate.now().getYear()-user.getBirth().getYear()+1-1900)
                         .build();
 
