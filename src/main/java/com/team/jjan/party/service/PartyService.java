@@ -1,5 +1,6 @@
 package com.team.jjan.party.service;
 
+import com.team.jjan.chat.entity.ChatRoom;
 import com.team.jjan.common.ResponseMessage;
 import com.team.jjan.common.dto.CurrentUser;
 import com.team.jjan.party.dto.request.PartyCreateRequestDto;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.team.jjan.chat.entity.ChatRoom.createChatRoom;
 import static com.team.jjan.common.ResponseCode.*;
 
 @Service
@@ -52,6 +54,8 @@ public class PartyService {
         List<String> imagesName = uploadImage(images);
         //파티 생성
         PartyEntity createParty = partyRepository.save(partyCreateRequestDto.toEntity(authorUser, imagesName));
+        createParty.setChatRoom(createChatRoom(createParty));
+
         return ResponseMessage.of(REQUEST_SUCCESS, PartyCreateResponseDto.of(createParty));
     }
 

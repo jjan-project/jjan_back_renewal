@@ -28,6 +28,10 @@ public class QPartyEntity extends EntityPathBase<PartyEntity> {
 
     public final NumberPath<Long> averageAge = createNumber("averageAge", Long.class);
 
+    public final ListPath<com.team.jjan.chat.entity.Chat, com.team.jjan.chat.entity.QChat> chatList = this.<com.team.jjan.chat.entity.Chat, com.team.jjan.chat.entity.QChat>createList("chatList", com.team.jjan.chat.entity.Chat.class, com.team.jjan.chat.entity.QChat.class, PathInits.DIRECT2);
+
+    public final com.team.jjan.chat.entity.QChatRoom chatRoom;
+
     public final StringPath content = createString("content");
 
     //inherited
@@ -73,6 +77,7 @@ public class QPartyEntity extends EntityPathBase<PartyEntity> {
     public QPartyEntity(Class<? extends PartyEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.author = inits.isInitialized("author") ? new com.team.jjan.user.entitiy.QUserEntity(forProperty("author")) : null;
+        this.chatRoom = inits.isInitialized("chatRoom") ? new com.team.jjan.chat.entity.QChatRoom(forProperty("chatRoom"), inits.get("chatRoom")) : null;
         this.location = inits.isInitialized("location") ? new QLocation(forProperty("location")) : null;
     }
 
