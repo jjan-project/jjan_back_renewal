@@ -1,5 +1,6 @@
 package com.team.jjan.common;
 
+import com.team.jjan.chat.entity.ChatRoom;
 import com.team.jjan.join.dto.JoinRequest;
 import com.team.jjan.party.entity.Location;
 import com.team.jjan.party.entity.PartyEntity;
@@ -73,6 +74,7 @@ public class InitData {
                         .author(user)
                         .averageAge((long) LocalDate.now().getYear()-user.getBirth().getYear()+1-1900)
                         .build();
+                party.setChatRoom(ChatRoom.createChatRoom(party));
 
                 partyRepository.save(party);
             }

@@ -13,7 +13,7 @@ public class ChatRequest {
 
     private String message;
 
-    private long meetingId;
+    private long partyId;
 
     private MessageType messageType;
 

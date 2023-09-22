@@ -62,7 +62,7 @@ public class PartyEntity extends BaseTimeEntity {
     List<Message> messages = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "party" , cascade = { CascadeType.PERSIST , CascadeType.REMOVE } , orphanRemoval = true)
+    @OneToMany(mappedBy = "party" , cascade = { CascadeType.REMOVE } , orphanRemoval = true)
     List<Chat> chatList = new LinkedList<>();
 
     @Setter

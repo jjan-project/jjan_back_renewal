@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface CustomChatRepository {
 
-    List<ChatResponse> findChatDataByMeetingId(long meetingId);
+    List<ChatResponse> findChatDataByPartyId(long findChatDataByPartyId);
 
-    List<ChatRoomResponse> findChatRoomByUserId(String userId);
+    List<ChatRoomResponse> findChatRoomByUserEmail(String userEmail);
 
 }

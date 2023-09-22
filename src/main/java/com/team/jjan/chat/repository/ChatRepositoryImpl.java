@@ -4,6 +4,8 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.team.jjan.chat.dto.ChatResponse;
 import com.team.jjan.chat.dto.ChatRoomResponse;
+import com.team.jjan.party.entity.QPartyEntity;
+import com.team.jjan.partyJoin.entity.QPartyJoin;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +25,7 @@ public class ChatRepositoryImpl implements CustomChatRepository {
     }
 
     @Override
-    public List<ChatResponse> findChatDataByMeetingId(long meetingId) {
+    public List<ChatResponse> findChatDataByPartyId(long meetingId) {
         return jpaQueryFactory.select(Projections.constructor(
                         ChatResponse.class,
                         chat.chatId,
@@ -37,17 +39,31 @@ public class ChatRepositoryImpl implements CustomChatRepository {
     }
 
     @Override
-    public List<ChatRoomResponse> findChatRoomByUserId(String userId) {
-        return jpaQueryFactory.select(Projections.constructor(
+    public List<ChatRoomResponse> findChatRoomByUserEmail(String userEmail) {
+        List<ChatRoomResponse> result = jpaQueryFactory.select(Projections.constructor(
                         ChatRoomResponse.class,
                         chatRoom.chatId,
                         partyEntity.id,
                         partyEntity.title,
                         partyEntity.partyImages
-                )).from(partyJoin)
-                .innerJoin(partyJoin.joinUser, userEntity).on(userEntity.nickName.eq(userId))
-                .innerJoin(partyJoin.joinParty, partyEntity)
+                )).from(partyEntity)
                 .innerJoin(partyEntity.chatRoom , chatRoom)
+                .leftJoin(partyEntity.joinUser , partyJoin)
+                .leftJoin(partyJoin.joinUser , userEntity).on(userEntity.email.eq(userEmail))
                 .fetch();
+
+        result.add(jpaQueryFactory.select(Projections.constructor(
+                        ChatRoomResponse.class,
+                        chatRoom.chatId,
+                        partyEntity.id,
+                        partyEntity.title,
+                        partyEntity.partyImages
+                )).from(partyEntity)
+                .innerJoin(partyEntity.author, userEntity).on(userEntity.email.eq(userEmail))
+                .innerJoin(partyEntity.chatRoom , chatRoom)
+                .fetchOne());
+
+        return result;
     }
+
 }

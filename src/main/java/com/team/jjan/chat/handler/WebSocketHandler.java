@@ -38,32 +38,32 @@ public class WebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         ChatRequest chatMessage = objectMapper.readValue(message.getPayload(), ChatRequest.class);
-        long meetingId = chatMessage.getMeetingId();
+        long partyId = chatMessage.getPartyId();
 
         if(chatMessage.getMessageType() == MessageType.ENTER) {
-            joinChatBySession(meetingId , session);
+            joinChatBySession(partyId , session);
 
         } else if(chatMessage.getMessageType() == MessageType.SEND) {
-            sendChatToSameRootId(meetingId , objectMapper , chatMessage);
+            sendChatToSameRootId(partyId , objectMapper , chatMessage);
         }
     }
 
-    private void joinChatBySession(long meetingId , WebSocketSession session) {
-        if(!sessionList.containsKey(meetingId)) {
-            sessionList.put(meetingId , new ArrayList<>());
+    private void joinChatBySession(long partyId , WebSocketSession session) {
+        if(!sessionList.containsKey(partyId)) {
+            sessionList.put(partyId , new ArrayList<>());
         }
-        List<WebSocketSession> sessions = sessionList.get(meetingId);
+        List<WebSocketSession> sessions = sessionList.get(partyId);
         if(!sessions.contains(session)) {
             sessions.add(session);
         }
     }
 
-    private void sendChatToSameRootId(long meetingId , ObjectMapper objectMapper , ChatRequest chatMessage) throws IOException {
-        List<WebSocketSession> sessions = sessionList.get(meetingId);
+    private void sendChatToSameRootId(long partyId , ObjectMapper objectMapper , ChatRequest chatMessage) throws IOException {
+        List<WebSocketSession> sessions = sessionList.get(partyId);
 
         for(WebSocketSession webSocketSession : sessions) {
             ChatResponse chatResponse = createChatResponse(chatMessage);
-            saveChatData(meetingId , chatResponse);
+            saveChatData(partyId , chatResponse);
 
             String result = objectMapper.writeValueAsString(chatResponse);
             webSocketSession.sendMessage(new TextMessage(result));
@@ -71,17 +71,18 @@ public class WebSocketHandler extends TextWebSocketHandler {
     }
 
     private void saveChatData(long partyId , ChatResponse chatResponse) {
-        PartyEntity party = partyRepository.findById(partyId)
+        PartyEntity party = partyRepository.findPartyAndChatById(partyId)
                 .orElseThrow(() -> new NoSuchPartyException("파티 정보를 찾을 수 없습니다."));
 
         Chat chat = Chat.createChat(chatResponse , party);
         party.getChatList().add(chat);
+        chatRepository.save(chat);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-        for(Long meetingId : sessionList.keySet()) {
-            List<WebSocketSession> webSocketSessions = sessionList.get(meetingId);
+        for(Long partyId : sessionList.keySet()) {
+            List<WebSocketSession> webSocketSessions = sessionList.get(partyId);
 
             for(int i = 0; i < webSocketSessions.size(); i++) {
                 WebSocketSession socket = webSocketSessions.get(i);

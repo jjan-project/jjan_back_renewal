@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -18,6 +19,6 @@ public class ChatRoomResponse {
 
     private String meetingTitle;
 
-    private String meetingImage;
+    private List<String> meetingImages;
 
 }
