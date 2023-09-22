@@ -2,7 +2,6 @@ package com.team.jjan.chat.service;
 
 import com.team.jjan.chat.dto.ChatResponse;
 import com.team.jjan.chat.dto.ChatRoomResponse;
-import com.team.jjan.chat.entity.ChatRoom;
 import com.team.jjan.chat.repository.ChatRepository;
 import com.team.jjan.jwt.support.JwtProvider;
 import lombok.RequiredArgsConstructor;

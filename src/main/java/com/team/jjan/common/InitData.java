@@ -13,6 +13,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class InitData {
     }
 
     @Component
+    @Transactional
     @RequiredArgsConstructor
     static class InitDataService {
 
@@ -74,9 +76,9 @@ public class InitData {
                         .author(user)
                         .averageAge((long) LocalDate.now().getYear()-user.getBirth().getYear()+1-1900)
                         .build();
-                party.setChatRoom(ChatRoom.createChatRoom(party));
 
                 partyRepository.save(party);
+                party.setChatRoom(ChatRoom.createChatRoom(party));
             }
         }
 
