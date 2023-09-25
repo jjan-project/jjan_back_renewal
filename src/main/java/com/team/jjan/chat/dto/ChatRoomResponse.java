@@ -20,10 +20,13 @@ public class ChatRoomResponse {
 
     private String partyImages;
 
+    private String lastChat;
+
     public ChatRoomResponse(ChatRoomDTO chatRoomDTO) {
         this.chatId = chatRoomDTO.getChatId();
         this.partyId = chatRoomDTO.getParty().getId();
         this.partyTitle = chatRoomDTO.getParty().getTitle();
         this.partyImages = !chatRoomDTO.getParty().getPartyImages().isEmpty()? chatRoomDTO.getParty().getPartyImages().get(0):null;
+        this.lastChat = chatRoomDTO.getParty().getLastChat();
     }
 }

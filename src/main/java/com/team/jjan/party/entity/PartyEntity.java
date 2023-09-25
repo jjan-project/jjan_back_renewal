@@ -69,6 +69,13 @@ public class PartyEntity extends BaseTimeEntity {
     @OneToOne(cascade = { CascadeType.PERSIST , CascadeType.REMOVE } , orphanRemoval = true)
     private ChatRoom chatRoom;
 
+    @Column
+    private String lastChat;
+
+    public void updateListChat(String lastChat) {
+        this.lastChat = lastChat;
+    }
+
     public void update(PartyUpdateRequestDto partyUpdateRequestDto, List<String> updateImages){
         this.title = partyUpdateRequestDto.getTitle();
         this.content = partyUpdateRequestDto.getContent();

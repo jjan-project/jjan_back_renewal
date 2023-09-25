@@ -74,6 +74,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         PartyEntity party = partyRepository.findPartyAndChatById(partyId)
                 .orElseThrow(() -> new NoSuchPartyException("파티 정보를 찾을 수 없습니다."));
 
+        party.updateListChat(chatResponse.getMessage());
         Chat chat = Chat.createChat(chatResponse , party);
         party.getChatList().add(chat);
         chatRepository.save(chat);
