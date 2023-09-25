@@ -41,6 +41,8 @@ public class QPartyEntity extends EntityPathBase<PartyEntity> {
 
     public final ListPath<com.team.jjan.partyJoin.entity.PartyJoin, com.team.jjan.partyJoin.entity.QPartyJoin> joinUser = this.<com.team.jjan.partyJoin.entity.PartyJoin, com.team.jjan.partyJoin.entity.QPartyJoin>createList("joinUser", com.team.jjan.partyJoin.entity.PartyJoin.class, com.team.jjan.partyJoin.entity.QPartyJoin.class, PathInits.DIRECT2);
 
+    public final StringPath lastChat = createString("lastChat");
+
     public final QLocation location;
 
     public final NumberPath<Integer> maxPartyNum = createNumber("maxPartyNum", Integer.class);
