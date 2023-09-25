@@ -35,7 +35,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     @Override
     @Transactional
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         ChatRequest chatMessage = objectMapper.readValue(message.getPayload(), ChatRequest.class);
         long partyId = chatMessage.getPartyId();
@@ -48,7 +48,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    private void joinChatBySession(long partyId , WebSocketSession session) {
+    public void joinChatBySession(long partyId , WebSocketSession session) {
         if(!sessionList.containsKey(partyId)) {
             sessionList.put(partyId , new ArrayList<>());
         }
@@ -58,7 +58,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    private void sendChatToSameRootId(long partyId , ObjectMapper objectMapper , ChatRequest chatMessage) throws IOException {
+    public void sendChatToSameRootId(long partyId , ObjectMapper objectMapper , ChatRequest chatMessage) throws IOException {
         List<WebSocketSession> sessions = sessionList.get(partyId);
 
         for(WebSocketSession webSocketSession : sessions) {
@@ -70,7 +70,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    private void saveChatData(long partyId , ChatResponse chatResponse) {
+    public void saveChatData(long partyId , ChatResponse chatResponse) {
         PartyEntity party = partyRepository.findPartyAndChatById(partyId)
                 .orElseThrow(() -> new NoSuchPartyException("파티 정보를 찾을 수 없습니다."));
 
@@ -78,6 +78,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         Chat chat = Chat.createChat(chatResponse , party);
         party.getChatList().add(chat);
         chatRepository.save(chat);
+        partyRepository.save(party);
     }
 
     @Override

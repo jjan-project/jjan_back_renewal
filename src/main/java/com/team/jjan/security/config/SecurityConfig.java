@@ -33,18 +33,13 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
-                .anyRequest().permitAll()
+                .requestMatchers("/**").permitAll();
 //                .requestMatchers(HttpMethod.POST , "/api/user/**").permitAll()
 //                .requestMatchers(HttpMethod.DELETE , "/api/user/**").permitAll()
 //                .requestMatchers(HttpMethod.DELETE , "/**").hasRole(Role.MEMBER.name())
 //                .requestMatchers(HttpMethod.PATCH , "/**").hasRole(Role.MEMBER.name())
 //                .requestMatchers(HttpMethod.PUT , "/**").hasRole(Role.MEMBER.name())
 //                .requestMatchers(HttpMethod.POST , "/**").hasRole(Role.MEMBER.name())
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .deleteCookies("accessToken")
-                .deleteCookies("refreshToken");
 
         http.addFilterBefore(new ExceptionHandlerFilter() , UsernamePasswordAuthenticationFilter.class);
 
