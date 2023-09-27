@@ -1,9 +1,13 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/jjan?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/jjan?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
     password: password
+  servlet:
+    jpa:
+      hibernate:
+        ddl-auto: create-drop
 
   sql:
     init:
