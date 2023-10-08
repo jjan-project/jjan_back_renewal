@@ -53,7 +53,7 @@ pipeline {
                     fi
 
                     echo "> jjan 배포 작업 시작"
-                    JENKINS_NODE_COOKIE=dontKillMe nohup java -jar jjan_back_renewal-0.0.1-SNAPSHOT.jar &
+                    JENKINS_NODE_COOKIE=dontKillMe nohup java -jar -Duser.timezone=Asia/Seoul jjan_back_renewal-0.0.1-SNAPSHOT.jar &
                     '''
                 }
             }

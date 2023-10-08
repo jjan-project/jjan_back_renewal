@@ -13,12 +13,14 @@ public class JwtCookie {
 
     public static long REFRESH_TOKEN_MAX_AGE = 1000L * 60 * 60 * 24 * 30;
 
+    public static String DOMAIN = "jjan.p-e.kr";
+
     public static ResponseCookie createAccessToken(String accessToken) {
         return ResponseCookie.from("accessToken" , accessToken)
                 .path("/")
                 .maxAge(1000 * 60 * 30)
                 .httpOnly(true)
-                .domain("jjan.p-e.kr")
+                .domain(DOMAIN)
                 .build();
     }
 
@@ -27,7 +29,7 @@ public class JwtCookie {
                 .path("/")
                 .maxAge(1000L * 60 * 60 * 24 * 30)
                 .httpOnly(true)
-                .domain("jjan.p-e.kr")
+                .domain(DOMAIN)
                 .build();
     }
 
@@ -40,12 +42,12 @@ public class JwtCookie {
         Cookie accessToken = new Cookie("accessToken", null);
         accessToken.setPath("/");
         accessToken.setMaxAge(0);
-        //accessToken.setDomain(DOMAIN_URL);
+        accessToken.setDomain(DOMAIN);
 
         Cookie refreshToken = new Cookie("refreshToken", null);
         refreshToken.setPath("/");
         refreshToken.setMaxAge(0);
-        //refreshToken.setDomain(DOMAIN_URL);
+        refreshToken.setDomain(DOMAIN);
 
         response.addCookie(accessToken);
         response.addCookie(refreshToken);
