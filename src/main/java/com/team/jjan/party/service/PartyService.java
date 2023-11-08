@@ -21,6 +21,7 @@ import com.team.jjan.user.repository.UserRepository;
 import java.sql.Date;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
@@ -90,12 +91,15 @@ public class PartyService {
         //현재 로그인 유저
         UserEntity user = getAuthorUser(currentUser);
 
-        List<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllBySearch(pageable, searchCondition, user).stream().map(PartyGetAllResponseDto::new).collect(Collectors.toList());
+        Page<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllBySearch(pageable,
+            searchCondition, user).map(PartyGetAllResponseDto::new);
+
         return ResponseMessage.of(REQUEST_SUCCESS, allPartyDto);
     }
 
     public ResponseMessage getAllParty(Pageable pageable){
-        List<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllParty(pageable).stream().map(PartyGetAllResponseDto::new).collect(Collectors.toList());
+        Page<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllParty(pageable)
+            .map(PartyGetAllResponseDto::new);
         return ResponseMessage.of(REQUEST_SUCCESS, allPartyDto);
     }
 

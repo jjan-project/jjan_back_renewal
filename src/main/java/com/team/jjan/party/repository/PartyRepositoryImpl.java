@@ -9,11 +9,10 @@ import com.team.jjan.party.dto.request.PartySearchCondition;
 import com.team.jjan.party.dto.request.SortSelection;
 import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.party.entity.PartyTag;
-import com.team.jjan.party.entity.QPartyEntity;
-import com.team.jjan.partyJoin.entity.QPartyJoin;
-import com.team.jjan.user.entitiy.QUserEntity;
 import com.team.jjan.user.entitiy.UserEntity;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -32,22 +31,51 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom{
     }
 
     @Override
-    public List<PartyEntity> findAllBySearch(Pageable pageable, PartySearchCondition searchCondition, UserEntity user) {
-        return queryFactory
-                .selectFrom(partyEntity)
-                .leftJoin(partyEntity.author, userEntity).fetchJoin()
-                .leftJoin(partyEntity.joinUser, partyJoin).fetchJoin()
-                .leftJoin(partyJoin.joinUser).fetchJoin()
-                .where(
-                    useTag(searchCondition.getPartyTagList()),                                              //어떤 술 모임에 가고 싶으세요?
-                    partition(searchCondition.getPersonnelGoe(), searchCondition.getPersonnelLoe()),        //모집 인원을 선택해주세요
-                    radius(searchCondition.getRadiusRange(), user),                                         //동네 반경 범위
-                    ageTag(searchCondition.getAgeTag())                                                 //연령대
-                )
-                .orderBy(
-                    sorting(searchCondition.getSort(), user)                                                 //정렬
-                )
-                .fetch();
+    public Page<PartyEntity> findAllBySearch(Pageable pageable, PartySearchCondition searchCondition, UserEntity user) {
+        List<PartyEntity> content = queryFactory
+            .selectFrom(partyEntity)
+            .leftJoin(partyEntity.author, userEntity).fetchJoin()
+            .leftJoin(partyEntity.joinUser, partyJoin).fetchJoin()
+            .leftJoin(partyJoin.joinUser).fetchJoin()
+            .where(
+                useTag(searchCondition.getPartyTagList()),
+                //어떤 술 모임에 가고 싶으세요?
+                partition(searchCondition.getPersonnelGoe(), searchCondition.getPersonnelLoe()),
+                //모집 인원을 선택해주세요
+                radius(searchCondition.getRadiusRange(), user),
+                //동네 반경 범위
+                ageTag(searchCondition.getAgeTag())
+                //연령대
+            )
+            .orderBy(
+                sorting(searchCondition.getSort(), user)
+                //정렬
+            )
+            .fetch();
+
+        Long total = queryFactory
+            .select(partyEntity.count())
+            .from(partyEntity)
+            .leftJoin(partyEntity.author, userEntity).fetchJoin()
+            .leftJoin(partyEntity.joinUser, partyJoin).fetchJoin()
+            .leftJoin(partyJoin.joinUser).fetchJoin()
+            .where(
+                useTag(searchCondition.getPartyTagList()),
+                //어떤 술 모임에 가고 싶으세요?
+                partition(searchCondition.getPersonnelGoe(), searchCondition.getPersonnelLoe()),
+                //모집 인원을 선택해주세요
+                radius(searchCondition.getRadiusRange(), user),
+                //동네 반경 범위
+                ageTag(searchCondition.getAgeTag())
+                //연령대
+            )
+            .orderBy(
+                sorting(searchCondition.getSort(), user)
+                //정렬
+            )
+            .fetchOne();
+
+        return new PageImpl<>(content, pageable, total);
     }
 
     @Override
