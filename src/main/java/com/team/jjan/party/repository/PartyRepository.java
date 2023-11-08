@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -30,6 +31,7 @@ public interface PartyRepository extends JpaRepository<PartyEntity, Long>, Party
     @Query("select party from PartyEntity party left join fetch party.joinUser party_join left join fetch party_join.joinUser user where user=:user")
     List<PartyEntity> findMyJoinParty(@Param("user") UserEntity user);
 
+    @Modifying(clearAutomatically = true)
     @Query("delete from PartyEntity party where party.partyDate <= :partyDate")
-    void deleteParty(Date partyDate);
+    void deleteParty(@Param("partyDate") Date partyDate);
 }

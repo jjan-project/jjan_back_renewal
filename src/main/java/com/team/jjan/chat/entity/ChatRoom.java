@@ -21,6 +21,7 @@ public class ChatRoom {
     private long chatId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private PartyEntity party;
 
     @CreationTimestamp
