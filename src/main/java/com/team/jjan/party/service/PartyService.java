@@ -18,6 +18,8 @@ import com.team.jjan.upload.service.FileUploadService;
 import com.team.jjan.user.entitiy.UserEntity;
 import com.team.jjan.user.exception.NoSuchEmailException;
 import com.team.jjan.user.repository.UserRepository;
+import java.sql.Date;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -156,6 +158,11 @@ public class PartyService {
                 throw new RuntimeException(e);
             }
         }).collect(Collectors.toList());
+    }
+
+    public void deletePastParty(){
+        Date date = Date.valueOf(LocalDate.now());
+        partyRepository.deleteParty(date);
     }
 }
 
