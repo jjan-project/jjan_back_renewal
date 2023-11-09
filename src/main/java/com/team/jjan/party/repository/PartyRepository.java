@@ -2,6 +2,7 @@ package com.team.jjan.party.repository;
 
 import com.team.jjan.party.entity.PartyEntity;
 import com.team.jjan.user.entitiy.UserEntity;
+import java.util.Date;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
