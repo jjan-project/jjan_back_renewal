@@ -31,7 +31,7 @@ public class PartyEntity extends BaseTimeEntity {
     private UserEntity author;
 
     @BatchSize(size = 100)
-    @OneToMany(mappedBy = "joinParty", cascade = CascadeType.REMOVE ,orphanRemoval = true)
+    @OneToMany(mappedBy = "joinParty", orphanRemoval = true)
     private List<PartyJoin> joinUser = new ArrayList<>();
 
     @Column(nullable = false)

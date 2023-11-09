@@ -18,10 +18,7 @@ import com.team.jjan.upload.service.FileUploadService;
 import com.team.jjan.user.entitiy.UserEntity;
 import com.team.jjan.user.exception.NoSuchEmailException;
 import com.team.jjan.user.repository.UserRepository;
-import java.sql.Date;
-import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
@@ -63,7 +60,7 @@ public class PartyService {
 
     public ResponseMessage getParty(Long partyId){
         PartyEntity getParty = partyRepository.findById(partyId)
-                .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
+            .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
 
         List<PartyJoin> getPartyJoinInfo = partyJoinRepository.findPartyJoinByJoinParty(getParty);
 
@@ -91,15 +88,12 @@ public class PartyService {
         //현재 로그인 유저
         UserEntity user = getAuthorUser(currentUser);
 
-        Page<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllBySearch(pageable,
-            searchCondition, user).map(PartyGetAllResponseDto::new);
-
+        List<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllBySearch(pageable, searchCondition, user).stream().map(PartyGetAllResponseDto::new).collect(Collectors.toList());
         return ResponseMessage.of(REQUEST_SUCCESS, allPartyDto);
     }
 
     public ResponseMessage getAllParty(Pageable pageable){
-        Page<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllParty(pageable)
-            .map(PartyGetAllResponseDto::new);
+        List<PartyGetAllResponseDto> allPartyDto = partyRepository.findAllParty(pageable).stream().map(PartyGetAllResponseDto::new).collect(Collectors.toList());
         return ResponseMessage.of(REQUEST_SUCCESS, allPartyDto);
     }
 
@@ -139,13 +133,13 @@ public class PartyService {
     //유저 추출
     private UserEntity getAuthorUser(CurrentUser currentUser){
         return userRepository.findByEmail(currentUser.getEmail())
-                .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
+            .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
     }
 
     //파티 추출
     private PartyEntity getPartyFromId(Long partyId){
         return partyRepository.findById(partyId)
-                .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
+            .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
     }
 
     //이미지 저장
@@ -162,11 +156,6 @@ public class PartyService {
                 throw new RuntimeException(e);
             }
         }).collect(Collectors.toList());
-    }
-
-    public void deletePastParty(){
-        Date date = Date.valueOf(LocalDate.now());
-        partyRepository.deleteParty(date);
     }
 }
 
