@@ -29,9 +29,9 @@ public class ChatRoom {
 
     public static ChatRoom createChatRoom(PartyEntity party) {
         return ChatRoom.builder()
-                .chatId(party.getId())
-                .party(party)
-                .build();
+            .chatId(party.getId())
+            .party(party)
+            .build();
     }
 
 }

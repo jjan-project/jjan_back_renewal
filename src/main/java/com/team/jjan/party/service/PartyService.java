@@ -63,7 +63,7 @@ public class PartyService {
 
     public ResponseMessage getParty(Long partyId){
         PartyEntity getParty = partyRepository.findById(partyId)
-                .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
+            .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
 
         List<PartyJoin> getPartyJoinInfo = partyJoinRepository.findPartyJoinByJoinParty(getParty);
 
@@ -139,13 +139,13 @@ public class PartyService {
     //유저 추출
     private UserEntity getAuthorUser(CurrentUser currentUser){
         return userRepository.findByEmail(currentUser.getEmail())
-                .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
+            .orElseThrow(() -> new NoSuchEmailException(currentUser.getEmail()));
     }
 
     //파티 추출
     private PartyEntity getPartyFromId(Long partyId){
         return partyRepository.findById(partyId)
-                .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
+            .orElseThrow(() -> new NoSuchPartyException("존재하지 않는 파티입니다"));
     }
 
     //이미지 저장
